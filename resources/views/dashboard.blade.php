@@ -26,6 +26,7 @@ $customizerHidden = 'customizer-hide';
 
 <div class="row">
 
+    {{--
     <!-- Customers -->
     <div class="col-lg-3 col-sm-6 mb-4">
         <div class="card">
@@ -44,8 +45,9 @@ $customizerHidden = 'customizer-hide';
             </div>
         </div>
     </div>
-    <!--/ Customers -->
+    <!--/ Customers --> --}}
 
+    {{--
     <!-- Products -->
     <div class="col-lg-3 col-sm-6 mb-4">
         <div class="card">
@@ -65,7 +67,7 @@ $customizerHidden = 'customizer-hide';
             </div>
         </div>
     </div>
-    <!--/ Products -->
+    <!--/ Products --> --}}
 
 </div>
 

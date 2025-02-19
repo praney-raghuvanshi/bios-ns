@@ -1,6 +1,6 @@
 <!-- resources/views/components/search.blade.php -->
 <div class="bios-search-container">
-    <form action="#" method="GET" class="bios-search-form">
+    <form action="{{ route('search') }}" method="GET" class="bios-search-form">
         <div class="bios-search-icon" id="bios-search-icon" onclick="toggleSearchBox()">
             <i class="ti ti-search ti-md bios-icon-search"></i>
         </div>

@@ -2,8 +2,9 @@
 
 namespace App\Providers;
 
-// use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use App\Models\User;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -22,6 +23,16 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->registerPolicies();
-        //
+
+        // Extend permission logic to check group-based permissions
+        Gate::before(function (User $user, string $permission) {
+            // If user has direct permission, allow
+            if ($user->hasPermissionTo($permission)) {
+                return true;
+            }
+
+            // If user's group has permission, allow
+            return $user->group && $user->group->roles->flatMap->permissions->pluck('name')->contains($permission);
+        });
     }
 }

@@ -66,11 +66,13 @@ $navbarDetached = ($navbarDetached ?? '');
 
         <ul class="navbar-nav flex-row align-items-center ms-auto">
 
+          @can('view search')
           <!-- Search -->
           <li class="nav-item me-2 me-xl-0">
             <x-search />
           </li>
           <!-- \ Search -->
+          @endcan
 
           <!-- Favourites Dropdown -->
           <li class="nav-item navbar-dropdown dropdown-favorites dropdown">

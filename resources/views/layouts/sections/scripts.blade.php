@@ -8,6 +8,19 @@
 <script src="{{ asset(mix('assets/vendor/libs/typeahead-js/typeahead.js')) }}"></script>
 <script src="{{ asset(mix('assets/vendor/js/menu.js')) }}"></script>
 
+<script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/2.2.2/js/dataTables.bootstrap5.min.js"></script>
+
+<script src="{{asset('assets/vendor/libs/select2/select2.js')}}"></script>
+<script src="{{asset('assets/vendor/libs/sweetalert2/sweetalert2.js')}}"></script>
+
+<script src="https://cdn.datatables.net/buttons/3.2.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.2.2/js/buttons.bootstrap5.min.js"></script>
+
+<script src="https://cdn.datatables.net/buttons/3.2.2/js/buttons.colVis.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.2.2/js/buttons.html5.min.js"></script>
+
 <!-- Include jQuery Validation -->
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 <!-- Include jQuery Validation additional methods (optional) -->

@@ -1,10 +1,35 @@
 {
   "menu": [
     {
-      "url": "/",
       "name": "Dashboard",
       "icon": "menu-icon tf-icons ti ti-smart-home",
-      "slug": "dashboard"
+      "slug": "dashboard",
+      "url": "/dashboard"
+    },
+    {
+      "name": "Administration",
+      "icon": "menu-icon tf-icons ti ti-settings",
+      "slug": "administration",
+      "submenu": [
+        {
+          "url": "/administration/groups",
+          "name": "Groups",
+          "icon": "menu-icon tf-icons ti ti-users",
+          "slug": "groups"
+        },
+        {
+          "url": "/administration/users",
+          "name": "Users",
+          "icon": "menu-icon tf-icons ti ti-users",
+          "slug": "users"
+        },
+        {
+          "url": "/administration/bios-audit",
+          "name": "BIOS Audit",
+          "icon": "menu-icon tf-icons ti ti-settings",
+          "slug": "bios-audit"
+        }
+      ]
     }
   ]
 }
