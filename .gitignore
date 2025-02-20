@@ -20,4 +20,3 @@ package-lock.json
 
 # But not these files...
 !/public/assets/*
-/public/assets/vendor
