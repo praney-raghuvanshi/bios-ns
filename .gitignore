@@ -17,7 +17,7 @@ package-lock.json
 /.vscode
 /public/css
 /public/js
-/public/mix-manifest.json
+
 # But not these files...
 !/public/assets/*
 /public/assets/vendor
