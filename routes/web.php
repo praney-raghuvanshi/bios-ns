@@ -3,6 +3,12 @@
 use App\Http\Controllers\Administration\ActivityLogController;
 use App\Http\Controllers\Administration\GroupController;
 use App\Http\Controllers\Administration\UserController;
+use App\Http\Controllers\Maintenance\AirportController;
+use App\Http\Controllers\Maintenance\CustomerController;
+use App\Http\Controllers\Maintenance\CustomerEmailController;
+use App\Http\Controllers\Maintenance\LocationController;
+use App\Http\Controllers\Maintenance\ProductController;
+use App\Http\Controllers\Maintenance\ZoneController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
@@ -63,6 +69,66 @@ Route::middleware(['auth', 'verified'])->prefix('administration')->name('adminis
     // - BIOS Audit Routes
     Route::name('bios-audit.')->controller(ActivityLogController::class)->group(function () {
         Route::get('/bios-audit', 'index')->name('list')->can('view bios-audit');
+    });
+});
+
+Route::middleware(['auth', 'verified'])->prefix('maintenance')->name('maintenance.')->group(function () {
+
+    // - Zone Routes
+    Route::name('zone.')->controller(ZoneController::class)->group(function () {
+        Route::get('/zones', 'index')->name('list')->can('view zones');
+        Route::post('/zones', 'store')->name('store')->can('add zones');
+        Route::get('/zones/{zone}/edit', 'edit')->name('edit')->can('edit zones');
+        Route::post('/zones/{zone}/update', 'update')->name('update')->can('edit zones');
+        Route::delete('/zones/{zone}', 'destroy')->name('destroy')->can('delete zones');
+    });
+
+    // - Location Routes
+    Route::name('location.')->controller(LocationController::class)->group(function () {
+        Route::get('/locations', 'index')->name('list')->can('view locations');
+        Route::post('/locations', 'store')->name('store')->can('add locations');
+        Route::get('/locations/{location}/edit', 'edit')->name('edit')->can('edit locations');
+        Route::post('/locations/{location}/update', 'update')->name('update')->can('edit locations');
+        Route::delete('/locations/{location}', 'destroy')->name('destroy')->can('delete locations');
+    });
+
+    // - Airport Routes
+    Route::name('airport.')->controller(AirportController::class)->group(function () {
+        Route::get('/airports', 'index')->name('list')->can('view airports');
+        Route::post('/airports', 'store')->name('store')->can('add airports');
+        Route::get('/airports/{airport}/edit', 'edit')->name('edit')->can('edit airports');
+        Route::post('/airports/{airport}/update', 'update')->name('update')->can('edit airports');
+        Route::delete('/airports/{airport}', 'destroy')->name('destroy')->can('delete airports');
+    });
+
+    // - Product Routes
+    Route::name('product.')->controller(ProductController::class)->group(function () {
+        Route::get('/products', 'index')->name('list')->can('view products');
+        Route::post('/products', 'store')->name('store')->can('add products');
+        Route::get('/products/{product}/edit', 'edit')->name('edit')->can('edit products');
+        Route::post('/products/{product}/update', 'update')->name('update')->can('edit products');
+        Route::delete('/products/{product}', 'destroy')->name('destroy')->can('delete products');
+    });
+
+    // - Customer Routes
+    Route::name('customer.')->controller(CustomerController::class)->group(function () {
+        Route::get('/customers', 'index')->name('list')->can('view customers');
+        Route::post('/customers', 'store')->name('store')->can('add customers');
+        Route::get('/customers/{customer}', 'show')->name('show')->can('view customers');
+        Route::get('/customers/{customer}/edit', 'edit')->name('edit')->can('edit customers');
+        Route::post('/customers/{customer}/update', 'update')->name('update')->can('edit customers');
+        Route::delete('/customers/{customer}', 'destroy')->name('destroy')->can('delete customers');
+
+        Route::post('/customers/{customer}/manage-products', 'manageCustomerProducts')->name('manage-products')->can('add customers');
+    });
+
+    // - Customer Email Routes
+    Route::name('customer.email.')->controller(CustomerEmailController::class)->group(function () {
+        Route::get('/customers/{customer}/emails', 'index')->name('list')->can('view customers');
+        Route::post('/customers/{customer}/emails', 'store')->name('store')->can('add customers');
+        Route::get('/customers/{customer}/emails/{customerEmail}/edit', 'edit')->name('edit')->can('edit customers');
+        Route::post('/customers/{customer}/emails/{customerEmail}/update', 'update')->name('update')->can('edit customers');
+        Route::delete('/customers/{customer}/emails/{customerEmail}', 'destroy')->name('destroy')->can('delete customers');
     });
 });
 

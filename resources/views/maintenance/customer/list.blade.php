@@ -4,18 +4,19 @@ $customizerHidden = 'customizer-hide';
 
 @extends('layouts/layoutMaster')
 
-@section('title', 'User List')
+@section('title', 'Customer List')
 
 @section('page-script')
 
-<script src="{{asset('assets/js/user/add.js')}}"></script>
+<script src="{{asset('assets/js/customer/add.js')}}"></script>
+<script src="{{asset('assets/js/customer/delete.js')}}"></script>
 
 <script type="text/javascript">
     $(document).ready(function () {
     // Setup - add a text input to each header cell
-    $('#users-table thead tr').clone(true).appendTo('#users-table thead');
+    $('#customers-table thead tr').clone(true).appendTo('#customers-table thead');
 
-    var dt = $('#users-table').DataTable({
+    var dt = $('#customers-table').DataTable({
         orderCellsTop: true,
         stateSave: true,
         order: [],
@@ -39,48 +40,48 @@ $customizerHidden = 'customizer-hide';
                 className: 'btn btn-secondary',
                 action: function (e, dt, node, config) {
                     dt.search('').columns().search('').draw();
-                    $('#users-table thead tr:eq(1) th input').val('');
+                    $('#customers-table thead tr:eq(1) th input').val('');
                     dt.draw();
                 }
             }
         ],
         columnDefs: [
             {
-                targets: [0, 2], // Index of the "Actions" column
+                targets: [0], // Index of the "Actions" column
                 searchable: false,
                 orderable: false
             }
         ]
     });
 
-    $('#users-table thead tr:eq(1) th').each(function (i) {
+    $('#customers-table thead tr:eq(1) th').each(function (i) {
         var title = $(this).text();
-        if (![0,2].includes(i)) { // Exclude the "Actions" column from searching
+        if (![0].includes(i)) { // Exclude the "Actions" column from searching
           $(this).html('<input type="text" class="form-control" placeholder="Search ' + title + '" />');
         } else {
           $(this).html('<input type="text" class="form-control" disabled />');
         }
 
         $('input', this).on('keyup change', function () {
-            if (![0,2].includes(i) && dt.column(i).search() !== this.value) {
+            if (![0].includes(i) && dt.column(i).search() !== this.value) {
                 dt.column(i).search(this.value).draw();
             }
         });
     });
 
     $('.edit-btn').on('click', function () {
-        let userId = $(this).data('record-id');
+        let customerId = $(this).data('record-id');
 
         // Load the edit form content into the modal
         $.ajax({
-            url: '{{ route("administration.user.edit", ":userId") }}'.replace(':userId', userId),
+            url: '{{ route("maintenance.customer.edit", ":customerId") }}'.replace(':customerId', customerId),
             type: 'GET',
             success: function (response) {
-                $('#editUser .modal-form').html(response);
-                $('#editUser').show();
+                $('#editCustomer .modal-form').html(response);
+                $('#editCustomer').show();
 
                 // Initialize jQuery Validation
-                $('#editUserForm').validate({
+                $('#editCustomerForm').validate({
                     errorElement: 'div',
                     errorClass: 'invalid-feedback',
                     highlight: function (element, errorClass, validClass) {
@@ -93,14 +94,10 @@ $customizerHidden = 'customizer-hide';
                         error.appendTo(element.parent().append('<div class="form-control-feedback"></div>'));
                     },
                     rules: {
-                        name: {
+                        code: {
                             required: true
                         },
-                        email: {
-                            required: true,
-                            email: true
-                        },
-                        group: {
+                        name: {
                             required: true
                         },
                         status: {
@@ -117,7 +114,7 @@ $customizerHidden = 'customizer-hide';
 
 @section('content')
 <h4 class="mb-4">
-    <span class="text-muted fw-light">BIOS /</span> Users
+    <span class="text-muted fw-light">BIOS /</span> Customers
 </h4>
 
 @if(session('success'))
@@ -149,79 +146,67 @@ $customizerHidden = 'customizer-hide';
 <!-- Bordered Table -->
 <div class="card">
     <div class="card-header d-flex justify-content-between">
-        <h5>Users</h5>
-        @can('add users')
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUser">
-            <span><i class="ti ti-plus me-0 me-sm-1 ti-xs"></i>Add New User</span>
+        <h5>Customers</h5>
+        @can('add customers')
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCustomer">
+            <span><i class="ti ti-plus me-0 me-sm-1 ti-xs"></i>Add New Customer</span>
         </button>
         @endcan
     </div>
     <div class="card-body">
         <div class="table-responsive text-nowrap">
-            <table class="table table-bordered text-center" id="users-table">
+            <table class="table table-bordered text-center" id="customers-table">
                 <thead>
                     <tr>
                         <th>Actions</th>
                         <th>ID</th>
-                        <th>Avatar</th>
+                        <th>Code</th>
                         <th>Name</th>
-                        <th>Email</th>
-                        <th>Group</th>
                         <th>Status</th>
-                        <th>Last Login</th>
+                        <th>Added By</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($users as $user)
+                    @foreach ($customers as $customer)
                     <tr>
                         <td>
                             <div class="d-flex align-items-center justify-content-center">
-                                @can('edit users')
-                                <a href="javascript:;" class="text-body edit-btn" data-record-id="{{ $user->id }}"
-                                    data-bs-toggle="modal" data-bs-target="#editUser"><i
-                                        class="ti ti-edit ti-sm text-info"></i></a>
+                                @can('edit customers')
+                                <a href="javascript:;" class="text-body edit-btn" data-record-id="{{ $customer->id }}"
+                                    data-bs-toggle="modal" data-bs-target="#editCustomer"><i
+                                        class="ti ti-edit ti-sm mx-2 text-info"></i></a>
                                 @endcan
+                                {{-- @can('delete customers')
+                                <form action="{{ route('maintenance.customer.destroy', $customer) }}" method="post"
+                                    id="delete-customer-form-{{ $customer->id }}">
+                                    @csrf
+                                    @method('delete')
+                                    <a href="javascript:;" onclick="confirmCustomerDelete({{ $customer->id }})">
+                                        <i class="ti ti-trash ti-sm mx-2 text-danger"></i>
+                                    </a>
+                                </form>
+                                @endcan --}}
                             </div>
                         </td>
-                        <td>{{ $user->formatted_id }}</td>
                         <td>
-                            @if($user->profile_image)
-                            <div class="d-flex justify-content-center align-items-center">
-                                <div class="avatar-wrapper">
-                                    <div class="avatar">
-                                        <img src="{{ asset('storage/profile_images/' . $user->profile_image) }}" alt
-                                            class="h-auto rounded-circle">
-                                    </div>
-                                </div>
-                            </div>
+                            @can('view customers')
+                            <a href="{{ route('maintenance.customer.show', $customer) }}" class="text-primary">
+                                {{ $customer->formatted_id }}
+                            </a>
                             @else
-                            <div class="d-flex justify-content-center align-items-center">
-                                <div class="avatar-wrapper">
-                                    <div class="avatar">
-                                        <img src="{{ asset('assets/img/avatars/1.png') }}" alt
-                                            class="h-auto rounded-circle">
-                                    </div>
-                                </div>
-                            </div>
-                            @endif
+                            {{ $customer->formatted_id }}
+                            @endcan
                         </td>
-                        <td>{{ $user->name }}</td>
-                        <td>{{ $user->email }}</td>
-                        <td>{{ $user->group->name ?? 'N/A' }}</td>
+                        <td>{{ $customer->code }}</td>
+                        <td>{{ $customer->name }}</td>
                         <td>
-                            @if ($user->active)
+                            @if ($customer->active)
                             <span class="badge bg-label-success me-1">Active</span>
                             @else
                             <span class="badge bg-label-danger me-1">Inactive</span>
                             @endif
                         </td>
-                        <td>
-                            @if (!is_null($user->last_login_at))
-                            {{ Carbon\Carbon::parse($user->last_login_at)->format('d-m-Y H:i:s') }}
-                            @else
-                            N/A
-                            @endif
-                        </td>
+                        <td>{{ $customer->addedByUser->name }}</td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -231,16 +216,16 @@ $customizerHidden = 'customizer-hide';
 </div>
 <!--/ Bordered Table -->
 
-@include('_partials/_modals/user/add')
+@include('_partials/_modals/customer/add')
 
 <!-- Edit Modal -->
-<div class="modal" id="editUser" tabindex="-1" aria-hidden="true" style="display: none">
+<div class="modal" id="editCustomer" tabindex="-1" aria-hidden="true" style="display: none">
     <div class="modal-dialog modal-lg modal-simple">
         <div class="modal-content p-3 p-md-5">
             <div class="modal-body">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 <div class="text-center mb-4">
-                    <h3 class="mb-2">Edit User</h3>
+                    <h3 class="mb-2">Edit Customer</h3>
                 </div>
                 <div class="modal-form"></div>
             </div>

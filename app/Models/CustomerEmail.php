@@ -9,9 +9,8 @@ use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Builder;
-use Spatie\Permission\Models\Role;
 
-class Group extends Model
+class CustomerEmail extends Model
 {
     use HasFactory, SoftDeletes, LogsActivity;
 
@@ -20,11 +19,11 @@ class Group extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->useLogName('Group')
+            ->useLogName('Customer Email')
             ->logAll()
             ->logExcept(['created_at', 'updated_at', 'deleted_at'])
             ->dontLogIfAttributesChangedOnly(['updated_at'])
-            ->setDescriptionForEvent(fn(string $eventName) => "Group {$eventName}")
+            ->setDescriptionForEvent(fn(string $eventName) => "Customer Email {$eventName}")
             ->logOnlyDirty(true)
             ->dontSubmitEmptyLogs();
     }
@@ -35,21 +34,21 @@ class Group extends Model
     }
 
     /**
-     * Scope a query to only include active groups.
+     * Scope a query to only include active customer emails.
      */
     public function scopeActive(Builder $query): void
     {
         $query->where('active', 1);
     }
 
-    public function users()
+    public function customer()
     {
-        return $this->hasMany(User::class);
+        return $this->belongsTo(Customer::class, 'customer_id');
     }
 
-    public function roles()
+    public function locations()
     {
-        return $this->belongsToMany(Role::class, 'group_roles', 'group_id', 'role_id');
+        return $this->belongsToMany(Location::class, 'customer_email_location', 'customer_email_id', 'location_id');
     }
 
     public function addedByUser()

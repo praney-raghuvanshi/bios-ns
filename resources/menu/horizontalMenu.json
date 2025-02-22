@@ -14,7 +14,7 @@
         {
           "url": "/administration/groups",
           "name": "Groups",
-          "icon": "menu-icon tf-icons ti ti-users",
+          "icon": "menu-icon tf-icons ti ti-users-group",
           "slug": "groups"
         },
         {
@@ -26,8 +26,45 @@
         {
           "url": "/administration/bios-audit",
           "name": "BIOS Audit",
-          "icon": "menu-icon tf-icons ti ti-settings",
+          "icon": "menu-icon tf-icons ti ti-file-report",
           "slug": "bios-audit"
+        }
+      ]
+    },
+    {
+      "name": "Maintenance",
+      "icon": "menu-icon tf-icons ti ti-tools",
+      "slug": "maintenance",
+      "submenu": [
+        {
+          "url": "/maintenance/zones",
+          "name": "Zones",
+          "icon": "menu-icon tf-icons ti ti-globe",
+          "slug": "zones"
+        },
+        {
+          "url": "/maintenance/locations",
+          "name": "Locations",
+          "icon": "menu-icon tf-icons ti ti-map",
+          "slug": "locations"
+        },
+        {
+          "url": "/maintenance/airports",
+          "name": "Airports",
+          "icon": "menu-icon tf-icons ti ti-plane-arrival",
+          "slug": "airports"
+        },
+        {
+          "url": "/maintenance/products",
+          "name": "Products",
+          "icon": "menu-icon tf-icons ti ti-tag",
+          "slug": "products"
+        },
+        {
+          "url": "/maintenance/customers",
+          "name": "Customers",
+          "icon": "menu-icon tf-icons ti ti-users",
+          "slug": "customers"
         }
       ]
     }

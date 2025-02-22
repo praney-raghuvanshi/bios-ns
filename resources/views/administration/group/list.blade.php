@@ -111,7 +111,7 @@ $customizerHidden = 'customizer-hide';
 @endcan
 
 <!-- Bordered Table -->
-<div class="card mt-3">
+<div class="card mt-2">
     <h5 class="card-header">Groups</h5>
     <div class="card-body">
         <div class="table-responsive text-nowrap">

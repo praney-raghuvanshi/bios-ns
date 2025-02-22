@@ -58,7 +58,7 @@ $customizerHidden = 'customizer-hide';
 @endif
 
 <div class="card">
-    <div class="card-body d-flex justify-content-between align-items-center">
+    <div class="card-body p-3 d-flex justify-content-between align-items-center">
         <div class="align-self-center">
             <span class="btn btn-md btn-primary"><strong>{{ $group->name }}</strong></span>
             <span class="btn btn-md btn-info">Added By: &nbsp; <strong> {{ $group->addedByUser->name }}</strong></span>
@@ -75,8 +75,8 @@ $customizerHidden = 'customizer-hide';
 </div>
 
 @can('view roles')
-<div class="card mt-3">
-    <div class="card-header d-flex justify-content-between align-items-center">
+<div class="card mt-2">
+    <div class="card-header p-3 d-flex justify-content-between align-items-center">
         <h5 class="mb-0">Group Roles</h5>
         @if($group->active)
         @can('add roles')
@@ -86,7 +86,7 @@ $customizerHidden = 'customizer-hide';
         @endcan
         @endif
     </div>
-    <div class="card-body">
+    <div class="card-body p-3">
         <!-- Roles List -->
         @if(count($groupRoles) > 0)
         <div class="d-flex flex-wrap gap-2">
@@ -104,8 +104,8 @@ $customizerHidden = 'customizer-hide';
 @endcan
 
 @can('view users')
-<div class="card mt-3">
-    <div class="card-header d-flex justify-content-between align-items-center">
+<div class="card mt-2">
+    <div class="card-header p-3 d-flex justify-content-between align-items-center">
         <h5 class="mb-0">Group Users</h5>
         @if($group->active)
         @can('add users')
@@ -115,7 +115,7 @@ $customizerHidden = 'customizer-hide';
         @endcan
         @endif
     </div>
-    <div class="card-body">
+    <div class="card-body p-3">
         <!-- Users List -->
         @if($groupUsers->count() > 0)
         <div class="d-flex flex-wrap gap-2">

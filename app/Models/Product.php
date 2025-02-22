@@ -9,9 +9,8 @@ use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Builder;
-use Spatie\Permission\Models\Role;
 
-class Group extends Model
+class Product extends Model
 {
     use HasFactory, SoftDeletes, LogsActivity;
 
@@ -20,11 +19,11 @@ class Group extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->useLogName('Group')
+            ->useLogName('Product')
             ->logAll()
             ->logExcept(['created_at', 'updated_at', 'deleted_at'])
             ->dontLogIfAttributesChangedOnly(['updated_at'])
-            ->setDescriptionForEvent(fn(string $eventName) => "Group {$eventName}")
+            ->setDescriptionForEvent(fn(string $eventName) => "Product {$eventName}")
             ->logOnlyDirty(true)
             ->dontSubmitEmptyLogs();
     }
@@ -35,21 +34,16 @@ class Group extends Model
     }
 
     /**
-     * Scope a query to only include active groups.
+     * Scope a query to only include active products.
      */
     public function scopeActive(Builder $query): void
     {
         $query->where('active', 1);
     }
 
-    public function users()
+    public function customers()
     {
-        return $this->hasMany(User::class);
-    }
-
-    public function roles()
-    {
-        return $this->belongsToMany(Role::class, 'group_roles', 'group_id', 'role_id');
+        return $this->belongsToMany(Customer::class, 'customer_product', 'product_id', 'customer_id');
     }
 
     public function addedByUser()
