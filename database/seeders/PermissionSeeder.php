@@ -68,5 +68,10 @@ class PermissionSeeder extends Seeder
         Permission::create(['name' => 'add customers', 'guard_name' => 'web']);
         Permission::create(['name' => 'edit customers', 'guard_name' => 'web']);
         Permission::create(['name' => 'delete customers', 'guard_name' => 'web']);
+        // Administration - Operational Calendar
+        Permission::create(['name' => 'view operational-calendars', 'guard_name' => 'web']);
+        Permission::create(['name' => 'add operational-calendars', 'guard_name' => 'web']);
+        Permission::create(['name' => 'edit operational-calendars', 'guard_name' => 'web']);
+        Permission::create(['name' => 'delete operational-calendars', 'guard_name' => 'web']);
     }
 }

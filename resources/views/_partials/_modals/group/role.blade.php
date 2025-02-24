@@ -330,6 +330,39 @@
                             </div>
                         </div>
 
+                        <!-- Operational Calendars Section -->
+                        <div class="row mb-2 align-items-center">
+                            <div class="col-md-3">
+                                <label for="modalMaintenanceOperationalCalendarsRole"
+                                    class="form-label mb-0">Operational Calendars</label>
+                            </div>
+                            <div class="col-md-9">
+                                <select name="roles[]" class="form-select select2" data-allow-clear="true">
+                                    <option value="0">No Access</option>
+                                    <option value="{{$allRoles['maintenance-operational-calendars-view']}}"
+                                        @if(in_array('maintenance-operational-calendars-view', $groupRoles)) selected
+                                        @endif>
+                                        View Only
+                                    </option>
+                                    <option value="{{$allRoles['maintenance-operational-calendars-user']}}"
+                                        @if(in_array('maintenance-operational-calendars-user', $groupRoles)) selected
+                                        @endif>
+                                        User
+                                    </option>
+                                    <option value="{{$allRoles['maintenance-operational-calendars-manager']}}"
+                                        @if(in_array('maintenance-operational-calendars-manager', $groupRoles)) selected
+                                        @endif>
+                                        Manager
+                                    </option>
+                                    <option value="{{$allRoles['maintenance-operational-calendars-admin']}}"
+                                        @if(in_array('maintenance-operational-calendars-admin', $groupRoles)) selected
+                                        @endif>
+                                        Administrator
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="col-12 text-center">

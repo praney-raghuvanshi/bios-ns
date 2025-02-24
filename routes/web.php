@@ -7,6 +7,7 @@ use App\Http\Controllers\Maintenance\AirportController;
 use App\Http\Controllers\Maintenance\CustomerController;
 use App\Http\Controllers\Maintenance\CustomerEmailController;
 use App\Http\Controllers\Maintenance\LocationController;
+use App\Http\Controllers\Maintenance\OperationalCalendarController;
 use App\Http\Controllers\Maintenance\ProductController;
 use App\Http\Controllers\Maintenance\ZoneController;
 use App\Http\Controllers\ProfileController;
@@ -129,6 +130,15 @@ Route::middleware(['auth', 'verified'])->prefix('maintenance')->name('maintenanc
         Route::get('/customers/{customer}/emails/{customerEmail}/edit', 'edit')->name('edit')->can('edit customers');
         Route::post('/customers/{customer}/emails/{customerEmail}/update', 'update')->name('update')->can('edit customers');
         Route::delete('/customers/{customer}/emails/{customerEmail}', 'destroy')->name('destroy')->can('delete customers');
+    });
+
+    // - Operational Calendar Routes
+    Route::name('operational-calendar.')->controller(OperationalCalendarController::class)->group(function () {
+        Route::get('/operational-calendars', 'index')->name('list')->can('view operational-calendars');
+        Route::post('/operational-calendars', 'store')->name('store')->can('add operational-calendars');
+        // Route::get('/operational-calendars/{operationalCalendar}/edit', 'edit')->name('edit')->can('edit operational-calendars');
+        // Route::post('/operational-calendars/{operationalCalendar}/update', 'update')->name('update')->can('edit operational-calendars');
+        Route::delete('/operational-calendars/{operationalCalendar}', 'destroy')->name('destroy')->can('delete operational-calendars');
     });
 });
 

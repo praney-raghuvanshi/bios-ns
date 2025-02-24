@@ -65,6 +65,12 @@
           "name": "Customers",
           "icon": "menu-icon tf-icons ti ti-users",
           "slug": "customers"
+        },
+        {
+          "url": "/maintenance/operational-calendars",
+          "name": "Operational Calendar",
+          "icon": "menu-icon tf-icons ti ti-calendar",
+          "slug": "operational-calendars"
         }
       ]
     }

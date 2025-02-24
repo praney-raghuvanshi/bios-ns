@@ -120,5 +120,16 @@ class RoleSeeder extends Seeder
         $roleMaintenanceCustomersUser->givePermissionTo(['view customers', 'add customers', 'edit customers']);
         $roleMaintenanceCustomersManager->givePermissionTo(['view customers', 'add customers', 'edit customers', 'delete customers']);
         $roleMaintenanceCustomersAdmin->givePermissionTo(['view customers', 'add customers', 'edit customers', 'delete customers']);
+
+        // Maintenance - Operational Calendar
+        $roleMaintenanceOperationalCalendarsView = Role::create(['name' => 'maintenance-operational-calendars-view', 'guard_name' => 'web']);
+        $roleMaintenanceOperationalCalendarsUser = Role::create(['name' => 'maintenance-operational-calendars-user', 'guard_name' => 'web']);
+        $roleMaintenanceOperationalCalendarsManager = Role::create(['name' => 'maintenance-operational-calendars-manager', 'guard_name' => 'web']);
+        $roleMaintenanceOperationalCalendarsAdmin = Role::create(['name' => 'maintenance-operational-calendars-admin', 'guard_name' => 'web']);
+
+        $roleMaintenanceOperationalCalendarsView->givePermissionTo('view operational-calendars');
+        $roleMaintenanceOperationalCalendarsUser->givePermissionTo(['view operational-calendars', 'add operational-calendars', 'edit operational-calendars']);
+        $roleMaintenanceOperationalCalendarsManager->givePermissionTo(['view operational-calendars', 'add operational-calendars', 'edit operational-calendars', 'delete operational-calendars']);
+        $roleMaintenanceOperationalCalendarsAdmin->givePermissionTo(['view operational-calendars', 'add operational-calendars', 'edit operational-calendars', 'delete operational-calendars']);
     }
 }

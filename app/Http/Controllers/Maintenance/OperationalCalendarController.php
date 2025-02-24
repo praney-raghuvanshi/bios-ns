@@ -3,7 +3,14 @@
 namespace App\Http\Controllers\Maintenance;
 
 use App\Http\Controllers\Controller;
+use App\Models\OperationalCalendar;
+use App\Models\OperationalCalendarDay;
+use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class OperationalCalendarController extends Controller
 {
@@ -12,7 +19,8 @@ class OperationalCalendarController extends Controller
      */
     public function index()
     {
-        //
+        $operationalCalendars = OperationalCalendar::all();
+        return view('maintenance.operational-calendar.list', compact('operationalCalendars'));
     }
 
     /**
@@ -28,7 +36,51 @@ class OperationalCalendarController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'year' => ['required', 'numeric', 'unique:operational_calendars,year,NULL,id,deleted_at,NULL'],
+            'start_date' => ['required', 'date'],
+            'weeks' => ['required', 'numeric'],
+            'status' => ['required']
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator->errors())->withInput();
+        }
+
+        try {
+
+            DB::beginTransaction();
+
+            $startDate = $request->input('start_date');
+            $weeks = $request->input('weeks');
+
+            $operationalCalendar = OperationalCalendar::create([
+                'year' => $request->input('year'),
+                'start_date' => $startDate,
+                'weeks' => $weeks,
+                'active' => $request->input('status'),
+                'added_by' => Auth::id()
+            ]);
+
+            // Create Operational Days
+            $startDate = Carbon::parse($startDate);
+            $totalDays = $weeks * 7;
+            for ($i = 0; $i < $totalDays; $i++) {
+                OperationalCalendarDay::create([
+                    'operational_calendar_id' => $operationalCalendar->id,
+                    'day' => $startDate->copy()->addDays($i),
+                    'week' => ceil(($i + 1) / 7)
+                ]);
+            }
+
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with('failure', $e->getMessage());
+        }
+
+        return redirect()->route('maintenance.operational-calendar.list')->with('success', 'Operational Calendar added successfully.');
     }
 
     /**
@@ -58,8 +110,26 @@ class OperationalCalendarController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(OperationalCalendar $operationalCalendar)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            // Delete Operational Days
+            $operationalCalendar->operationalDays()->delete();
+
+            $operationalCalendar->update([
+                'deleted_by' => Auth::id()
+            ]);
+
+            $operationalCalendar->delete();
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with('failure', $e->getMessage());
+        }
+
+        return redirect()->route('maintenance.operational-calendar.list')->with('success', 'Operational Calendar deleted successfully.');
     }
 }
