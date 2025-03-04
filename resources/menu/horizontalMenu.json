@@ -37,6 +37,12 @@
       "slug": "maintenance",
       "submenu": [
         {
+          "url": "/maintenance/flights",
+          "name": "Flights",
+          "icon": "menu-icon tf-icons ti ti-plane-inflight",
+          "slug": "flights"
+        },
+        {
           "url": "/maintenance/zones",
           "name": "Zones",
           "icon": "menu-icon tf-icons ti ti-globe",
@@ -71,6 +77,12 @@
           "name": "Operational Calendar",
           "icon": "menu-icon tf-icons ti ti-calendar",
           "slug": "operational-calendars"
+        },
+        {
+          "url": "/maintenance/aircrafts",
+          "name": "Aircrafts",
+          "icon": "menu-icon tf-icons ti ti-plane",
+          "slug": "aircrafts"
         }
       ]
     }

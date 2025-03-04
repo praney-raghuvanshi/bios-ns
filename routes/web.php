@@ -3,9 +3,11 @@
 use App\Http\Controllers\Administration\ActivityLogController;
 use App\Http\Controllers\Administration\GroupController;
 use App\Http\Controllers\Administration\UserController;
+use App\Http\Controllers\Maintenance\AircraftController;
 use App\Http\Controllers\Maintenance\AirportController;
 use App\Http\Controllers\Maintenance\CustomerController;
 use App\Http\Controllers\Maintenance\CustomerEmailController;
+use App\Http\Controllers\Maintenance\FlightController;
 use App\Http\Controllers\Maintenance\LocationController;
 use App\Http\Controllers\Maintenance\OperationalCalendarController;
 use App\Http\Controllers\Maintenance\ProductController;
@@ -139,6 +141,46 @@ Route::middleware(['auth', 'verified'])->prefix('maintenance')->name('maintenanc
         // Route::get('/operational-calendars/{operationalCalendar}/edit', 'edit')->name('edit')->can('edit operational-calendars');
         // Route::post('/operational-calendars/{operationalCalendar}/update', 'update')->name('update')->can('edit operational-calendars');
         Route::delete('/operational-calendars/{operationalCalendar}', 'destroy')->name('destroy')->can('delete operational-calendars');
+    });
+
+    // - Aircraft Routes
+    Route::name('aircraft.')->controller(AircraftController::class)->group(function () {
+        Route::get('/aircrafts', 'index')->name('list')->can('view aircrafts');
+        Route::post('/aircrafts', 'store')->name('store')->can('add aircrafts');
+        Route::get('/aircrafts/{aircraft}/edit', 'edit')->name('edit')->can('edit aircrafts');
+        Route::post('/aircrafts/{aircraft}/update', 'update')->name('update')->can('edit aircrafts');
+        Route::delete('/aircrafts/{aircraft}', 'destroy')->name('destroy')->can('delete aircrafts');
+    });
+
+    // - Flight Routes
+
+    Route::get('/flights', function () {
+        $location = session('location');
+
+        // If location exists and not in the query, redirect with location in URL
+        if ($location && !request()->has('location')) {
+            return redirect()->to(request()->fullUrlWithQuery(['location' => $location]));
+        }
+
+        return app()->call('App\Http\Controllers\Maintenance\FlightController@index');
+    })->name('flight.list')->can('view flights');
+
+    Route::name('flight.')->controller(FlightController::class)->group(function () {
+
+        Route::post('/flights', 'store')->name('store')->can('add flights');
+        Route::get('/flights/{flightPairId}', 'show')->name('show')->can('view flights');
+        Route::get('/flights/{flight}/edit', 'edit')->name('edit')->can('edit flights');
+        Route::post('/flights/{flight}/update', 'update')->name('update')->can('edit flights');
+        Route::delete('/flights/{flight}', 'destroy')->name('destroy')->can('delete flights');
+
+        Route::get('flights/{flight}/day/{flightDay}/inactive', 'inactiveFlightDay')->name('day.inactive')->can('edit flights');
+        Route::get('flights/{flight}/day/{flightDay}/active', 'activeFlightDay')->name('day.active')->can('edit flights');
+        Route::delete('/flights/{flight}/day/{flightDay}', 'flightDayDestroy')->name('day.destroy')->can('delete flights');
+
+        Route::get('flights/{flight}/day/{flightDay}/customers', 'flightDayCustomers')->name('day.customer')->can('view customers');
+        Route::post('/flights/{flight}/day/{flightDay}/manage-customers', 'manageFlightDayCustomers')->name('day.manage-customers')->can('edit customers');
+
+        Route::get('/flights/{flightPairId}/clone', 'clone')->name('clone')->can('edit flights');
     });
 });
 

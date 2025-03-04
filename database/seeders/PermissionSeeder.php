@@ -43,35 +43,45 @@ class PermissionSeeder extends Seeder
 
         // Maintenance
         Permission::create(['name' => 'view maintenance', 'guard_name' => 'web']);
-        // Administration - Zones
+        // Maintenance - Zones
         Permission::create(['name' => 'view zones', 'guard_name' => 'web']);
         Permission::create(['name' => 'add zones', 'guard_name' => 'web']);
         Permission::create(['name' => 'edit zones', 'guard_name' => 'web']);
         Permission::create(['name' => 'delete zones', 'guard_name' => 'web']);
-        // Administration - Locations
+        // Maintenance - Locations
         Permission::create(['name' => 'view locations', 'guard_name' => 'web']);
         Permission::create(['name' => 'add locations', 'guard_name' => 'web']);
         Permission::create(['name' => 'edit locations', 'guard_name' => 'web']);
         Permission::create(['name' => 'delete locations', 'guard_name' => 'web']);
-        // Administration - Airports
+        // Maintenance - Airports
         Permission::create(['name' => 'view airports', 'guard_name' => 'web']);
         Permission::create(['name' => 'add airports', 'guard_name' => 'web']);
         Permission::create(['name' => 'edit airports', 'guard_name' => 'web']);
         Permission::create(['name' => 'delete airports', 'guard_name' => 'web']);
-        // Administration - Products
+        // Maintenance - Products
         Permission::create(['name' => 'view products', 'guard_name' => 'web']);
         Permission::create(['name' => 'add products', 'guard_name' => 'web']);
         Permission::create(['name' => 'edit products', 'guard_name' => 'web']);
         Permission::create(['name' => 'delete products', 'guard_name' => 'web']);
-        // Administration - Customers
+        // Maintenance - Customers
         Permission::create(['name' => 'view customers', 'guard_name' => 'web']);
         Permission::create(['name' => 'add customers', 'guard_name' => 'web']);
         Permission::create(['name' => 'edit customers', 'guard_name' => 'web']);
         Permission::create(['name' => 'delete customers', 'guard_name' => 'web']);
-        // Administration - Operational Calendar
+        // Maintenance - Operational Calendar
         Permission::create(['name' => 'view operational-calendars', 'guard_name' => 'web']);
         Permission::create(['name' => 'add operational-calendars', 'guard_name' => 'web']);
         Permission::create(['name' => 'edit operational-calendars', 'guard_name' => 'web']);
         Permission::create(['name' => 'delete operational-calendars', 'guard_name' => 'web']);
+        // Maintenance - Aircrafts
+        Permission::create(['name' => 'view aircrafts', 'guard_name' => 'web']);
+        Permission::create(['name' => 'add aircrafts', 'guard_name' => 'web']);
+        Permission::create(['name' => 'edit aircrafts', 'guard_name' => 'web']);
+        Permission::create(['name' => 'delete aircrafts', 'guard_name' => 'web']);
+        // Maintenance - Flights
+        Permission::create(['name' => 'view flights', 'guard_name' => 'web']);
+        Permission::create(['name' => 'add flights', 'guard_name' => 'web']);
+        Permission::create(['name' => 'edit flights', 'guard_name' => 'web']);
+        Permission::create(['name' => 'delete flights', 'guard_name' => 'web']);
     }
 }

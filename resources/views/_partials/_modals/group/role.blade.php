@@ -190,6 +190,34 @@
                             </div>
                         </div>
 
+                        <!-- Flights Section -->
+                        <div class="row mb-2 align-items-center">
+                            <div class="col-md-3">
+                                <label for="modalMaintenanceFlightsRole" class="form-label mb-0">Flights</label>
+                            </div>
+                            <div class="col-md-9">
+                                <select name="roles[]" class="form-select select2" data-allow-clear="true">
+                                    <option value="0">No Access</option>
+                                    <option value="{{$allRoles['maintenance-flights-view']}}"
+                                        @if(in_array('maintenance-flights-view', $groupRoles)) selected @endif>
+                                        View Only
+                                    </option>
+                                    <option value="{{$allRoles['maintenance-flights-user']}}"
+                                        @if(in_array('maintenance-flights-user', $groupRoles)) selected @endif>
+                                        User
+                                    </option>
+                                    <option value="{{$allRoles['maintenance-flights-manager']}}"
+                                        @if(in_array('maintenance-flights-manager', $groupRoles)) selected @endif>
+                                        Manager
+                                    </option>
+                                    <option value="{{$allRoles['maintenance-flights-admin']}}"
+                                        @if(in_array('maintenance-flights-admin', $groupRoles)) selected @endif>
+                                        Administrator
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
                         <!-- Zones Section -->
                         <div class="row mb-2 align-items-center">
                             <div class="col-md-3">
@@ -357,6 +385,34 @@
                                     <option value="{{$allRoles['maintenance-operational-calendars-admin']}}"
                                         @if(in_array('maintenance-operational-calendars-admin', $groupRoles)) selected
                                         @endif>
+                                        Administrator
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Aircrafts Section -->
+                        <div class="row mb-2 align-items-center">
+                            <div class="col-md-3">
+                                <label for="modalMaintenanceAircraftsRole" class="form-label mb-0">Aircrafts</label>
+                            </div>
+                            <div class="col-md-9">
+                                <select name="roles[]" class="form-select select2" data-allow-clear="true">
+                                    <option value="0">No Access</option>
+                                    <option value="{{$allRoles['maintenance-aircrafts-view']}}"
+                                        @if(in_array('maintenance-aircrafts-view', $groupRoles)) selected @endif>
+                                        View Only
+                                    </option>
+                                    <option value="{{$allRoles['maintenance-aircrafts-user']}}"
+                                        @if(in_array('maintenance-aircrafts-user', $groupRoles)) selected @endif>
+                                        User
+                                    </option>
+                                    <option value="{{$allRoles['maintenance-aircrafts-manager']}}"
+                                        @if(in_array('maintenance-aircrafts-manager', $groupRoles)) selected @endif>
+                                        Manager
+                                    </option>
+                                    <option value="{{$allRoles['maintenance-aircrafts-admin']}}"
+                                        @if(in_array('maintenance-aircrafts-admin', $groupRoles)) selected @endif>
                                         Administrator
                                     </option>
                                 </select>

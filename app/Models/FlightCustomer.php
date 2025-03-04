@@ -10,7 +10,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Builder;
 
-class Customer extends Model
+class FlightCustomer extends Model
 {
     use HasFactory, SoftDeletes, LogsActivity;
 
@@ -19,11 +19,11 @@ class Customer extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->useLogName('Customer')
+            ->useLogName('Flight Customer')
             ->logAll()
             ->logExcept(['created_at', 'updated_at', 'deleted_at'])
             ->dontLogIfAttributesChangedOnly(['updated_at'])
-            ->setDescriptionForEvent(fn(string $eventName) => "Customer {$eventName}")
+            ->setDescriptionForEvent(fn(string $eventName) => "Flight Customer {$eventName}")
             ->logOnlyDirty(true)
             ->dontSubmitEmptyLogs();
     }
@@ -34,33 +34,16 @@ class Customer extends Model
     }
 
     /**
-     * Scope a query to only include active customers.
+     * Scope a query to only include active flight customer.
      */
     public function scopeActive(Builder $query): void
     {
         $query->where('active', 1);
     }
 
-    public function products()
+    public function customer()
     {
-        return $this->belongsToMany(Product::class, 'customer_product', 'customer_id', 'product_id');
-    }
-
-    public function emails()
-    {
-        return $this->hasMany(CustomerEmail::class, 'customer_id');
-    }
-
-    public function locations()
-    {
-        return $this->hasManyThrough(
-            Location::class,               // Final destination model
-            CustomerEmail::class,          // Intermediate model
-            'customer_id',                 // Foreign key in customer_emails table (links to customers)
-            'id',                          // Primary key in locations table
-            'id',                          // Primary key in customers table
-            'location_id'                  // Foreign key in customer_email_location table
-        );
+        return $this->belongsTo(Customer::class);
     }
 
     public function addedByUser()

@@ -131,5 +131,27 @@ class RoleSeeder extends Seeder
         $roleMaintenanceOperationalCalendarsUser->givePermissionTo(['view operational-calendars', 'add operational-calendars', 'edit operational-calendars']);
         $roleMaintenanceOperationalCalendarsManager->givePermissionTo(['view operational-calendars', 'add operational-calendars', 'edit operational-calendars', 'delete operational-calendars']);
         $roleMaintenanceOperationalCalendarsAdmin->givePermissionTo(['view operational-calendars', 'add operational-calendars', 'edit operational-calendars', 'delete operational-calendars']);
+
+        // Maintenance - Aircrafts
+        $roleMaintenanceAircraftsView = Role::create(['name' => 'maintenance-aircrafts-view', 'guard_name' => 'web']);
+        $roleMaintenanceAircraftsUser = Role::create(['name' => 'maintenance-aircrafts-user', 'guard_name' => 'web']);
+        $roleMaintenanceAircraftsManager = Role::create(['name' => 'maintenance-aircrafts-manager', 'guard_name' => 'web']);
+        $roleMaintenanceAircraftsAdmin = Role::create(['name' => 'maintenance-aircrafts-admin', 'guard_name' => 'web']);
+
+        $roleMaintenanceAircraftsView->givePermissionTo('view aircrafts');
+        $roleMaintenanceAircraftsUser->givePermissionTo(['view aircrafts', 'add aircrafts', 'edit aircrafts']);
+        $roleMaintenanceAircraftsManager->givePermissionTo(['view aircrafts', 'add aircrafts', 'edit aircrafts', 'delete aircrafts']);
+        $roleMaintenanceAircraftsAdmin->givePermissionTo(['view aircrafts', 'add aircrafts', 'edit aircrafts', 'delete aircrafts']);
+
+        // Maintenance - Flights
+        $roleMaintenanceFlightsView = Role::create(['name' => 'maintenance-flights-view', 'guard_name' => 'web']);
+        $roleMaintenanceFlightsUser = Role::create(['name' => 'maintenance-flights-user', 'guard_name' => 'web']);
+        $roleMaintenanceFlightsManager = Role::create(['name' => 'maintenance-flights-manager', 'guard_name' => 'web']);
+        $roleMaintenanceFlightsAdmin = Role::create(['name' => 'maintenance-flights-admin', 'guard_name' => 'web']);
+
+        $roleMaintenanceFlightsView->givePermissionTo('view flights');
+        $roleMaintenanceFlightsUser->givePermissionTo(['view flights', 'add flights', 'edit flights']);
+        $roleMaintenanceFlightsManager->givePermissionTo(['view flights', 'add flights', 'edit flights', 'delete flights']);
+        $roleMaintenanceFlightsAdmin->givePermissionTo(['view flights', 'add flights', 'edit flights', 'delete flights']);
     }
 }

@@ -31,13 +31,13 @@ class Helpers
       'footerFixed' => false,
       'customizerControls' => [
         'rtl',
-      'style',
-      'headerType',
-      'contentLayout',
-      'layoutCollapsed',
-      'showDropdownOnHover',
-      'layoutNavbarOptions',
-      'themes',
+        'style',
+        'headerType',
+        'contentLayout',
+        'layoutCollapsed',
+        'showDropdownOnHover',
+        'layoutNavbarOptions',
+        'themes',
       ],
       //   'defaultLanguage'=>'en',
     ];
@@ -186,5 +186,24 @@ class Helpers
         }
       }
     }
+  }
+
+  public static function getFlightDaysName($days)
+  {
+    $daysMap = [
+      1 => 'Monday',
+      2 => 'Tuesday',
+      3 => 'Wednesday',
+      4 => 'Thursday',
+      5 => 'Friday',
+      6 => 'Saturday',
+      7 => 'Sunday'
+    ];
+
+    if (is_array($days)) {
+      return array_map(fn($day) => $daysMap[$day] ?? 'Unknown', $days);
+    }
+
+    return $daysMap[$days] ?? 'Unknown';
   }
 }

@@ -10,20 +10,22 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Builder;
 
-class Customer extends Model
+class Aircraft extends Model
 {
     use HasFactory, SoftDeletes, LogsActivity;
+
+    protected $table = 'aircrafts';
 
     protected $guarded = [];
 
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->useLogName('Customer')
+            ->useLogName('Aircraft')
             ->logAll()
             ->logExcept(['created_at', 'updated_at', 'deleted_at'])
             ->dontLogIfAttributesChangedOnly(['updated_at'])
-            ->setDescriptionForEvent(fn(string $eventName) => "Customer {$eventName}")
+            ->setDescriptionForEvent(fn(string $eventName) => "Aircraft {$eventName}")
             ->logOnlyDirty(true)
             ->dontSubmitEmptyLogs();
     }
@@ -34,33 +36,11 @@ class Customer extends Model
     }
 
     /**
-     * Scope a query to only include active customers.
+     * Scope a query to only include active aircrafts.
      */
     public function scopeActive(Builder $query): void
     {
         $query->where('active', 1);
-    }
-
-    public function products()
-    {
-        return $this->belongsToMany(Product::class, 'customer_product', 'customer_id', 'product_id');
-    }
-
-    public function emails()
-    {
-        return $this->hasMany(CustomerEmail::class, 'customer_id');
-    }
-
-    public function locations()
-    {
-        return $this->hasManyThrough(
-            Location::class,               // Final destination model
-            CustomerEmail::class,          // Intermediate model
-            'customer_id',                 // Foreign key in customer_emails table (links to customers)
-            'id',                          // Primary key in locations table
-            'id',                          // Primary key in customers table
-            'location_id'                  // Foreign key in customer_email_location table
-        );
     }
 
     public function addedByUser()
