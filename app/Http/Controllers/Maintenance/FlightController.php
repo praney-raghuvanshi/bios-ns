@@ -182,6 +182,7 @@ class FlightController extends Controller
 
                 if ($request->has('clone_id')) {
                     $inboundFlight = $this->insertFlight($request, $flightPairId, 'inbound', $request->day, []);
+                    $inboundFlight->update(['cloned_from' => $request->clone_id]);
                 } else {
                     [$selectedDays, $existingDays] = $this->checkIfFlightExists($request, 'inbound');
 
@@ -204,6 +205,7 @@ class FlightController extends Controller
 
                 if ($request->has('clone_id')) {
                     $outboundFlight = $this->insertFlight($request, $flightPairId, 'outbound', $request->day, []);
+                    $outboundFlight->update(['cloned_from' => $request->clone_id]);
                 } else {
                     [$selectedDays, $existingDays] = $this->checkIfFlightExists($request, 'outbound');
 

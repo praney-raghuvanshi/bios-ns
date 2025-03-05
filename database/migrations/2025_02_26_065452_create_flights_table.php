@@ -25,7 +25,7 @@ return new class extends Migration
             $table->tinyInteger('arrival_day')->default(0);
             $table->enum('flight_type', ['inbound', 'outbound']);
             $table->foreignId('corresponding_flight')->nullable()->constrained('flights');
-            $table->foreignId('cloned_from')->nullable()->constrained('flights');
+            $table->uuid('cloned_from')->nullable();
             $table->boolean('active')->default(true);
             $table->foreignId('added_by')->constrained('users');
             $table->timestamps();
