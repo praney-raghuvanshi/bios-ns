@@ -440,66 +440,30 @@
                             </div>
                         </div>
 
-                        <!-- Schedule Summary Section -->
+                        <!-- Schedule Section -->
                         <div class="row mb-2 align-items-center">
                             <div class="col-md-3">
-                                <label for="modalFlightOperationsScheduleSummaryRole" class="form-label mb-0">Schedule
-                                    Summary</label>
-                            </div>
-                            <div class="col-md-9">
-                                <select name="roles[]" class="form-select select2" data-allow-clear="true">
-                                    <option value="0">No Access</option>
-                                    <option value="{{$allRoles['flight-operations-schedule-summary-view']}}"
-                                        @if(in_array('flight-operations-schedule-summary-view', $groupRoles)) selected
-                                        @endif>
-                                        View Only
-                                    </option>
-                                    <option value="{{$allRoles['flight-operations-schedule-summary-user']}}"
-                                        @if(in_array('flight-operations-schedule-summary-user', $groupRoles)) selected
-                                        @endif>
-                                        User
-                                    </option>
-                                    <option value="{{$allRoles['flight-operations-schedule-summary-manager']}}"
-                                        @if(in_array('flight-operations-schedule-summary-manager', $groupRoles))
-                                        selected @endif>
-                                        Manager
-                                    </option>
-                                    <option value="{{$allRoles['flight-operations-schedule-summary-admin']}}"
-                                        @if(in_array('flight-operations-schedule-summary-admin', $groupRoles)) selected
-                                        @endif>
-                                        Administrator
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <!-- Create Schedule Section -->
-                        <div class="row mb-2 align-items-center">
-                            <div class="col-md-3">
-                                <label for="modalFlightOperationsCreateScheduleRole" class="form-label mb-0">Create
+                                <label for="modalFlightOperationsScheduleRole" class="form-label mb-0">
                                     Schedule</label>
                             </div>
                             <div class="col-md-9">
                                 <select name="roles[]" class="form-select select2" data-allow-clear="true">
                                     <option value="0">No Access</option>
-                                    <option value="{{$allRoles['flight-operations-create-schedule-view']}}"
-                                        @if(in_array('flight-operations-create-schedule-view', $groupRoles)) selected
-                                        @endif>
+                                    <option value="{{$allRoles['flight-operations-schedules-view']}}"
+                                        @if(in_array('flight-operations-schedules-view', $groupRoles)) selected @endif>
                                         View Only
                                     </option>
-                                    <option value="{{$allRoles['flight-operations-create-schedule-user']}}"
-                                        @if(in_array('flight-operations-create-schedule-user', $groupRoles)) selected
-                                        @endif>
+                                    <option value="{{$allRoles['flight-operations-schedules-user']}}"
+                                        @if(in_array('flight-operations-schedules-user', $groupRoles)) selected @endif>
                                         User
                                     </option>
-                                    <option value="{{$allRoles['flight-operations-create-schedule-manager']}}"
-                                        @if(in_array('flight-operations-create-schedule-manager', $groupRoles)) selected
+                                    <option value="{{$allRoles['flight-operations-schedules-manager']}}"
+                                        @if(in_array('flight-operations-schedules-manager', $groupRoles)) selected
                                         @endif>
                                         Manager
                                     </option>
-                                    <option value="{{$allRoles['flight-operations-create-schedule-admin']}}"
-                                        @if(in_array('flight-operations-create-schedule-admin', $groupRoles)) selected
-                                        @endif>
+                                    <option value="{{$allRoles['flight-operations-schedules-admin']}}"
+                                        @if(in_array('flight-operations-schedules-admin', $groupRoles)) selected @endif>
                                         Administrator
                                     </option>
                                 </select>
