@@ -12,6 +12,13 @@ use App\Http\Controllers\Maintenance\LocationController;
 use App\Http\Controllers\Maintenance\OperationalCalendarController;
 use App\Http\Controllers\Maintenance\ProductController;
 use App\Http\Controllers\Maintenance\ZoneController;
+use App\Http\Controllers\Operations\ScheduleController;
+use App\Http\Controllers\Operations\ScheduleFlightController;
+use App\Http\Controllers\Operations\ScheduleFlightCustomerController;
+use App\Http\Controllers\Operations\ScheduleFlightCustomerProductController;
+use App\Http\Controllers\Operations\ScheduleFlightCustomerShipmentController;
+use App\Http\Controllers\Operations\ScheduleFlightEmailController;
+use App\Http\Controllers\Operations\ScheduleFlightRemarkController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
@@ -184,9 +191,68 @@ Route::middleware(['auth', 'verified'])->prefix('maintenance')->name('maintenanc
     });
 });
 
+Route::middleware(['auth', 'verified'])->prefix('flight-operations')->name('flight-operations.')->group(function () {
+
+    // - Schedule Routes
+    Route::name('schedule.')->controller(ScheduleController::class)->group(function () {
+        Route::get('/schedules', 'index')->name('list')->can('view schedules');
+        Route::get('/schedules/create', 'create')->name('create')->can('add schedules');
+        Route::post('/schedules/confirm', 'confirm')->name('confirm')->can('add schedules');
+        Route::post('/schedules', 'store')->name('store')->can('add schedules');
+        Route::get('/schedules/{schedule}', 'show')->name('show')->can('view schedules');
+        Route::delete('/schedules/{schedule}', 'destroy')->name('destroy')->can('delete schedules');
+
+        // Schedule Flight Routes
+        Route::name('flight.')->controller(ScheduleFlightController::class)->group(function () {
+            Route::get('/schedules/{schedule}/flights/{scheduleFlight}', 'show')->name('show')->can('view schedules');
+            Route::post('/schedules/{schedule}/flights/{scheduleFlight}/update', 'update')->name('update')->can('edit schedules');
+            Route::get('/schedules/{schedule}/flights/{scheduleFlight}/mark-complete', 'markComplete')->name('mark-complete')->can('add schedules');
+            Route::get('/schedules/{schedule}/flights/{scheduleFlight}/cancel', 'cancel')->name('cancel')->can('delete schedules');
+            Route::get('/schedules/{schedule}/flights/{scheduleFlight}/emails', 'scheduleFlightEmails')->name('email')->can('view schedules');
+
+            // Schedule Flight Remark Routes
+            Route::name('remark.')->controller(ScheduleFlightRemarkController::class)->group(function () {
+                Route::post('/schedules/{schedule}/flights/{scheduleFlight}/remarks', 'store')->name('store')->can('add schedules');
+                Route::get('/schedules/{schedule}/flights/{scheduleFlight}/remarks/{scheduleFlightRemark}/edit', 'edit')->name('edit')->can('edit schedules');
+                Route::post('/schedules/{schedule}/flights/{scheduleFlight}/remarks/{scheduleFlightRemark}', 'update')->name('update')->can('edit schedules');
+                Route::delete('/schedules/{schedule}/flights/{scheduleFlight}/remarks/{scheduleFlightRemark}', 'destroy')->name('destroy')->can('delete schedules');
+            });
+
+            // Schedule Flight Email Routes
+            Route::name('email.')->controller(ScheduleFlightEmailController::class)->group(function () {
+                Route::get('/schedules/{schedule}/flights/{scheduleFlight}/customers/{scheduleFlightCustomer}/email-preview', 'preview')->name('preview')->can('view schedules');
+                Route::get('/schedules/{schedule}/flights/{scheduleFlight}/send-email', 'send')->name('send')->can('add schedules');
+            });
+
+            // Schedule Flight Customer Routes
+            Route::name('customer.')->controller(ScheduleFlightCustomerController::class)->group(function () {
+                Route::get('/schedules/{schedule}/flights/{scheduleFlight}/customers/{scheduleFlightCustomer}', 'show')->name('show')->can('view schedules');
+                Route::post('/schedules/{schedule}/flights/{scheduleFlight}/customers', 'store')->name('store')->can('add schedules');
+
+                // Schedule Flight Customer Product Routes
+                Route::name('product.')->controller(ScheduleFlightCustomerProductController::class)->group(function () {
+                    Route::post('/schedules/{schedule}/flights/{scheduleFlight}/customers/{scheduleFlightCustomer}/products', 'store')->name('store')->can('add schedules');
+                    Route::get('/schedules/{schedule}/flights/{scheduleFlight}/customers/{scheduleFlightCustomer}/products/{scheduleFlightCustomerProduct}/edit', 'edit')->name('edit')->can('edit schedules');
+                    Route::post('/schedules/{schedule}/flights/{scheduleFlight}/customers/{scheduleFlightCustomer}/products/{scheduleFlightCustomerProduct}', 'update')->name('update')->can('edit schedules');
+                    Route::delete('/schedules/{schedule}/flights/{scheduleFlight}/customers/{scheduleFlightCustomer}/products/{scheduleFlightCustomerProduct}', 'destroy')->name('destroy')->can('delete schedules');
+                });
+
+                // Schedule Flight Customer Shipment (AWB) Routes
+                Route::name('shipment.')->controller(ScheduleFlightCustomerShipmentController::class)->group(function () {
+                    Route::post('/schedules/{schedule}/flights/{scheduleFlight}/customers/{scheduleFlightCustomer}/shipments', 'store')->name('store')->can('add schedules');
+                    Route::get('/schedules/{schedule}/flights/{scheduleFlight}/customers/{scheduleFlightCustomer}/shipments/{scheduleFlightCustomerShipment}/edit', 'edit')->name('edit')->can('edit schedules');
+                    Route::post('/schedules/{schedule}/flights/{scheduleFlight}/customers/{scheduleFlightCustomer}/shipments/{scheduleFlightCustomerShipment}', 'update')->name('update')->can('edit schedules');
+                    Route::delete('/schedules/{schedule}/flights/{scheduleFlight}/customers/{scheduleFlightCustomer}/shipments/{scheduleFlightCustomerShipment}', 'destroy')->name('destroy')->can('delete schedules');
+                });
+            });
+        });
+    });
+});
+
 // Routes for AJAX
 Route::middleware('auth')->group(function () {
     Route::post('manageMenuFavourites', [UserController::class, 'manageMenuFavourites']);
+    Route::post('checkAwbForScheduleFlightCustomer', [ScheduleFlightCustomerShipmentController::class, 'checkAwbForScheduleFlightCustomer']);
 });
 
 require __DIR__ . '/auth.php';

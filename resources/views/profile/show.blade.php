@@ -56,7 +56,7 @@
                     <img src="{{ asset('storage/profile_images/' . $user->profile_image) }}" alt="user-avatar"
                         class="d-block w-px-100 h-px-100 rounded" id="uploadedAvatar" />
                     @else
-                    <img src="{{ asset('assets/img/avatars/1.png') }}" alt="user-avatar"
+                    <img src="{{ asset('assets/img/avatars/default.png') }}" alt="user-avatar"
                         class="d-block w-px-100 h-px-100 rounded" id="uploadedAvatar" />
                     @endif
                     <div class="button-wrapper">

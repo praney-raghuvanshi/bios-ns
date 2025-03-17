@@ -198,7 +198,7 @@ $customizerHidden = 'customizer-hide';
                             <div class="d-flex justify-content-center align-items-center">
                                 <div class="avatar-wrapper">
                                     <div class="avatar">
-                                        <img src="{{ asset('assets/img/avatars/1.png') }}" alt
+                                        <img src="{{ asset('assets/img/avatars/default.png') }}" alt
                                             class="h-auto rounded-circle">
                                     </div>
                                 </div>

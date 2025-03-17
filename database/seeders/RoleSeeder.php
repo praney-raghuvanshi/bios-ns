@@ -153,5 +153,20 @@ class RoleSeeder extends Seeder
         $roleMaintenanceFlightsUser->givePermissionTo(['view flights', 'add flights', 'edit flights']);
         $roleMaintenanceFlightsManager->givePermissionTo(['view flights', 'add flights', 'edit flights', 'delete flights']);
         $roleMaintenanceFlightsAdmin->givePermissionTo(['view flights', 'add flights', 'edit flights', 'delete flights']);
+
+        // Flight Operations
+        $roleFlightOperationsView = Role::create(['name' => 'flight-operations-view', 'guard_name' => 'web']);
+        $roleFlightOperationsView->givePermissionTo('view flight-operations');
+
+        // Flight Operations - Schedules
+        $roleFlightOperationsSchedulesView = Role::create(['name' => 'flight-operations-schedules-view', 'guard_name' => 'web']);
+        $roleFlightOperationsSchedulesUser = Role::create(['name' => 'flight-operations-schedules-user', 'guard_name' => 'web']);
+        $roleFlightOperationsSchedulesManager = Role::create(['name' => 'flight-operations-schedules-manager', 'guard_name' => 'web']);
+        $roleFlightOperationsSchedulesAdmin = Role::create(['name' => 'flight-operations-schedules-admin', 'guard_name' => 'web']);
+
+        $roleFlightOperationsSchedulesView->givePermissionTo('view schedules');
+        $roleFlightOperationsSchedulesUser->givePermissionTo(['view schedules', 'add schedules', 'edit schedules']);
+        $roleFlightOperationsSchedulesManager->givePermissionTo(['view schedules', 'add schedules', 'edit schedules', 'delete schedules']);
+        $roleFlightOperationsSchedulesAdmin->givePermissionTo(['view schedules', 'add schedules', 'edit schedules', 'delete schedules']);
     }
 }

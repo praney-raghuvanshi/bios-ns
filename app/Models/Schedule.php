@@ -10,7 +10,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Builder;
 
-class Customer extends Model
+class Schedule extends Model
 {
     use HasFactory, SoftDeletes, LogsActivity;
 
@@ -19,11 +19,11 @@ class Customer extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->useLogName('Customer')
+            ->useLogName('Schedule')
             ->logAll()
             ->logExcept(['created_at', 'updated_at', 'deleted_at'])
             ->dontLogIfAttributesChangedOnly(['updated_at'])
-            ->setDescriptionForEvent(fn(string $eventName) => "Customer {$eventName}")
+            ->setDescriptionForEvent(fn(string $eventName) => "Schedule {$eventName}")
             ->logOnlyDirty(true)
             ->dontSubmitEmptyLogs();
     }
@@ -34,33 +34,21 @@ class Customer extends Model
     }
 
     /**
-     * Scope a query to only include active customers.
+     * Scope a query to only include active schedules.
      */
     public function scopeActive(Builder $query): void
     {
         $query->where('active', 1);
     }
 
-    public function products()
+    public function scheduleFlights()
     {
-        return $this->belongsToMany(Product::class, 'customer_product', 'customer_id', 'product_id');
+        return $this->hasMany(ScheduleFlight::class, 'schedule_id', 'id');
     }
 
-    public function emails()
+    public function flights()
     {
-        return $this->hasMany(CustomerEmail::class, 'customer_id')->active();
-    }
-
-    public function locations()
-    {
-        return $this->hasManyThrough(
-            Location::class,               // Final destination model
-            CustomerEmail::class,          // Intermediate model
-            'customer_id',                 // Foreign key in customer_emails table (links to customers)
-            'id',                          // Primary key in locations table
-            'id',                          // Primary key in customers table
-            'location_id'                  // Foreign key in customer_email_location table
-        );
+        return $this->belongsToMany(Flight::class, 'schedule_flights');
     }
 
     public function addedByUser()

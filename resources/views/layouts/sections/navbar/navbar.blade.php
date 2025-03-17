@@ -106,7 +106,7 @@ $navbarDetached = ($navbarDetached ?? '');
             <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
               <div class="avatar">
                 <img
-                  src="{{ Auth::user() ? (isset(Auth::user()->profile_image) ? asset('storage/profile_images/' . Auth::user()->profile_image) : asset('assets/img/avatars/1.png')) : asset('assets/img/avatars/1.png') }}"
+                  src="{{ Auth::user() ? (isset(Auth::user()->profile_image) ? asset('storage/profile_images/' . Auth::user()->profile_image) : asset('assets/img/avatars/default.png')) : asset('assets/img/avatars/default.png') }}"
                   alt class="h-auto rounded-circle">
               </div>
             </a>
@@ -118,7 +118,7 @@ $navbarDetached = ($navbarDetached ?? '');
                     <div class="flex-shrink-0 me-3">
                       <div class="avatar">
                         <img
-                          src="{{ Auth::user() ? (isset(Auth::user()->profile_image) ? asset('storage/profile_images/' . Auth::user()->profile_image) : asset('assets/img/avatars/1.png')) : asset('assets/img/avatars/1.png') }}"
+                          src="{{ Auth::user() ? (isset(Auth::user()->profile_image) ? asset('storage/profile_images/' . Auth::user()->profile_image) : asset('assets/img/avatars/default.png')) : asset('assets/img/avatars/default.png') }}"
                           alt class="h-auto rounded-circle">
                       </div>
                     </div>

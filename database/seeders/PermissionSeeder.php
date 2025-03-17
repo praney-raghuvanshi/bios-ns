@@ -83,5 +83,13 @@ class PermissionSeeder extends Seeder
         Permission::create(['name' => 'add flights', 'guard_name' => 'web']);
         Permission::create(['name' => 'edit flights', 'guard_name' => 'web']);
         Permission::create(['name' => 'delete flights', 'guard_name' => 'web']);
+
+        // Flight Operations
+        Permission::create(['name' => 'view flight-operations', 'guard_name' => 'web']);
+        // Flight Operations - Schedules
+        Permission::create(['name' => 'view schedules', 'guard_name' => 'web']);
+        Permission::create(['name' => 'add schedules', 'guard_name' => 'web']);
+        Permission::create(['name' => 'edit schedules', 'guard_name' => 'web']);
+        Permission::create(['name' => 'delete schedules', 'guard_name' => 'web']);
     }
 }

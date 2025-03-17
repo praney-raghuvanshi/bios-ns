@@ -85,6 +85,25 @@
           "slug": "aircrafts"
         }
       ]
+    },
+    {
+      "name": "Flight Operations",
+      "icon": "menu-icon tf-icons ti ti-settings",
+      "slug": "flight-operations",
+      "submenu": [
+        {
+          "url": "/flight-operations/schedules",
+          "name": "Schedule Summary",
+          "icon": "menu-icon tf-icons ti ti-users-group",
+          "slug": "schedules"
+        },
+        {
+          "url": "/flight-operations/schedules/create",
+          "name": "Create Schedule",
+          "icon": "menu-icon tf-icons ti ti-users",
+          "slug": "schedules"
+        }
+      ]
     }
   ]
 }

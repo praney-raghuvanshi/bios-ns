@@ -76,6 +76,11 @@ class Flight extends Model
         return $this->hasMany(FlightDay::class, 'flight_id', 'id');
     }
 
+    public function schedules()
+    {
+        return $this->belongsToMany(Schedule::class, 'schedule_flights');
+    }
+
     public function addedByUser()
     {
         return $this->belongsTo(User::class, 'added_by');
