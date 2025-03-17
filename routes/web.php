@@ -201,6 +201,11 @@ Route::middleware(['auth', 'verified'])->prefix('flight-operations')->name('flig
         Route::post('/schedules', 'store')->name('store')->can('add schedules');
         Route::get('/schedules/{schedule}', 'show')->name('show')->can('view schedules');
         Route::delete('/schedules/{schedule}', 'destroy')->name('destroy')->can('delete schedules');
+        Route::get('/schedules/{schedule}/manual/flights/list', 'manualList')->name('manual.list')->can('view schedules');
+        Route::get('/schedules/{schedule}/manual/flights/contingency', 'contingency')->name('manual.contingency')->can('view schedules');
+        Route::post('/schedules/{schedule}/manual/flights/store', 'manualStore')->name('manual.store')->can('add schedules');
+        Route::post('/schedules/{schedule}/manual/flights/contingency/store', 'contingencyStore')->name('manual.contingency.store')->can('add schedules');
+
 
         // Schedule Flight Routes
         Route::name('flight.')->controller(ScheduleFlightController::class)->group(function () {
@@ -253,6 +258,7 @@ Route::middleware(['auth', 'verified'])->prefix('flight-operations')->name('flig
 Route::middleware('auth')->group(function () {
     Route::post('manageMenuFavourites', [UserController::class, 'manageMenuFavourites']);
     Route::post('checkAwbForScheduleFlightCustomer', [ScheduleFlightCustomerShipmentController::class, 'checkAwbForScheduleFlightCustomer']);
+    Route::post('checkFlight', [FlightController::class, 'checkFlight']);
 });
 
 require __DIR__ . '/auth.php';

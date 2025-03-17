@@ -554,4 +554,37 @@ class FlightController extends Controller
 
         return [$selectedDays, $existingDays];
     }
+
+    public function checkFlight(Request $request)
+    {
+        $flightNumber = $request->input('flightNumber');
+        $data = [
+            'success' => false,
+            'fill' => false,
+            'data' => []
+        ];
+
+        try {
+
+            $result = Flight::where('flight_number', $flightNumber)->first();
+
+            if ($result) {
+                $data = [
+                    'success' => true,
+                    'fill' => true,
+                    'data' => $result
+                ];
+            } else {
+                $data = [
+                    'success' => true,
+                    'fill' => false,
+                    'data' => []
+                ];
+            }
+        } catch (Exception $e) {
+            return response()->json($e->getMessage(), 500);
+        }
+
+        return response()->json($data);
+    }
 }

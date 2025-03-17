@@ -3,7 +3,12 @@
 namespace App\Http\Controllers\Operations;
 
 use App\Http\Controllers\Controller;
+use App\Models\Aircraft;
+use App\Models\Airport;
+use App\Models\Customer;
 use App\Models\Flight;
+use App\Models\FlightDay;
+use App\Models\Location;
 use App\Models\Schedule;
 use App\Models\ScheduleFlight;
 use Carbon\Carbon;
@@ -12,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class ScheduleController extends Controller
 {
@@ -153,5 +159,108 @@ class ScheduleController extends Controller
         }
 
         return redirect()->route('flight-operations.schedule.list')->with('success', 'Schedule deleted successfully.');
+    }
+
+    public function manualList(Schedule $schedule)
+    {
+        $scheduleDate = $schedule->date;
+        $scheduleDay = Carbon::parse($scheduleDate)->format('N');
+        $flights = Flight::whereHas('flightDays', function ($query) use ($scheduleDay) {
+            $query->where('day', $scheduleDay);
+        })->whereDoesntHave('schedules', function ($query) use ($schedule) {
+            $query->where('schedule_id', $schedule->id);
+        })->with(['fromAirport', 'toAirport', 'aircraft'])->whereDate('effective_date', '<=', $scheduleDate)->get();
+        return view('operations.schedule.flight.list', compact('schedule', 'flights'));
+    }
+
+    public function manualStore(Request $request, Schedule $schedule)
+    {
+        try {
+            $flightIds = $request->input('flight');
+
+            foreach ($flightIds as $flightId) {
+                ScheduleFlight::create([
+                    'schedule_id' => $schedule->id,
+                    'flight_id' => $flightId,
+                    'added_by' => Auth::id()
+                ]);
+            }
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with('failure', $e->getMessage());
+        }
+
+        return redirect()->route('flight-operations.schedule.show', $schedule)->with('success', 'Flights added to Schedule successfully.');
+    }
+
+    public function contingency(Schedule $schedule)
+    {
+        $airports = Airport::active()->get();
+        $aircrafts = Aircraft::active()->get();
+        $locations = Location::active()->get();
+        return view('operations.schedule.flight.contingency', compact('schedule', 'airports', 'aircrafts', 'locations'));
+    }
+
+    public function contingencyStore(Request $request, Schedule $schedule)
+    {
+        try {
+
+            DB::beginTransaction();
+
+            $flightPairId = Str::uuid();
+
+            $locationId = $request->input('location');
+            $arrivalTime = $request->input('arrival_time');
+            $departureTime = $request->input('departure_time');
+            $flightNumber = $request->input('flight');
+            $from = $request->input('from');
+            $to = $request->input('to');
+            $aircraft = $request->input('aircraft');
+            $flightDirection = $request->input('direction');
+            $arrivalDay = $request->input('arrival_day');
+
+            $customers = Customer::whereHas('emails.locations', function ($query) use ($locationId) {
+                $query->where('location_id', $locationId);
+            })->get();
+
+            // Flight
+            $flight = Flight::create([
+                'flight_pair_id' => $flightPairId,
+                'flight_number' => $flightNumber,
+                'location_id' => $locationId,
+                'from' => $from,
+                'to' => $to,
+                'departure_time' => $departureTime,
+                'arrival_time' => $arrivalTime,
+                'aircraft_id' => $aircraft,
+                'effective_date' => $request->input('effective_date'),
+                'arrival_day' => $arrivalDay,
+                'flight_type' => $flightDirection,
+                'active' => 1,
+                'added_by' => Auth::id()
+            ]);
+
+
+            $flightDay = FlightDay::create([
+                'flight_id' => $flight->id,
+                'day' => $schedule->day,
+                'added_by' => Auth::id()
+            ]);
+
+            $syncData = [];
+            foreach ($customers as $customer) {
+                $syncData[$customer->id] = ['added_by' => Auth::id()];
+            }
+
+            $flightDay->customers()->sync($syncData);
+
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with('failure', $e->getMessage());
+        }
+
+        return redirect()->route('flight-operations.schedule.manual.list', [$schedule])->with('success', 'Contingency Flight added successfully.');
     }
 }

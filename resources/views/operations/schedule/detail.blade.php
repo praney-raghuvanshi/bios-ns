@@ -151,6 +151,15 @@ $customizerHidden = 'customizer-hide';
         @else
         <p class="text-info"><strong>There are no flights for this Schedule!</strong></p>
         @endif
+
+        <div class="mt-3">
+            <a href="{{ route('flight-operations.schedule.manual.list', $schedule) }}" class="btn btn-primary me-2">
+                <i class="ti ti-plus me-0 me-sm-1 ti-xs"></i> Add Scheduled Flights
+            </a>
+            <a href="{{ route('flight-operations.schedule.manual.contingency', $schedule) }}" class="btn btn-info mx-2">
+                <i class="ti ti-plus me-0 me-sm-1 ti-xs"></i> Add contingency Flight
+            </a>
+        </div>
     </div>
 </div>
 
