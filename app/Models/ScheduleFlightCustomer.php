@@ -92,6 +92,11 @@ class ScheduleFlightCustomer extends Model
         return $this->hasMany(ScheduleFlightCustomerShipment::class, 'schedule_flight_customer_id', 'id');
     }
 
+    public function scheduleFlight()
+    {
+        return $this->belongsTo(ScheduleFlight::class, 'schedule_flight_id', 'id');
+    }
+
     public function customer()
     {
         return $this->belongsTo(Customer::class, 'customer_id');

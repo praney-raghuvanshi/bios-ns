@@ -46,6 +46,18 @@ class ScheduleFlightCustomerShipment extends Model
         return $this->belongsTo(ScheduleFlightCustomer::class, 'schedule_flight_customer_id');
     }
 
+    public function scheduleFlight()
+    {
+        return $this->hasOneThrough(
+            ScheduleFlight::class,
+            ScheduleFlightCustomer::class,
+            'id',       // Foreign key on parents table
+            'id',       // Foreign key on grandparents table
+            'schedule_flight_customer_id', // Local key on child table
+            'schedule_flight_id' // Local key on parent table
+        );
+    }
+
     public function product()
     {
         return $this->belongsTo(Product::class, 'product_id');
