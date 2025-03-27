@@ -20,6 +20,8 @@ use App\Http\Controllers\Operations\ScheduleFlightCustomerShipmentController;
 use App\Http\Controllers\Operations\ScheduleFlightEmailController;
 use App\Http\Controllers\Operations\ScheduleFlightRemarkController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Reports\BillingExtractController;
+use App\Http\Controllers\Reports\FlightPerformanceReportController;
 use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 
@@ -254,11 +256,28 @@ Route::middleware(['auth', 'verified'])->prefix('flight-operations')->name('flig
     });
 });
 
+Route::middleware(['auth', 'verified'])->prefix('reports')->name('reports.')->group(function () {
+
+    // - Flight Performance Routes
+    Route::name('flight-performance-report.')->controller(FlightPerformanceReportController::class)->group(function () {
+        Route::match(['get', 'post'], '/flight-performance-report', 'index')->name('list')->can('view flight-performance-report');
+        Route::post('/flight-performance-report/export', 'export')->name('export')->can('view flight-performance-report');
+    });
+
+    // - Billing Extract Routes
+    Route::name('billing-extract.')->controller(BillingExtractController::class)->group(function () {
+        Route::match(['get', 'post'], '/billing-extract', 'index')->name('list')->can('view billing-extract');
+    });
+});
+
 // Routes for AJAX
 Route::middleware('auth')->group(function () {
     Route::post('manageMenuFavourites', [UserController::class, 'manageMenuFavourites']);
     Route::post('checkAwbForScheduleFlightCustomer', [ScheduleFlightCustomerShipmentController::class, 'checkAwbForScheduleFlightCustomer']);
     Route::post('checkFlight', [FlightController::class, 'checkFlight']);
+
+    Route::post('getWeeksForOperationalYear', [FlightPerformanceReportController::class, 'getWeeksForOperationalYear']);
+    Route::post('getFlightsForCustomer', [FlightPerformanceReportController::class, 'getFlightsForCustomer']);
 });
 
 require __DIR__ . '/auth.php';

@@ -11,4 +11,9 @@ class OperationalCalendarDay extends Model
     use HasFactory, SoftDeletes;
 
     protected $guarded = [];
+
+    public function operationalCalendar()
+    {
+        return $this->belongsTo(OperationalCalendar::class);
+    }
 }

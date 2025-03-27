@@ -91,5 +91,12 @@ class PermissionSeeder extends Seeder
         Permission::create(['name' => 'add schedules', 'guard_name' => 'web']);
         Permission::create(['name' => 'edit schedules', 'guard_name' => 'web']);
         Permission::create(['name' => 'delete schedules', 'guard_name' => 'web']);
+
+        // Reports
+        Permission::create(['name' => 'view reports', 'guard_name' => 'web']);
+        // Reports - Flight Performance Report
+        Permission::create(['name' => 'view flight-performance-report', 'guard_name' => 'web']);
+        // Reports - Billing Extract
+        Permission::create(['name' => 'view billing-extract', 'guard_name' => 'web']);
     }
 }

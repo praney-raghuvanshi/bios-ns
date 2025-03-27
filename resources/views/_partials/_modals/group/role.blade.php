@@ -472,6 +472,62 @@
 
                     </div>
 
+                    <div class="p-3 border rounded bg-white shadow-sm">
+                        <h6 class="fw-bold mb-3">Reports</h6>
+
+                        <!-- Reports Section -->
+                        <div class="row mb-2 align-items-center">
+                            <div class="col-md-3">
+                                <label for="modalReportsRole" class="form-label mb-0">Reports</label>
+                            </div>
+                            <div class="col-md-9">
+                                <select name="roles[]" class="form-select select2" data-allow-clear="true">
+                                    <option value="0">No Access</option>
+                                    <option value="{{$allRoles['reports-view']}}" @if(in_array('reports-view',
+                                        $groupRoles)) selected @endif>
+                                        View Only
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Flight Performance Report Section -->
+                        <div class="row mb-2 align-items-center">
+                            <div class="col-md-3">
+                                <label for="modalReportsFlightPerformanceReportRole" class="form-label mb-0">
+                                    Flight Performance Report</label>
+                            </div>
+                            <div class="col-md-9">
+                                <select name="roles[]" class="form-select select2" data-allow-clear="true">
+                                    <option value="0">No Access</option>
+                                    <option value="{{$allRoles['reports-flight-performance-report-view']}}"
+                                        @if(in_array('reports-flight-performance-report-view', $groupRoles)) selected
+                                        @endif>
+                                        View Only
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Billing Extract Section -->
+                        <div class="row mb-2 align-items-center">
+                            <div class="col-md-3">
+                                <label for="modalReportsBillingExtractRole" class="form-label mb-0">
+                                    Billing Extract</label>
+                            </div>
+                            <div class="col-md-9">
+                                <select name="roles[]" class="form-select select2" data-allow-clear="true">
+                                    <option value="0">No Access</option>
+                                    <option value="{{$allRoles['reports-billing-extract-view']}}"
+                                        @if(in_array('reports-billing-extract-view', $groupRoles)) selected @endif>
+                                        View Only
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+
                     <div class="col-12 text-center">
                         <button type="submit" class="btn btn-primary me-sm-3 me-1">Submit</button>
                         <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal"

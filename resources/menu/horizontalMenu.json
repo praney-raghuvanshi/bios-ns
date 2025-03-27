@@ -104,6 +104,25 @@
           "slug": "schedules"
         }
       ]
+    },
+    {
+      "name": "Reports",
+      "icon": "menu-icon tf-icons ti ti-file-report",
+      "slug": "reports",
+      "submenu": [
+        {
+          "url": "/reports/flight-performance-report",
+          "name": "Flight Performance Report",
+          "icon": "menu-icon tf-icons ti ti-file",
+          "slug": "flight-performance-report"
+        },
+        {
+          "url": "/reports/billing-extract",
+          "name": "Billing Extract",
+          "icon": "menu-icon tf-icons ti ti-file",
+          "slug": "billing-extract"
+        }
+      ]
     }
   ]
 }

@@ -168,5 +168,19 @@ class RoleSeeder extends Seeder
         $roleFlightOperationsSchedulesUser->givePermissionTo(['view schedules', 'add schedules', 'edit schedules']);
         $roleFlightOperationsSchedulesManager->givePermissionTo(['view schedules', 'add schedules', 'edit schedules', 'delete schedules']);
         $roleFlightOperationsSchedulesAdmin->givePermissionTo(['view schedules', 'add schedules', 'edit schedules', 'delete schedules']);
+
+        // Reports
+        $roleReportsView = Role::create(['name' => 'reports-view', 'guard_name' => 'web']);
+        $roleReportsView->givePermissionTo('view reports');
+
+        // Reports - Flight Performance Report
+        $roleReportsFlightPerformanceReportView = Role::create(['name' => 'reports-flight-performance-report-view', 'guard_name' => 'web']);
+
+        $roleReportsFlightPerformanceReportView->givePermissionTo('view flight-performance-report');
+
+        // Reports - Billing Extract
+        $roleReportsBilingExtractView = Role::create(['name' => 'reports-billing-extract-view', 'guard_name' => 'web']);
+
+        $roleReportsBilingExtractView->givePermissionTo('view billing-extract');
     }
 }
