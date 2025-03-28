@@ -267,6 +267,7 @@ Route::middleware(['auth', 'verified'])->prefix('reports')->name('reports.')->gr
     // - Billing Extract Routes
     Route::name('billing-extract.')->controller(BillingExtractController::class)->group(function () {
         Route::match(['get', 'post'], '/billing-extract', 'index')->name('list')->can('view billing-extract');
+        Route::post('/billing-extract/export', 'export')->name('export')->can('view billing-extract');
     });
 });
 

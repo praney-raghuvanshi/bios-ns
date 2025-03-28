@@ -27,7 +27,7 @@ class FlightPerformanceReportController extends Controller
         $operationalYears = OperationalCalendar::active()->get();
         $zones = Zone::active()->get();
         $customers = Customer::active()->get();
-        $flights = Flight::active()->get();
+        $flights = Flight::active()->get(); // Need to update this - remove duplicate flight numbers
         $startWeeks = $endWeeks = $finalData = [];
         $customerToShow = $weeksToShow = null;
         if ($request->isMethod('post')) {
