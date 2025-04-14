@@ -129,14 +129,14 @@ $customizerHidden = 'customizer-hide';
 
             <div class="col-12 col-md-6">
                 <label class="form-label">STD</label>
-                <input type="time" name="departure_time" class="form-control" value="{{ old('departure_time') }}"
+                <input type="time" name="departure_time" class="form-control time24" value="{{ old('departure_time') }}"
                     id="std" disabled>
             </div>
 
             <div class="col-12 col-md-6">
                 <label class="form-label">STA</label>
-                <input type="time" name="arrival_time" class="form-control" value="{{ old('arrival_time') }}" id="sta"
-                    disabled>
+                <input type="time" name="arrival_time" class="form-control time24" value="{{ old('arrival_time') }}"
+                    id="sta" disabled>
             </div>
 
             <div class="col-12 col-md-6">

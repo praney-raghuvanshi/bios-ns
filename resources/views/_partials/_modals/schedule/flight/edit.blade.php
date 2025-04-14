@@ -13,34 +13,34 @@
 
                     <div class="col-12 col-md-6">
                         <label class="form-label" for="std">STD</label>
-                        <input type="time" name="std" class="form-control"
+                        <input type="time" name="std" class="form-control time24"
                             value="{{ old('std', $scheduleFlight->flight->departure_time) }}" disabled />
                     </div>
                     <div class="col-12 col-md-6">
                         <label class="form-label" for="sta">STA</label>
-                        <input type="time" name="sta" class="form-control"
+                        <input type="time" name="sta" class="form-control time24"
                             value="{{ old('sta', $scheduleFlight->flight->arrival_time) }}" disabled />
                     </div>
 
                     <div class="col-12 col-md-6">
                         <label class="form-label" for="etd">ETD</label>
-                        <input type="time" name="etd" class="form-control"
+                        <input type="time" name="etd" class="form-control time24"
                             value="{{ old('etd', $scheduleFlight->estimated_departure_time) }}" />
                     </div>
                     <div class="col-12 col-md-6">
                         <label class="form-label" for="eta">ETA</label>
-                        <input type="time" name="eta" class="form-control"
+                        <input type="time" name="eta" class="form-control time24"
                             value="{{ old('eta', $scheduleFlight->estimated_arrival_time) }}" />
                     </div>
 
                     <div class="col-12 col-md-6">
                         <label class="form-label" for="atd">ATD</label>
-                        <input type="time" name="atd" class="form-control"
+                        <input type="time" name="atd" class="form-control time24"
                             value="{{ old('atd', $scheduleFlight->actual_departure_time) }}" />
                     </div>
                     <div class="col-12 col-md-6">
                         <label class="form-label" for="ata">ATA</label>
-                        <input type="time" name="ata" class="form-control"
+                        <input type="time" name="ata" class="form-control time24"
                             value="{{ old('ata', $scheduleFlight->actual_arrival_time) }}" />
                     </div>
 

@@ -7,6 +7,7 @@
 <script src="{{ asset(mix('assets/vendor/libs/hammer/hammer.js')) }}"></script>
 <script src="{{ asset(mix('assets/vendor/libs/typeahead-js/typeahead.js')) }}"></script>
 <script src="{{ asset(mix('assets/vendor/js/menu.js')) }}"></script>
+<script src="{{ asset(mix('assets/vendor/libs/flatpickr/flatpickr.js')) }}"></script>
 
 <script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/2.2.2/js/dataTables.bootstrap5.min.js"></script>
@@ -133,6 +134,15 @@
                 console.log('Error: ' + error);
             }
         });
+    });
+
+    flatpickr(".time24", {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: "H:i",
+        time_24hr: true,
+        allowInput: true,
+        minuteIncrement: 1
     });
 });
 </script>

@@ -407,12 +407,12 @@ $customizerHidden = 'customizer-hide';
                             </div>
                             <div class="mb-2">
                                 <label class="form-label">STD:</label>
-                                <input type="time" name="i_departure_time" class="form-control"
+                                <input type="time" name="i_departure_time" class="form-control time24"
                                     value="{{ old('i_departure_time', $clonedFlight['inbound']['std'] ?? '') }}">
                             </div>
                             <div class="mb-2">
                                 <label class="form-label">STA:</label>
-                                <input type="time" name="i_arrival_time" class="form-control"
+                                <input type="time" name="i_arrival_time" class="form-control time24"
                                     value="{{ old('i_arrival_time', $clonedFlight['inbound']['sta'] ?? '') }}">
                             </div>
                             <div class="mb-2">
@@ -545,12 +545,12 @@ $customizerHidden = 'customizer-hide';
                             </div>
                             <div class="mb-2">
                                 <label class="form-label">STD:</label>
-                                <input type="time" name="o_departure_time" class="form-control"
+                                <input type="time" name="o_departure_time" class="form-control time24"
                                     value="{{ old('o_departure_time', $clonedFlight['outbound']['std'] ?? '') }}">
                             </div>
                             <div class="mb-2">
                                 <label class="form-label">STA:</label>
-                                <input type="time" name="o_arrival_time" class="form-control"
+                                <input type="time" name="o_arrival_time" class="form-control time24"
                                     value="{{ old('o_arrival_time', $clonedFlight['outbound']['sta'] ?? '') }}">
                             </div>
                             <div class="mb-2">
