@@ -47,11 +47,7 @@ $customizerHidden = 'customizer-hide';
         ],
         columnDefs: [
             {
-                type: 'string',
-                targets: [6, 7]
-            },
-            {
-                targets: [0, 6, 7], // Index of the "Actions" column
+                targets: [0], // Index of the "Actions" column
                 searchable: false,
                 orderable: true
             }
@@ -60,14 +56,14 @@ $customizerHidden = 'customizer-hide';
 
     $('#airports-table thead tr:eq(1) th').each(function (i) {
         var title = $(this).text();
-        if (![0, 6, 7].includes(i)) { // Exclude the "Actions" column from searching
+        if (![0].includes(i)) { // Exclude the "Actions" column from searching
           $(this).html('<input type="text" class="form-control" placeholder="Search ' + title + '" />');
         } else {
           $(this).html('<input type="text" class="form-control" disabled />');
         }
 
         $('input', this).on('keyup change', function () {
-            if (![0, 6, 7].includes(i) && dt.column(i).search() !== this.value) {
+            if (![0].includes(i) && dt.column(i).search() !== this.value) {
                 dt.column(i).search(this.value).draw();
             }
         });
@@ -112,14 +108,17 @@ $customizerHidden = 'customizer-hide';
                         country: {
                             required: true
                         },
-                        summer_difference: {
-                            required: true,
-                            number: true
+                        timezone: {
+                            required: true
                         },
-                        winter_difference: {
-                            required: true,
-                            number: true
-                        },
+                        // summer_difference: {
+                        //     required: true,
+                        //     number: true
+                        // },
+                        // winter_difference: {
+                        //     required: true,
+                        //     number: true
+                        // },
                         status: {
                             required: true
                         }
@@ -184,8 +183,9 @@ $customizerHidden = 'customizer-hide';
                         <th>Name</th>
                         <th>City</th>
                         <th>Country</th>
-                        <th>Summer Difference</th>
-                        <th>Winter Difference</th>
+                        <th>Timezone</th>
+                        {{-- <th>Summer Difference</th>
+                        <th>Winter Difference</th> --}}
                         <th>Status</th>
                         <th>Added By</th>
                     </tr>
@@ -217,8 +217,9 @@ $customizerHidden = 'customizer-hide';
                         <td>{{ $airport->name }}</td>
                         <td>{{ $airport->city }}</td>
                         <td>{{ $airport->country }}</td>
-                        <td>{{ $airport->summer_difference }}</td>
-                        <td>{{ $airport->winter_difference }}</td>
+                        <td>{{ $airport->timezone }}</td>
+                        {{-- <td>{{ $airport->summer_difference }}</td>
+                        <td>{{ $airport->winter_difference }}</td> --}}
                         <td>
                             @if ($airport->active)
                             <span class="badge bg-label-success me-1">Active</span>

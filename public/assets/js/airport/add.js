@@ -49,14 +49,17 @@ $(document).ready(function () {
       country: {
         required: true
       },
-      summer_difference: {
-        required: true,
-        number: true
+      timezone: {
+        required: true
       },
-      winter_difference: {
-        required: true,
-        number: true
-      },
+      // summer_difference: {
+      //   required: true,
+      //   number: true
+      // },
+      // winter_difference: {
+      //   required: true,
+      //   number: true
+      // },
       status: {
         required: true
       }

@@ -9,6 +9,7 @@ use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Builder;
+use Carbon\Carbon;
 
 class Flight extends Model
 {
@@ -31,6 +32,22 @@ class Flight extends Model
     public function getFormattedIdAttribute()
     {
         return '#' . Str::padLeft($this->attributes['id'], 6, '0');
+    }
+
+    public function getDepartureTimeLocalAttribute()
+    {
+        $departureTimeUtc = Carbon::parse($this->attributes['departure_time'])->tz('UTC');
+        $airportTimezone = $this->fromAirport->timezone;
+        $departureTimeLocal = $departureTimeUtc->copy()->tz($airportTimezone);
+        return $departureTimeLocal->format('H:i');
+    }
+
+    public function getArrivalTimeLocalAttribute()
+    {
+        $arrivalTimeUtc = Carbon::parse($this->attributes['arrival_time'])->tz('UTC');
+        $airportTimezone = $this->toAirport->timezone;
+        $arrivalTimeLocal = $arrivalTimeUtc->copy()->tz($airportTimezone);
+        return $arrivalTimeLocal->format('H:i');
     }
 
     /**

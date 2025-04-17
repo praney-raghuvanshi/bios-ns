@@ -83,7 +83,7 @@ class AircraftController extends Controller
     public function update(Request $request, Aircraft $aircraft)
     {
         $validator = Validator::make($request->all(), [
-            'name' => ['required', 'string', Rule::unique('aircrafts', 'name')->ignore($aircraft->id)],
+            'name' => ['required', 'string', Rule::unique('aircrafts', 'name')->ignore($aircraft->id)->whereNull('deleted_at')],
             'capacity' => ['nullable', 'numeric'],
             'status' => ['required']
         ]);

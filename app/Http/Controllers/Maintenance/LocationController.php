@@ -89,8 +89,8 @@ class LocationController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'zone' => ['required'],
-            'code' => ['required', 'string', Rule::unique('locations', 'code')->ignore($location->id)],
-            'name' => ['required', 'string', Rule::unique('locations', 'name')->ignore($location->id)],
+            'code' => ['required', 'string', Rule::unique('locations', 'code')->ignore($location->id)->whereNull('deleted_at')],
+            'name' => ['required', 'string', Rule::unique('locations', 'name')->ignore($location->id)->whereNull('deleted_at')],
             'status' => ['required']
         ]);
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Maintenance;
 
 use App\Http\Controllers\Controller;
 use App\Models\Airport;
+use DateTimeZone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -20,7 +21,9 @@ class AirportController extends Controller
     public function index()
     {
         $airports = Airport::all();
-        return view('maintenance.airport.list', compact('airports'));
+        $timezones = DateTimeZone::listIdentifiers();
+
+        return view('maintenance.airport.list', compact('airports', 'timezones'));
     }
 
     /**
@@ -41,8 +44,9 @@ class AirportController extends Controller
             'name' => ['required', 'string', 'unique:airports,name,NULL,id,deleted_at,NULL'],
             'city' => ['required', 'string'],
             'country' => ['required', 'string'],
-            'summer_difference' => ['required', 'numeric'],
-            'winter_difference' => ['required', 'numeric'],
+            'timezone' => ['required', 'string'],
+            // 'summer_difference' => ['required', 'numeric'],
+            // 'winter_difference' => ['required', 'numeric'],
             'status' => ['required']
         ]);
 
@@ -57,8 +61,9 @@ class AirportController extends Controller
                 'name' => Str::upper($request->input('name')),
                 'city' => Str::upper($request->input('city')),
                 'country' => Str::upper($request->input('country')),
-                'summer_difference' => $request->input('summer_difference'),
-                'winter_difference' => $request->input('winter_difference'),
+                'timezone' => $request->input('timezone'),
+                'summer_difference' => $request->input('summer_difference') ?? 0,
+                'winter_difference' => $request->input('winter_difference') ?? 0,
                 'active' => $request->input('status'),
                 'added_by' => Auth::id()
             ]);
@@ -82,7 +87,8 @@ class AirportController extends Controller
      */
     public function edit(Airport $airport)
     {
-        return view('_partials._modals.airport.edit', compact('airport'));
+        $timezones = DateTimeZone::listIdentifiers();
+        return view('_partials._modals.airport.edit', compact('airport', 'timezones'));
     }
 
     /**
@@ -91,12 +97,13 @@ class AirportController extends Controller
     public function update(Request $request, Airport $airport)
     {
         $validator = Validator::make($request->all(), [
-            'iata' => ['required', 'string', 'size:3', Rule::unique('airports', 'iata')->ignore($airport->id)],
-            'name' => ['required', 'string', Rule::unique('airports', 'name')->ignore($airport->id)],
+            'iata' => ['required', 'string', 'size:3', Rule::unique('airports', 'iata')->ignore($airport->id)->whereNull('deleted_at')],
+            'name' => ['required', 'string', Rule::unique('airports', 'name')->ignore($airport->id)->whereNull('deleted_at')],
             'city' => ['required', 'string'],
             'country' => ['required', 'string'],
-            'summer_difference' => ['required', 'numeric'],
-            'winter_difference' => ['required', 'numeric'],
+            'timezone' => ['required', 'string'],
+            // 'summer_difference' => ['required', 'numeric'],
+            // 'winter_difference' => ['required', 'numeric'],
             'status' => ['required']
         ]);
 
@@ -109,8 +116,9 @@ class AirportController extends Controller
             $airport->name = Str::upper($request->input('name'));
             $airport->city = Str::upper($request->input('city'));
             $airport->country = Str::upper($request->input('country'));
-            $airport->summer_difference = $request->input('summer_difference');
-            $airport->winter_difference = $request->input('winter_difference');
+            $airport->timezone = $request->input('timezone');
+            $airport->summer_difference = $request->input('summer_difference') ?? 0;
+            $airport->winter_difference = $request->input('winter_difference') ?? 0;
             $airport->active = $request->input('status');
             $airport->save();
         } catch (Exception $e) {

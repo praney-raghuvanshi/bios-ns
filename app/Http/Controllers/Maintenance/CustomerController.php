@@ -90,8 +90,8 @@ class CustomerController extends Controller
     public function update(Request $request, Customer $customer)
     {
         $validator = Validator::make($request->all(), [
-            'code' => ['required', 'string', Rule::unique('customers', 'code')->ignore($customer->id)],
-            'name' => ['required', 'string', Rule::unique('customers', 'name')->ignore($customer->id)],
+            'code' => ['required', 'string', Rule::unique('customers', 'code')->ignore($customer->id)->whereNull('deleted_at')],
+            'name' => ['required', 'string', Rule::unique('customers', 'name')->ignore($customer->id)->whereNull('deleted_at')],
             'status' => ['required']
         ]);
 

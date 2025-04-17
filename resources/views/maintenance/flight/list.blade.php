@@ -286,10 +286,13 @@ $customizerHidden = 'customizer-hide';
                             {{ $flightPair['inbound']['to'] ?? '' }}</td>
                         <td
                             class="@if(isset($flightPair['inbound']['active']) && $flightPair['inbound']['active']) bg-success-subtle @elseif(isset($flightPair['inbound']['active']) && !$flightPair['inbound']['active']) bg-danger-subtle @endif">
-                            {{ $flightPair['inbound']['std'] ?? '' }}</td>
+                            {{ $flightPair['inbound']['std'] ?? '' }} {{ isset($flightPair['inbound']['std_local']) ?
+                            '('.$flightPair['inbound']['std_local'].')' : ''
+                            }}</td>
                         <td
                             class="@if(isset($flightPair['inbound']['active']) && $flightPair['inbound']['active']) bg-success-subtle @elseif(isset($flightPair['inbound']['active']) && !$flightPair['inbound']['active']) bg-danger-subtle @endif">
-                            {{ $flightPair['inbound']['sta'] ?? '' }}</td>
+                            {{ $flightPair['inbound']['sta'] ?? '' }} {{ isset($flightPair['inbound']['sta']) ?
+                            '('.$flightPair['inbound']['sta_local'].')' : '' }}</td>
                         <td
                             class="@if(isset($flightPair['inbound']['active']) && $flightPair['inbound']['active']) bg-success-subtle @elseif(isset($flightPair['inbound']['active']) && !$flightPair['inbound']['active']) bg-danger-subtle @endif">
                             {{ $flightPair['inbound']['aircraft'] ?? '' }}</td>
@@ -308,10 +311,13 @@ $customizerHidden = 'customizer-hide';
                             {{ $flightPair['outbound']['to'] ?? '' }}</td>
                         <td
                             class="@if(isset($flightPair['outbound']['active']) && $flightPair['outbound']['active']) bg-success-subtle @elseif(isset($flightPair['outbound']['active']) && !$flightPair['outbound']['active']) bg-danger-subtle @endif">
-                            {{ $flightPair['outbound']['std'] ?? '' }}</td>
+                            {{ $flightPair['outbound']['std'] ?? '' }} {{ isset($flightPair['outbound']['std_local']) ?
+                            '('.$flightPair['outbound']['std_local'].')' : ''
+                            }}</td>
                         <td
                             class="@if(isset($flightPair['outbound']['active']) && $flightPair['outbound']['active']) bg-success-subtle @elseif(isset($flightPair['outbound']['active']) && !$flightPair['outbound']['active']) bg-danger-subtle @endif">
-                            {{ $flightPair['outbound']['sta'] ?? '' }}</td>
+                            {{ $flightPair['outbound']['sta'] ?? '' }} {{ isset($flightPair['outbound']['sta']) ?
+                            '('.$flightPair['outbound']['sta_local'].')' : '' }}</td>
                         <td
                             class="@if(isset($flightPair['outbound']['active']) && $flightPair['outbound']['active']) bg-success-subtle @elseif(isset($flightPair['outbound']['active']) && !$flightPair['outbound']['active']) bg-danger-subtle @endif">
                             {{ $flightPair['outbound']['aircraft'] ?? '' }}</td>

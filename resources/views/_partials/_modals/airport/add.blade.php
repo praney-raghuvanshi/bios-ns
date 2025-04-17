@@ -28,6 +28,15 @@
                         <input type="text" name="country" class="form-control" value="{{ old('country') }}" />
                     </div>
                     <div class="col-12 col-md-6">
+                        <label class="form-label" for="timezone">Timezone</label>
+                        <select name="timezone" class="select2 form-select" data-allow-clear="true">
+                            <option value="">-- Select Timezone --</option>
+                            @foreach ($timezones as $tz)
+                            <option value="{{$tz}}" @if(old('timezone')===$tz) selected @endif>{{$tz}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    {{-- <div class="col-12 col-md-6">
                         <label class="form-label" for="summer_difference">Summer Difference</label>
                         <input type="number" name="summer_difference" class="form-control"
                             value="{{ old('summer_difference') }}" />
@@ -36,7 +45,7 @@
                         <label class="form-label" for="winter_difference">Winter Difference</label>
                         <input type="number" name="winter_difference" class="form-control"
                             value="{{ old('winter_difference') }}" />
-                    </div>
+                    </div> --}}
                     <div class="col-12 col-md-6">
                         <label class="form-label" for="status">Status</label>
                         <select name="status" class="select2 form-select" data-allow-clear="true">

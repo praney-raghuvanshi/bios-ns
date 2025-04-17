@@ -98,6 +98,50 @@ class ScheduleFlight extends Model
         return Carbon::createFromTime(0, 0, 0)->addMinutes(abs($this->arrival_time_diff))->format('H:i');
     }
 
+    public function getEtdLocalAttribute()
+    {
+        if (is_null($this->attributes['estimated_departure_time'])) {
+            return null;
+        }
+        $EtdUtc = Carbon::parse($this->attributes['estimated_departure_time'])->tz('UTC');
+        $airportTimezone = $this->flight->fromAirport->timezone;
+        $EtdLocal = $EtdUtc->copy()->tz($airportTimezone);
+        return $EtdLocal->format('H:i');
+    }
+
+    public function getAtdLocalAttribute()
+    {
+        if (is_null($this->attributes['actual_departure_time'])) {
+            return null;
+        }
+        $AtdUtc = Carbon::parse($this->attributes['actual_departure_time'])->tz('UTC');
+        $airportTimezone = $this->flight->fromAirport->timezone;
+        $AtdLocal = $AtdUtc->copy()->tz($airportTimezone);
+        return $AtdLocal->format('H:i');
+    }
+
+    public function getEtaLocalAttribute()
+    {
+        if (is_null($this->attributes['estimated_arrival_time'])) {
+            return null;
+        }
+        $EtaUtc = Carbon::parse($this->attributes['estimated_arrival_time'])->tz('UTC');
+        $airportTimezone = $this->flight->toAirport->timezone;
+        $EtaLocal = $EtaUtc->copy()->tz($airportTimezone);
+        return $EtaLocal->format('H:i');
+    }
+
+    public function getAtaLocalAttribute()
+    {
+        if (is_null($this->attributes['actual_arrival_time'])) {
+            return null;
+        }
+        $AtaUtc = Carbon::parse($this->attributes['actual_arrival_time'])->tz('UTC');
+        $airportTimezone = $this->flight->toAirport->timezone;
+        $AtaLocal = $AtaUtc->copy()->tz($airportTimezone);
+        return $AtaLocal->format('H:i');
+    }
+
     /**
      * Scope a query to only include active schedule flights.
      */

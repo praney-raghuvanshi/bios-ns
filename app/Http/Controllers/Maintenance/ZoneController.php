@@ -83,8 +83,8 @@ class ZoneController extends Controller
     public function update(Request $request, Zone $zone)
     {
         $validator = Validator::make($request->all(), [
-            'code' => ['required', 'string', Rule::unique('zones', 'code')->ignore($zone->id)],
-            'name' => ['required', 'string', Rule::unique('zones', 'name')->ignore($zone->id)],
+            'code' => ['required', 'string', Rule::unique('zones', 'code')->ignore($zone->id)->whereNull('deleted_at')],
+            'name' => ['required', 'string', Rule::unique('zones', 'name')->ignore($zone->id)->whereNull('deleted_at')],
             'status' => ['required']
         ]);
 

@@ -111,8 +111,10 @@ $customizerHidden = 'customizer-hide';
                         <td>{{ $processedFlights['inbound']['flight_number'] }}</td>
                         <td>{{ $processedFlights['inbound']['from'] }}</td>
                         <td>{{ $processedFlights['inbound']['to'] }}</td>
-                        <td>{{ $processedFlights['inbound']['std'] }}</td>
-                        <td>{{ $processedFlights['inbound']['sta'] }}</td>
+                        <td>{{ $processedFlights['inbound']['std'] }} ({{ $processedFlights['inbound']['std_local'] }})
+                        </td>
+                        <td>{{ $processedFlights['inbound']['sta'] }} ({{ $processedFlights['inbound']['sta_local'] }})
+                        </td>
                         <td>{{ $processedFlights['inbound']['aircraft'] }}</td>
                         <td>{{ $processedFlights['inbound']['capacity'] }}</td>
                         <td>
@@ -211,8 +213,10 @@ $customizerHidden = 'customizer-hide';
                         <td>{{ $processedFlights['outbound']['flight_number'] }}</td>
                         <td>{{ $processedFlights['outbound']['from'] }}</td>
                         <td>{{ $processedFlights['outbound']['to'] }}</td>
-                        <td>{{ $processedFlights['outbound']['std'] }}</td>
-                        <td>{{ $processedFlights['outbound']['sta'] }}</td>
+                        <td>{{ $processedFlights['outbound']['std'] }} ({{ $processedFlights['outbound']['std_local']
+                            }})</td>
+                        <td>{{ $processedFlights['outbound']['sta'] }} ({{ $processedFlights['outbound']['sta_local']
+                            }})</td>
                         <td>{{ $processedFlights['outbound']['aircraft'] }}</td>
                         <td>{{ $processedFlights['outbound']['capacity'] }}</td>
                         <td>

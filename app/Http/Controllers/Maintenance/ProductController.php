@@ -83,8 +83,8 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $validator = Validator::make($request->all(), [
-            'code' => ['required', 'string', Rule::unique('products', 'code')->ignore($product->id)],
-            'name' => ['required', 'string', Rule::unique('products', 'name')->ignore($product->id)],
+            'code' => ['required', 'string', Rule::unique('products', 'code')->ignore($product->id)->whereNull('deleted_at')],
+            'name' => ['required', 'string', Rule::unique('products', 'name')->ignore($product->id)->whereNull('deleted_at')],
             'status' => ['required']
         ]);
 

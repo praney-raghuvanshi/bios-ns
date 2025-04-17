@@ -121,9 +121,12 @@ $customizerHidden = 'customizer-hide';
                     <td class="p-1">{{ $scheduleFlight->flight->fromAirport->iata ?? '' }}</td>
                     <td class="p-1">{{ $scheduleFlight->flight->toAirport->iata ?? '' }}</td>
                     <td class="p-1">{{ \Carbon\Carbon::parse($scheduleFlight->flight->departure_time)->format('H:i') }}
+                        <br>({{ $scheduleFlight->flight->departure_time_local }})
                     </td>
-                    <td class="p-1">{{ $scheduleFlight->formatted_etd }}</td>
-                    <td class="p-1">{{ $scheduleFlight->formatted_atd }}</td>
+                    <td class="p-1">{{ $scheduleFlight->formatted_etd }} <br> {{ !is_null($scheduleFlight->etd_local) ?
+                        '('.$scheduleFlight->etd_local.')' : '' }}</td>
+                    <td class="p-1">{{ $scheduleFlight->formatted_atd }} <br> {{ !is_null($scheduleFlight->atd_local) ?
+                        '('.$scheduleFlight->atd_local.')' : '' }}</td>
                     <td class="p-1">
                         @if(!is_null($scheduleFlight->departure_time_diff))
                         @if($scheduleFlight->departure_time_diff >= 0)
@@ -134,9 +137,13 @@ $customizerHidden = 'customizer-hide';
                         @endif
                     </td>
                     <td class="p-1">{{ \Carbon\Carbon::parse($scheduleFlight->flight->arrival_time)->format('H:i') }}
+                        <br>
+                        ({{ $scheduleFlight->flight->arrival_time_local }})
                     </td>
-                    <td class="p-1">{{ $scheduleFlight->formatted_eta }}</td>
-                    <td class="p-1">{{ $scheduleFlight->formatted_ata }}</td>
+                    <td class="p-1">{{ $scheduleFlight->formatted_eta }} <br> {{ !is_null($scheduleFlight->eta_local) ?
+                        '('.$scheduleFlight->eta_local.')' : '' }}</td>
+                    <td class="p-1">{{ $scheduleFlight->formatted_ata }} <br> {{ !is_null($scheduleFlight->ata_local) ?
+                        '('.$scheduleFlight->ata_local.')' : '' }}</td>
                     <td class="p-1">
                         @if(!is_null($scheduleFlight->arrival_time_diff))
                         @if($scheduleFlight->arrival_time_diff >= 0)
