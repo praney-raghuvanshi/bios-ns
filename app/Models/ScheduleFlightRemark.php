@@ -51,6 +51,11 @@ class ScheduleFlightRemark extends Model
         return $this->belongsTo(Customer::class, 'customer_id');
     }
 
+    public function auditLogs()
+    {
+        return $this->morphMany(AuditLog::class, 'model');
+    }
+
     public function addedByUser()
     {
         return $this->belongsTo(User::class, 'added_by');

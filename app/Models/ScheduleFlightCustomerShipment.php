@@ -68,6 +68,11 @@ class ScheduleFlightCustomerShipment extends Model
         return $this->belongsTo(Airport::class, 'destination', 'id');
     }
 
+    public function auditLogs()
+    {
+        return $this->morphMany(AuditLog::class, 'model');
+    }
+
     public function addedByUser()
     {
         return $this->belongsTo(User::class, 'added_by');

@@ -51,6 +51,11 @@ class ScheduleFlightCustomerProduct extends Model
         return $this->belongsTo(Product::class, 'product_id');
     }
 
+    public function auditLogs()
+    {
+        return $this->morphMany(AuditLog::class, 'model');
+    }
+
     public function addedByUser()
     {
         return $this->belongsTo(User::class, 'added_by');

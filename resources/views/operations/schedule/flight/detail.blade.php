@@ -394,6 +394,46 @@ $customizerHidden = 'customizer-hide';
     </div>
 </div>
 
+@can('view schedules')
+<div class="card shadow-sm rounded border-0 mt-2">
+    <div class="card-header bg-label-primary d-flex justify-content-between align-items-center">
+        <h5 class="card-title mb-0">📜 Audit Trail</h5>
+    </div>
+
+    <div class="card-body p-0">
+        @if($logs->isEmpty())
+        <div class="p-3 text-center text-muted">No audit logs available.</div>
+        @else
+        <ul class="list-group list-group-flush">
+            @foreach($logs as $log)
+            @if($log->description)
+            <li class="list-group-item py-2">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="tooltip-info"
+                            title="{{ $log->description }}">
+                            {{ \Illuminate\Support\Str::limit($log->description, 130) }}
+                        </span>
+                    </div>
+                    <div>
+                        <span class="text-primary">
+                            <i class="ti ti-user me-1"></i>
+                            {{ optional($log->user)->name ?? 'System' }}</span>
+                        <small class="text-muted">
+                            <i class="ti ti-calendar-time mx-2 me-1"></i>
+                            {{ \Carbon\Carbon::parse($log->performed_at)->format('d M Y, H:i') }}
+                        </small>
+                    </div>
+                </div>
+            </li>
+            @endif
+            @endforeach
+        </ul>
+        @endif
+    </div>
+</div>
+@endcan
+
 @include('_partials/_modals/schedule/flight/edit')
 
 @include('_partials/_modals/schedule/flight/customer/add')

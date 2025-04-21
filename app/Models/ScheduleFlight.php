@@ -180,6 +180,11 @@ class ScheduleFlight extends Model
         return $this->hasMany(ScheduleFlightEmail::class, 'schedule_flight_id', 'id');
     }
 
+    public function auditLogs()
+    {
+        return $this->morphMany(AuditLog::class, 'model');
+    }
+
     public function addedByUser()
     {
         return $this->belongsTo(User::class, 'added_by');

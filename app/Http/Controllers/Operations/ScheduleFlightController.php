@@ -43,7 +43,7 @@ class ScheduleFlightController extends Controller
     public function show(Schedule $schedule, ScheduleFlight $scheduleFlight)
     {
         // Eager load customers associated with the schedule flight
-        $scheduleFlight->load(['scheduleFlightCustomers.customer', 'scheduleFlightRemarks.customer']);
+        $scheduleFlight->load(['auditLogs', 'scheduleFlightCustomers.customer', 'scheduleFlightRemarks.customer', 'scheduleFlightCustomers.auditLogs', 'scheduleFlightCustomers.scheduleFlightCustomerProducts.auditLogs', 'scheduleFlightCustomers.scheduleFlightCustomerShipments.auditLogs', 'scheduleFlightEmails.auditLogs', 'scheduleFlightRemarks.auditLogs']);
         $customers = Customer::active()->get();
 
         $dfrRemarks = $fprRemarks = [];
@@ -54,7 +54,34 @@ class ScheduleFlightController extends Controller
                 $fprRemarks[] = $remark;
             }
         }
-        return view('operations.schedule.flight.detail', compact('schedule', 'scheduleFlight', 'customers', 'dfrRemarks', 'fprRemarks'));
+
+        $logs = collect();
+
+        $logs = $logs->merge($scheduleFlight->auditLogs);
+
+        foreach ($scheduleFlight->scheduleFlightCustomers as $customer) {
+            $logs = $logs->merge($customer->auditLogs);
+
+            foreach ($customer->scheduleFlightCustomerProducts as $product) {
+                $logs = $logs->merge($product->auditLogs);
+            }
+
+            foreach ($customer->scheduleFlightCustomerShipments as $shipment) {
+                $logs = $logs->merge($shipment->auditLogs);
+            }
+        }
+
+        foreach ($scheduleFlight->scheduleFlightEmails as $email) {
+            $logs = $logs->merge($email->auditLogs);
+        }
+        foreach ($scheduleFlight->scheduleFlightRemarks as $remark) {
+            $logs = $logs->merge($remark->auditLogs);
+        }
+
+        // Sort logs by time
+        $logs = $logs->sortByDesc('performed_at');
+
+        return view('operations.schedule.flight.detail', compact('schedule', 'scheduleFlight', 'customers', 'dfrRemarks', 'fprRemarks', 'logs'));
     }
 
     /**
@@ -73,23 +100,70 @@ class ScheduleFlightController extends Controller
         try {
 
             $etd = $request->input('etd');
+            $etd = Carbon::createFromFormat('H:i', $etd)->format('H:i:s');
             $eta = $request->input('eta');
+            $eta = Carbon::createFromFormat('H:i', $eta)->format('H:i:s');
             $atd = $request->input('atd');
+            $atd = Carbon::createFromFormat('H:i', $atd)->format('H:i:s');
             $ata = $request->input('ata');
+            $ata = Carbon::createFromFormat('H:i', $ata)->format('H:i:s');
 
             DB::beginTransaction();
 
-            $scheduleFlight->estimated_departure_time = $etd;
-            $scheduleFlight->actual_departure_time = $atd;
-            if ($atd && $etd) {
-                $scheduleFlight->departure_time_diff = Carbon::parse($atd)->diffInMinutes(Carbon::parse($etd), false);
+            // $scheduleFlight->estimated_departure_time = $etd;
+            // $scheduleFlight->actual_departure_time = $atd;
+            // if ($atd && $etd) {
+            //     $scheduleFlight->departure_time_diff = Carbon::parse($atd)->diffInMinutes(Carbon::parse($etd), false);
+            // }
+            // $scheduleFlight->estimated_arrival_time = $eta;
+            // $scheduleFlight->actual_arrival_time = $ata;
+            // if ($ata && $eta) {
+            //     $scheduleFlight->arrival_time_diff = Carbon::parse($ata)->diffInMinutes(Carbon::parse($eta), false);
+            // }
+            // $scheduleFlight->save();
+
+            $original = $scheduleFlight->getOriginal(); // store current values
+            $hasChanges = false;
+
+            if ($etd && $etd != $original['estimated_departure_time']) {
+                $scheduleFlight->estimated_departure_time = $etd;
+                $hasChanges = true;
             }
-            $scheduleFlight->estimated_arrival_time = $eta;
-            $scheduleFlight->actual_arrival_time = $ata;
-            if ($ata && $eta) {
-                $scheduleFlight->arrival_time_diff = Carbon::parse($ata)->diffInMinutes(Carbon::parse($eta), false);
+
+            if ($atd && $atd != $original['actual_departure_time']) {
+                $scheduleFlight->actual_departure_time = $atd;
+                $hasChanges = true;
             }
-            $scheduleFlight->save();
+
+            if ($etd && $atd) {
+                $departureDiff = Carbon::parse($atd)->diffInMinutes(Carbon::parse($etd), false);
+                if ($departureDiff != $original['departure_time_diff']) {
+                    $scheduleFlight->departure_time_diff = $departureDiff;
+                    $hasChanges = true;
+                }
+            }
+
+            if ($eta && $eta != $original['estimated_arrival_time']) {
+                $scheduleFlight->estimated_arrival_time = $eta;
+                $hasChanges = true;
+            }
+
+            if ($ata && $ata != $original['actual_arrival_time']) {
+                $scheduleFlight->actual_arrival_time = $ata;
+                $hasChanges = true;
+            }
+
+            if ($eta && $ata) {
+                $arrivalDiff = Carbon::parse($ata)->diffInMinutes(Carbon::parse($eta), false);
+                if ($arrivalDiff != $original['arrival_time_diff']) {
+                    $scheduleFlight->arrival_time_diff = $arrivalDiff;
+                    $hasChanges = true;
+                }
+            }
+
+            if ($hasChanges) {
+                $scheduleFlight->save();
+            }
 
             DB::commit();
         } catch (Exception $e) {
