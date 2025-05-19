@@ -80,6 +80,22 @@ $customizerHidden = 'customizer-hide';
                 $('#editAirport .modal-form').html(response);
                 $('#editAirport').show();
 
+                const select2 = $('.select2');
+
+                if (select2.length) {
+                    select2
+                    .each(function () {
+                        var $this = $(this);
+                        $this.wrap('<div class="position-relative"></div>').select2({
+                        placeholder: 'Select value',
+                        dropdownParent: $this.parent()
+                        });
+                    })
+                    .on('change', function () {
+                        $(this).valid();
+                    });
+                }
+
                 // Initialize jQuery Validation
                 $('#editAirportForm').validate({
                     errorElement: 'div',

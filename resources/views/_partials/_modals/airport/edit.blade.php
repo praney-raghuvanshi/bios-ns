@@ -23,10 +23,10 @@
     </div>
     <div class="col-12 col-md-6">
         <label class="form-label" for="timezone">Timezone</label>
-        <select name="timezone" class="select2 form-select" data-allow-clear="true">
+        <select name="timezone" class="select2 form-select" aria-label="timezone" data-allow-clear="true">
             <option value="">-- Select Timezone --</option>
             @foreach ($timezones as $tz)
-            <option value="{{$tz}}" @if(old('timezone', $airport->airport)===$tz) selected @endif>{{$tz}}</option>
+            <option value="{{$tz}}" @if(old('timezone', $airport->timezone)===$tz) selected @endif>{{$tz}}</option>
             @endforeach
         </select>
     </div>
