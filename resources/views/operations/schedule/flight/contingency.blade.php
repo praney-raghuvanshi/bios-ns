@@ -145,7 +145,7 @@ $customizerHidden = 'customizer-hide';
                     <option value="">-- Select Aircraft --</option>
                     @foreach ($aircrafts as $aircraft)
                     <option value="{{ $aircraft->id }}" @if(old('aircraft')==$aircraft->id) selected
-                        @endif >{{ $aircraft->name }} ({{ $aircraft->capacity
+                        @endif >{{ $aircraft->registration }} ({{ $aircraft->aircraftType->capacity ?? 0
                         }})
                     </option>
                     @endforeach

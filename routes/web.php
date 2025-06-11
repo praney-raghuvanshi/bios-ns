@@ -4,6 +4,7 @@ use App\Http\Controllers\Administration\ActivityLogController;
 use App\Http\Controllers\Administration\GroupController;
 use App\Http\Controllers\Administration\UserController;
 use App\Http\Controllers\Maintenance\AircraftController;
+use App\Http\Controllers\Maintenance\AircraftTypeController;
 use App\Http\Controllers\Maintenance\AirportController;
 use App\Http\Controllers\Maintenance\CustomerController;
 use App\Http\Controllers\Maintenance\CustomerEmailController;
@@ -150,6 +151,15 @@ Route::middleware(['auth', 'verified'])->prefix('maintenance')->name('maintenanc
         // Route::get('/operational-calendars/{operationalCalendar}/edit', 'edit')->name('edit')->can('edit operational-calendars');
         // Route::post('/operational-calendars/{operationalCalendar}/update', 'update')->name('update')->can('edit operational-calendars');
         Route::delete('/operational-calendars/{operationalCalendar}', 'destroy')->name('destroy')->can('delete operational-calendars');
+    });
+
+    // - Aircraft Type Routes
+    Route::name('aircraft-type.')->controller(AircraftTypeController::class)->group(function () {
+        Route::get('/aircraft-types', 'index')->name('list')->can('view aircrafts');
+        Route::post('/aircraft-types', 'store')->name('store')->can('add aircrafts');
+        Route::get('/aircraft-types/{aircraftType}/edit', 'edit')->name('edit')->can('edit aircrafts');
+        Route::post('/aircraft-types/{aircraftType}/update', 'update')->name('update')->can('edit aircrafts');
+        Route::delete('/aircraft-types/{aircraftType}', 'destroy')->name('destroy')->can('delete aircrafts');
     });
 
     // - Aircraft Routes

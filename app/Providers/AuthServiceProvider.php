@@ -26,6 +26,10 @@ class AuthServiceProvider extends ServiceProvider
 
         // Extend permission logic to check group-based permissions
         Gate::before(function (User $user, string $permission) {
+            if ($permission === 'view aircraft-types' || $permission === 'add aircraft-types' || $permission === 'edit aircraft-types' || $permission === 'delete aircraft-types') {
+                // Allow access to aircraft types if the user has the permission or belongs to a group with the permission 'Aircrafts'
+                $permission = str_replace('aircraft-types', 'aircrafts', $permission);
+            }
             // If user has direct permission, allow
             if ($user->hasPermissionTo($permission)) {
                 return true;

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Operations;
 
 use App\Http\Controllers\Controller;
+use App\Models\Aircraft;
+use App\Models\AircraftType;
 use App\Models\Customer;
 use App\Models\Schedule;
 use App\Models\ScheduleFlight;
@@ -45,6 +47,8 @@ class ScheduleFlightController extends Controller
         // Eager load customers associated with the schedule flight
         $scheduleFlight->load(['auditLogs', 'scheduleFlightCustomers.customer', 'scheduleFlightRemarks.customer', 'scheduleFlightCustomers.auditLogs', 'scheduleFlightCustomers.scheduleFlightCustomerProducts.auditLogs', 'scheduleFlightCustomers.scheduleFlightCustomerShipments.auditLogs', 'scheduleFlightEmails.auditLogs', 'scheduleFlightRemarks.auditLogs']);
         $customers = Customer::active()->get();
+        $aircraftTypes = AircraftType::active()->orderBy('name')->get();
+        $aircrafts = Aircraft::active()->orderBy('registration')->get();
 
         $dfrRemarks = $fprRemarks = [];
         foreach ($scheduleFlight->scheduleFlightRemarks as $remark) {
@@ -81,7 +85,7 @@ class ScheduleFlightController extends Controller
         // Sort logs by time
         $logs = $logs->sortByDesc('performed_at');
 
-        return view('operations.schedule.flight.detail', compact('schedule', 'scheduleFlight', 'customers', 'dfrRemarks', 'fprRemarks', 'logs'));
+        return view('operations.schedule.flight.detail', compact('schedule', 'scheduleFlight', 'customers', 'dfrRemarks', 'fprRemarks', 'logs', 'aircraftTypes', 'aircrafts'));
     }
 
     /**
@@ -100,37 +104,38 @@ class ScheduleFlightController extends Controller
         try {
 
             $etd = $request->input('etd');
-            $etd = Carbon::createFromFormat('H:i', $etd)->format('H:i:s');
+            if (!is_null($etd)) {
+                $etd = Carbon::createFromFormat('H:i', $etd)->format('H:i:s');
+            }
+
             $eta = $request->input('eta');
-            $eta = Carbon::createFromFormat('H:i', $eta)->format('H:i:s');
+            if (!is_null($eta)) {
+                $eta = Carbon::createFromFormat('H:i', $eta)->format('H:i:s');
+            }
+
             $atd = $request->input('atd');
-            $atd = Carbon::createFromFormat('H:i', $atd)->format('H:i:s');
+            if (!is_null($atd)) {
+                $atd = Carbon::createFromFormat('H:i', $atd)->format('H:i:s');
+            }
+
             $ata = $request->input('ata');
-            $ata = Carbon::createFromFormat('H:i', $ata)->format('H:i:s');
+            if (!is_null($ata)) {
+                $ata = Carbon::createFromFormat('H:i', $ata)->format('H:i:s');
+            }
+
+            $aircraft = $request->input('aircraft_registration');
 
             DB::beginTransaction();
-
-            // $scheduleFlight->estimated_departure_time = $etd;
-            // $scheduleFlight->actual_departure_time = $atd;
-            // if ($atd && $etd) {
-            //     $scheduleFlight->departure_time_diff = Carbon::parse($atd)->diffInMinutes(Carbon::parse($etd), false);
-            // }
-            // $scheduleFlight->estimated_arrival_time = $eta;
-            // $scheduleFlight->actual_arrival_time = $ata;
-            // if ($ata && $eta) {
-            //     $scheduleFlight->arrival_time_diff = Carbon::parse($ata)->diffInMinutes(Carbon::parse($eta), false);
-            // }
-            // $scheduleFlight->save();
 
             $original = $scheduleFlight->getOriginal(); // store current values
             $hasChanges = false;
 
-            if ($etd && $etd != $original['estimated_departure_time']) {
+            if ($etd != $original['estimated_departure_time']) {
                 $scheduleFlight->estimated_departure_time = $etd;
                 $hasChanges = true;
             }
 
-            if ($atd && $atd != $original['actual_departure_time']) {
+            if ($atd != $original['actual_departure_time']) {
                 $scheduleFlight->actual_departure_time = $atd;
                 $hasChanges = true;
             }
@@ -143,12 +148,12 @@ class ScheduleFlightController extends Controller
                 }
             }
 
-            if ($eta && $eta != $original['estimated_arrival_time']) {
+            if ($eta != $original['estimated_arrival_time']) {
                 $scheduleFlight->estimated_arrival_time = $eta;
                 $hasChanges = true;
             }
 
-            if ($ata && $ata != $original['actual_arrival_time']) {
+            if ($ata != $original['actual_arrival_time']) {
                 $scheduleFlight->actual_arrival_time = $ata;
                 $hasChanges = true;
             }
@@ -159,6 +164,11 @@ class ScheduleFlightController extends Controller
                     $scheduleFlight->arrival_time_diff = $arrivalDiff;
                     $hasChanges = true;
                 }
+            }
+
+            if ($aircraft != $scheduleFlight->flight->aircraft_id) {
+                $scheduleFlight->flight->aircraft_id = $aircraft;
+                $scheduleFlight->flight->save();
             }
 
             if ($hasChanges) {

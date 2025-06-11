@@ -44,6 +44,30 @@
                             value="{{ old('ata', $scheduleFlight->actual_arrival_time) }}" />
                     </div>
 
+                    <div class="col-12 col-md-6">
+                        <label class="form-label" for="aircraft_type">Aircraft Type</label>
+                        <select name="aircraft_type" class="select2 form-select" data-allow-clear="true" disabled>
+                            <option value="">-- Select Aircraft Type --</option>
+                            @foreach ($aircraftTypes as $aircraftType)
+                            <option value="{{$aircraftType->id}}" @if(old('aircraft_type', $scheduleFlight->
+                                flight->aircraft->aircraftType->id)===$aircraftType->id) selected
+                                @endif>{{ $aircraftType->formatted_name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <label class="form-label" for="aircraft_registration">Aircraft Registration</label>
+                        <select name="aircraft_registration" class="select2 form-select" data-allow-clear="true">
+                            <option value="">-- Select Aircraft --</option>
+                            @foreach ($aircrafts as $aircraft)
+                            <option value="{{$aircraft->id}}" @if(old('aircraft_registration', $scheduleFlight->
+                                flight->aircraft_id)===$aircraft->id) selected
+                                @endif>{{ $aircraft->registration }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
                     <div class="col-12 text-center">
                         <button type="submit" class="btn btn-primary me-sm-3 me-1">Submit</button>
                         <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal"

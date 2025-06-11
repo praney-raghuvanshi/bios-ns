@@ -1,30 +1,36 @@
-<!-- Add Aircraft Modal -->
-<div class="modal fade" id="addAircraft" tabindex="-1" aria-hidden="true">
+<!-- Add Aircraft Type Modal -->
+<div class="modal fade" id="addAircraftType" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-simple">
         <div class="modal-content p-3 p-md-5">
             <div class="modal-body">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 <div class="text-center mb-4">
-                    <h3 class="mb-2">Add Aircraft</h3>
+                    <h3 class="mb-2">Add Aircraft Type</h3>
                 </div>
-                <form id="addAircraftForm" class="row g-3" method="POST"
-                    action="{{ route('maintenance.aircraft.store') }}">
+                <form id="addAircraftTypeForm" class="row g-3" method="POST"
+                    action="{{ route('maintenance.aircraft-type.store') }}">
                     @csrf
 
                     <div class="col-12 col-md-6">
-                        <label class="form-label" for="aircraft_type">Aircraft Type</label>
-                        <select name="aircraft_type" class="select2 form-select" data-allow-clear="true">
-                            <option value="">-- Select Aircraft Type --</option>
-                            @foreach ($aircraftTypes as $aircraftType)
-                            <option value="{{$aircraftType->id}}" @if(old('aircraft_type')===$aircraftType->id) selected
-                                @endif>{{ $aircraftType->formatted_name }}</option>
+                        <label class="form-label" for="aircraft_manufacturer">Aircraft Manufacturer</label>
+                        <select name="aircraft_manufacturer" class="select2 form-select" data-allow-clear="true">
+                            <option value="">-- Select Aircraft Manufacturer --</option>
+                            @foreach ($aircraftManufacturers as $aircraftManufacturer)
+                            <option value="{{$aircraftManufacturer->id}}"
+                                @if(old('aircraft_manufacturer')===$aircraftManufacturer->id) selected
+                                @endif>{{ $aircraftManufacturer->name }}</option>
                             @endforeach
                         </select>
                     </div>
 
                     <div class="col-12 col-md-6">
-                        <label class="form-label" for="registration">Registration</label>
-                        <input type="text" name="registration" class="form-control" value="{{ old('registration') }}" />
+                        <label class="form-label" for="name">Name</label>
+                        <input type="text" name="name" class="form-control" value="{{ old('name') }}" />
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <label class="form-label" for="capacity">Capacity</label>
+                        <input type="number" name="capacity" class="form-control" value="{{ old('capacity') }}" />
                     </div>
 
                     <div class="col-12 col-md-6">
@@ -46,4 +52,4 @@
         </div>
     </div>
 </div>
-<!--/ Add Aircraft Modal -->
+<!--/ Add Aircraft Type Modal -->

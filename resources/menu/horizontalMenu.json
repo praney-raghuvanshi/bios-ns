@@ -79,6 +79,12 @@
           "slug": "operational-calendars"
         },
         {
+          "url": "/maintenance/aircraft-types",
+          "name": "Aircraft Types",
+          "icon": "menu-icon tf-icons ti ti-plane",
+          "slug": "aircraft-types"
+        },
+        {
           "url": "/maintenance/aircrafts",
           "name": "Aircrafts",
           "icon": "menu-icon tf-icons ti ti-plane",

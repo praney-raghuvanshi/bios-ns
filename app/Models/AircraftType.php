@@ -10,22 +10,22 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Builder;
 
-class Aircraft extends Model
+class AircraftType extends Model
 {
     use HasFactory, SoftDeletes, LogsActivity;
 
-    protected $table = 'aircrafts';
+    protected $table = 'aircraft_types';
 
     protected $guarded = [];
 
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->useLogName('Aircraft')
+            ->useLogName('Aircraft Type')
             ->logAll()
             ->logExcept(['created_at', 'updated_at', 'deleted_at'])
             ->dontLogIfAttributesChangedOnly(['updated_at'])
-            ->setDescriptionForEvent(fn(string $eventName) => "Aircraft {$eventName}")
+            ->setDescriptionForEvent(fn(string $eventName) => "Aircraft Type {$eventName}")
             ->logOnlyDirty(true)
             ->dontSubmitEmptyLogs();
     }
@@ -33,6 +33,11 @@ class Aircraft extends Model
     public function getFormattedIdAttribute()
     {
         return '#' . Str::padLeft($this->attributes['id'], 6, '0');
+    }
+
+    public function getFormattedNameAttribute()
+    {
+        return $this?->aircraftManufacturer?->name . ' ' . $this->attributes['name'];
     }
 
     /**
@@ -43,9 +48,9 @@ class Aircraft extends Model
         $query->where('active', 1);
     }
 
-    public function aircraftType()
+    public function aircraftManufacturer()
     {
-        return $this->belongsTo(AircraftType::class, 'aircraft_type_id');
+        return $this->belongsTo(AircraftManufacturer::class, 'aircraft_manufacturer_id');
     }
 
     public function addedByUser()

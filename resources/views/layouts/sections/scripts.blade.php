@@ -137,16 +137,6 @@
     });
 
     document.querySelectorAll(".time24").forEach(input => {
-        input.addEventListener("input", function (e) {
-            const val = e.target.value;
-
-            // Auto-format if user types 4 digits like "1412"
-            if (/^\d{4}$/.test(val)) {
-                const hours = val.slice(0, 2);
-                const minutes = val.slice(2, 4);
-                e.target.value = `${hours}:${minutes}`;
-            }
-        });
 
         flatpickr(input, {
             enableTime: true,

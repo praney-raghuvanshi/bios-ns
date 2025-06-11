@@ -3,26 +3,26 @@
 namespace App\Http\Controllers\Maintenance;
 
 use App\Http\Controllers\Controller;
-use App\Models\Aircraft;
+use App\Models\AircraftManufacturer;
 use App\Models\AircraftType;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
-class AircraftController extends Controller
+class AircraftTypeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $aircraftTypes = AircraftType::active()->orderBy('name')->get();
-        $aircrafts = Aircraft::with('aircraftType')->get();
-        return view('maintenance.aircraft.list', compact('aircrafts', 'aircraftTypes'));
+        $aircraftManufacturers = AircraftManufacturer::all();
+        $aircraftTypes = AircraftType::all();
+        return view('maintenance.aircraft-type.list', compact('aircraftManufacturers', 'aircraftTypes'));
     }
 
     /**
@@ -39,8 +39,7 @@ class AircraftController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'aircraft_type' => ['required'],
-            'registration' => ['required', 'string', 'unique:aircrafts,registration,NULL,id,deleted_at,NULL'],
+            'name' => ['required', 'string', 'unique:aircraft_types,name,NULL,id,deleted_at,NULL'],
             'capacity' => ['nullable', 'numeric'],
             'status' => ['required']
         ]);
@@ -51,9 +50,10 @@ class AircraftController extends Controller
 
         try {
 
-            Aircraft::create([
-                'aircraft_type_id' => $request->input('aircraft_type'),
-                'registration' => Str::upper($request->input('registration')),
+            AircraftType::create([
+                'aircraft_manufacturer_id' => $request->input('aircraft_manufacturer'),
+                'name' => Str::upper($request->input('name')),
+                'capacity' => $request->input('capacity'),
                 'active' => $request->input('status'),
                 'added_by' => Auth::id()
             ]);
@@ -61,7 +61,7 @@ class AircraftController extends Controller
             return back()->with('failure', $e->getMessage());
         }
 
-        return redirect()->route('maintenance.aircraft.list')->with('success', 'Aircraft added successfully.');
+        return redirect()->route('maintenance.aircraft-type.list')->with('success', 'Aircraft Type added successfully.');
     }
 
     /**
@@ -75,21 +75,20 @@ class AircraftController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Aircraft $aircraft)
+    public function edit(AircraftType $aircraftType)
     {
-        $aircraft->load('aircraftType');
-        $aircraftTypes = AircraftType::active()->orderBy('name')->get();
-        return view('_partials._modals.aircraft.edit', compact('aircraft', 'aircraftTypes'));
+        $aircraftManufacturers = AircraftManufacturer::all();
+        return view('_partials._modals.aircraft-type.edit', compact('aircraftManufacturers', 'aircraftType'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Aircraft $aircraft)
+    public function update(Request $request, AircraftType $aircraftType)
     {
         $validator = Validator::make($request->all(), [
-            'aircraft_type' => ['required'],
-            'registration' => ['required', 'string', Rule::unique('aircrafts', 'registration')->ignore($aircraft->id)->whereNull('deleted_at')],
+            'name' => ['required', 'string', Rule::unique('aircraft_types', 'name')->ignore($aircraftType->id)->whereNull('deleted_at')],
+            'capacity' => ['nullable', 'numeric'],
             'status' => ['required']
         ]);
 
@@ -98,30 +97,31 @@ class AircraftController extends Controller
         }
 
         try {
-            $aircraft->aircraft_type_id = $request->input('aircraft_type');
-            $aircraft->registration = Str::upper($request->input('registration'));
-            $aircraft->active = $request->input('status');
-            $aircraft->save();
+            $aircraftType->aircraft_manufacturer_id = $request->input('aircraft_manufacturer');
+            $aircraftType->name = Str::upper($request->input('name'));
+            $aircraftType->capacity = $request->input('capacity');
+            $aircraftType->active = $request->input('status');
+            $aircraftType->save();
         } catch (Exception $e) {
             return back()->with('failure', $e->getMessage());
         }
 
-        return redirect()->route('maintenance.aircraft.list')->with('success', 'Aircraft updated successfully.');
+        return redirect()->route('maintenance.aircraft-type.list')->with('success', 'Aircraft Type updated successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Aircraft $aircraft)
+    public function destroy(AircraftType $aircraftType)
     {
         try {
             DB::beginTransaction();
 
-            $aircraft->update([
+            $aircraftType->update([
                 'deleted_by' => Auth::id()
             ]);
 
-            $aircraft->delete();
+            $aircraftType->delete();
 
             DB::commit();
         } catch (Exception $e) {
@@ -129,6 +129,6 @@ class AircraftController extends Controller
             return back()->with('failure', $e->getMessage());
         }
 
-        return redirect()->route('maintenance.aircraft.list')->with('success', 'Aircraft deleted successfully.');
+        return redirect()->route('maintenance.aircraft-type.list')->with('success', 'Aircraft Type deleted successfully.');
     }
 }

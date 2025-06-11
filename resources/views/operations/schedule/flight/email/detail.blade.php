@@ -100,6 +100,12 @@ $customizerHidden = 'customizer-hide';
                         <td>{{ $scheduleFlight->flight->flight_number }}</td>
                     </tr>
                     <tr>
+                        <th>Aircraft Type</th>
+                        <td>{{ $scheduleFlight->flight->aircraft->aircraftType->formatted_name ?? 'NA' }}</td>
+                        <th>Aircraft Registration</th>
+                        <td>{{ $scheduleFlight->flight->aircraft->registration ?? 'NA' }}</td>
+                    </tr>
+                    <tr>
                         <th>From Airport</th>
                         <td>{{ $scheduleFlight->flight->fromAirport->iata ?? '' }}</td>
                         <th>To Airport</th>

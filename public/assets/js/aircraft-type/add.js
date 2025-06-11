@@ -1,5 +1,5 @@
 /**
- * Add Aircraft
+ * Add Aircraft Type
  */
 
 'use strict';
@@ -22,7 +22,7 @@ $(document).ready(function () {
   }
 
   // Initialize jQuery Validation
-  $('#addAircraftForm').validate({
+  $('#addAircraftTypeForm').validate({
     errorElement: 'div',
     errorClass: 'invalid-feedback',
     highlight: function (element, errorClass, validClass) {
@@ -35,10 +35,13 @@ $(document).ready(function () {
       error.appendTo(element.parent().append('<div class="form-control-feedback"></div>'));
     },
     rules: {
-      aircraft_type: {
+      aircraft_manufacturer: {
         required: true
       },
-      registration: {
+      name: {
+        required: true
+      },
+      capacity: {
         required: true
       },
       status: {

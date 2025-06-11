@@ -87,9 +87,9 @@ class FlightController extends Controller
                             'std_local' => $flight->departure_time_local,
                             'sta' => Carbon::parse($flight->arrival_time)->format('H:i'),
                             'sta_local' => $flight->arrival_time_local,
-                            'aircraft' => $flight->aircraft->name,
+                            'aircraft' => $flight->aircraft->registration,
                             'aircraft_id' => $flight->aircraft_id,
-                            'capacity' => $flight->aircraft->capacity,
+                            'capacity' => $flight->aircraft->aircraftType->capacity ?? 0,
                             'active' => $flight->active,
                         ];
                     }
@@ -105,9 +105,9 @@ class FlightController extends Controller
                             'std_local' => $flight->departure_time_local,
                             'sta' => Carbon::parse($flight->arrival_time)->format('H:i'),
                             'sta_local' => $flight->arrival_time_local,
-                            'aircraft' => $flight->aircraft->name,
+                            'aircraft' => $flight->aircraft->registration,
                             'aircraft_id' => $flight->aircraft_id,
-                            'capacity' => $flight->aircraft->capacity,
+                            'capacity' => $flight->aircraft->aircraftType->capacity ?? 0,
                             'active' => $flight->active,
                         ];
                     }
@@ -278,8 +278,8 @@ class FlightController extends Controller
                         'std_local' => $flight->departure_time_local,
                         'sta' => Carbon::parse($flight->arrival_time)->format('H:i'),
                         'sta_local' => $flight->arrival_time_local,
-                        'aircraft' => $flight->aircraft->name,
-                        'capacity' => $flight->aircraft->capacity,
+                        'aircraft' => $flight->aircraft->registration ?? 'NA',
+                        'capacity' => $flight->aircraft->aircraftType->capacity ?? 0,
                         'active' => $flight->active,
                         'days' => $activeFlightDays,
 
@@ -297,8 +297,8 @@ class FlightController extends Controller
                         'std_local' => $flight->departure_time_local,
                         'sta' => Carbon::parse($flight->arrival_time)->format('H:i'),
                         'sta_local' => $flight->arrival_time_local,
-                        'aircraft' => $flight->aircraft->name,
-                        'capacity' => $flight->aircraft->capacity,
+                        'aircraft' => $flight->aircraft->registration ?? 'NA',
+                        'capacity' => $flight->aircraft->aircraftType->capacity ?? 0,
                         'active' => $flight->active,
                         'days' => $activeFlightDays
                     ];

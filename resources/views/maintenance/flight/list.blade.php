@@ -428,7 +428,7 @@ $customizerHidden = 'customizer-hide';
                                     @foreach ($aircrafts as $aircraft)
                                     <option value="{{ $aircraft->id }}" @if(old('i_aircraft',
                                         $clonedFlight['inbound']['aircraft_id'] ?? '' )==$aircraft->id) selected
-                                        @endif >{{ $aircraft->name }} ({{ $aircraft->capacity
+                                        @endif >{{ $aircraft->registration }} ({{ $aircraft->aircraftType->capacity ?? 0
                                         }})
                                     </option>
                                     @endforeach
@@ -566,7 +566,7 @@ $customizerHidden = 'customizer-hide';
                                     @foreach ($aircrafts as $aircraft)
                                     <option value="{{ $aircraft->id }}" @if(old('o_aircraft',
                                         $clonedFlight['outbound']['aircraft_id'] ?? '' )==$aircraft->id) selected
-                                        @endif >{{ $aircraft->name }} ({{ $aircraft->capacity
+                                        @endif >{{ $aircraft->registration }} ({{ $aircraft->aircraftType->capacity ?? 0
                                         }})
                                     </option>
                                     @endforeach

@@ -5,13 +5,21 @@
     @csrf
 
     <div class="col-12 col-md-6">
-        <label class="form-label" for="name">Name</label>
-        <input type="text" name="name" class="form-control" value="{{ old('name', $aircraft->name) }}" />
+        <label class="form-label" for="aircraft_type">Aircraft Type</label>
+        <select name="aircraft_type" class="select2 form-select" data-allow-clear="true">
+            <option value="">-- Select Aircraft Type --</option>
+            @foreach ($aircraftTypes as $aircraftType)
+            <option value="{{$aircraftType->id}}" @if(old('aircraft_type', $aircraft->
+                aircraft_type_id)===$aircraftType->id) selected @endif>{{
+                $aircraftType->formatted_name }}</option>
+            @endforeach
+        </select>
     </div>
 
     <div class="col-12 col-md-6">
-        <label class="form-label" for="capacity">Capacity</label>
-        <input type="number" name="capacity" class="form-control" value="{{ old('capacity', $aircraft->capacity) }}" />
+        <label class="form-label" for="registration">Registration</label>
+        <input type="text" name="registration" class="form-control"
+            value="{{ old('registration', $aircraft->registration) }}" />
     </div>
 
     <div class="col-12 col-md-6">
