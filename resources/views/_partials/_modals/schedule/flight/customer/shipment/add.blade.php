@@ -17,7 +17,7 @@
                         <label class="form-label me-3">Select AWB Type:</label>
                         <div class="form-check me-3">
                             <input class="form-check-input" type="radio" name="awb_type" id="newAwbRadio" value="new">
-                            <label class="form-check-label" for="newAwbRadio">New AWB</label>
+                            <label class="form-check-label" for="newAwbRadio">New/Connecting AWB</label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="awb_type" id="subsequentAwbRadio"
@@ -29,7 +29,7 @@
                     <!-- Row 2: AWB Inputs with Lookup Buttons -->
                     <div class="row mb-1">
                         <div class="col-md-6">
-                            <label for="newAwb" class="form-label">New AWB</label>
+                            <label for="newAwb" class="form-label">New/Connecting AWB</label>
                             <input type="number" class="form-control" id="newAwb" name="new_awb" disabled>
                             <button type="button" class="btn btn-info check-awb mt-1" data-type="new">Check</button>
                         </div>

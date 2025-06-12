@@ -3,6 +3,7 @@
 use App\Http\Controllers\Administration\ActivityLogController;
 use App\Http\Controllers\Administration\GroupController;
 use App\Http\Controllers\Administration\UserController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Maintenance\AircraftController;
 use App\Http\Controllers\Maintenance\AircraftTypeController;
 use App\Http\Controllers\Maintenance\AirportController;
@@ -41,9 +42,7 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified', 'group.role:dashboard-view'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified', 'group.role:dashboard-view'])->name('dashboard');
 
 Route::middleware(['auth', 'verified', 'group.role:search-view'])->controller(SearchController::class)->group(function () {
     Route::get('/search', 'search')->name('search');
