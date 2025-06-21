@@ -526,6 +526,23 @@
                             </div>
                         </div>
 
+                        <!-- Daily Flight Report Section -->
+                        <div class="row mb-2 align-items-center">
+                            <div class="col-md-3">
+                                <label for="modalReportsDailyFlightReportRole" class="form-label mb-0">
+                                    Daily Flight Report</label>
+                            </div>
+                            <div class="col-md-9">
+                                <select name="roles[]" class="form-select select2" data-allow-clear="true">
+                                    <option value="0">No Access</option>
+                                    <option value="{{$allRoles['reports-daily-flight-report-view']}}"
+                                        @if(in_array('reports-daily-flight-report-view', $groupRoles)) selected @endif>
+                                        View Only
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="col-12 text-center">

@@ -182,5 +182,10 @@ class RoleSeeder extends Seeder
         $roleReportsBilingExtractView = Role::create(['name' => 'reports-billing-extract-view', 'guard_name' => 'web']);
 
         $roleReportsBilingExtractView->givePermissionTo('view billing-extract');
+
+        // Reports - Daily Flight Report
+        $roleReportsDailyFlightReportView = Role::create(['name' => 'reports-daily-flight-report-view', 'guard_name' => 'web']);
+
+        $roleReportsDailyFlightReportView->givePermissionTo('view daily-flight-report');
     }
 }

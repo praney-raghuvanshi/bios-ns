@@ -98,5 +98,7 @@ class PermissionSeeder extends Seeder
         Permission::create(['name' => 'view flight-performance-report', 'guard_name' => 'web']);
         // Reports - Billing Extract
         Permission::create(['name' => 'view billing-extract', 'guard_name' => 'web']);
+        // Reports - Daily Flight Report
+        Permission::create(['name' => 'view daily-flight-report', 'guard_name' => 'web']);
     }
 }
