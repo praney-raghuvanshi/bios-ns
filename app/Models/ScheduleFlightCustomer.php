@@ -52,7 +52,7 @@ class ScheduleFlightCustomer extends Model
             if (!$product) continue; // Skip if product not found
 
             $productCode = $product->code;
-            $awbTotal = $shipment->uplifted_weight;
+            $awbTotal = $shipment->total_volumetric_weight;
 
             // Get total AWB weight for this product and customer
             $productTotal = intval(ScheduleFlightCustomerProduct::where('schedule_flight_customer_id', $this->id)

@@ -147,6 +147,15 @@
             minuteIncrement: 1
         });
     });
+
+    document.querySelectorAll(".ddmmyyyyDateFormat").forEach(input => {
+
+        flatpickr(input, {
+            dateFormat: "Y-m-d",
+            altInput: true,
+            altFormat: "d-m-Y",
+        });
+    });
 });
 </script>
 <!-- BEGIN: Page JS-->

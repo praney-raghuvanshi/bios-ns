@@ -73,8 +73,8 @@ $customizerHidden = 'customizer-hide';
 
             <div class="d-flex align-items-end gap-3">
                 <div>
-                    <input type="date" name="flight_date" id="flightDate" class="form-select"
-                        value="{{ request('flight_date') }}" placeholder="Flight Date" required>
+                    <input type="date" name="flight_date" id="flightDate" class="form-select ddmmyyyyDateFormat"
+                        value="{{ request('flight_date') ?? 'today' }}" placeholder="Flight Date" required>
                 </div>
 
                 <div>
