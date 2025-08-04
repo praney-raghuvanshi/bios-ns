@@ -79,6 +79,7 @@ $customizerHidden = 'customizer-hide';
                     <th class="p-1">+/- Min</th>
                     <th class="p-1">Uplifted</th>
                     <th class="p-1">Aircraft</th>
+                    <th class="p-1">Registration</th>
                     <th class="p-1">Utilisation</th>
                     <th class="p-1">Off Loaded</th>
                     <th class="p-1">Status</th>
@@ -155,7 +156,8 @@ $customizerHidden = 'customizer-hide';
                         @endif
                     </td>
                     <td class="p-1">{{ $scheduleFlight->uplifted ?? 0 }}</td>
-                    <td class="p-1">{{ $scheduleFlight->flight->aircraft->registration ?? 'NA' }}</td>
+                    <td class="p-1">{{ $scheduleFlight->flight->aircraftType->formatted_name ?? 'NA' }}</td>
+                    <td class="p-1">{{ $scheduleFlight->aircraft->registration ?? 'NA' }}</td>
                     <td class="p-1">{{ $scheduleFlight->utilisation ?? 0 }} %</td>
                     <td class="p-1">{{ $scheduleFlight->offloaded ?? 0 }}</td>
                     <td class="p-1">

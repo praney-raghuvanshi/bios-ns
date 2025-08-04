@@ -73,9 +73,9 @@ class Flight extends Model
         return $this->belongsTo(Airport::class, 'to', 'id');
     }
 
-    public function aircraft()
+    public function aircraftType()
     {
-        return $this->belongsTo(Aircraft::class, 'aircraft_id', 'id');
+        return $this->belongsTo(AircraftType::class, 'aircraft_type_id', 'id');
     }
 
     public function correspondingFlight()

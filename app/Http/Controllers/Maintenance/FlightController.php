@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Maintenance;
 
 use App\Http\Controllers\Controller;
-use App\Models\Aircraft;
 use App\Models\Airport;
 use App\Models\Customer;
 use App\Models\Flight;
@@ -17,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use App\Helpers\Helpers;
+use App\Models\AircraftType;
 use Illuminate\Support\Arr;
 
 class FlightController extends Controller
@@ -36,7 +36,7 @@ class FlightController extends Controller
 
             $location = $request->location ?? session('location');
 
-            $flights = Flight::with(['location', 'fromAirport', 'toAirport', 'aircraft', 'flightDays'])
+            $flights = Flight::with(['location', 'fromAirport', 'toAirport', 'aircraftType', 'flightDays'])
                 ->where('location_id', $location)
                 ->when(!$request->has('include_inactive'), function ($query) {
                     $query->where('active', 1); // Only active flights when checkbox is NOT checked
@@ -46,7 +46,7 @@ class FlightController extends Controller
         }
         $locations = Location::active()->get();
         $airports = Airport::active()->get();
-        $aircrafts = Aircraft::active()->get();
+        $aircraftTypes = AircraftType::active()->get();
 
         if (count($flights) > 0) {
 
@@ -87,9 +87,9 @@ class FlightController extends Controller
                             'std_local' => $flight->departure_time_local,
                             'sta' => Carbon::parse($flight->arrival_time)->format('H:i'),
                             'sta_local' => $flight->arrival_time_local,
-                            'aircraft' => $flight->aircraft->registration,
-                            'aircraft_id' => $flight->aircraft_id,
-                            'capacity' => $flight->aircraft->aircraftType->capacity ?? 0,
+                            'aircraft_type' => $flight->aircraftType->formatted_name,
+                            //'aircraft_id' => $flight->aircraft_id,
+                            'capacity' => $flight->aircraftType->capacity ?? 0,
                             'active' => $flight->active,
                         ];
                     }
@@ -105,9 +105,9 @@ class FlightController extends Controller
                             'std_local' => $flight->departure_time_local,
                             'sta' => Carbon::parse($flight->arrival_time)->format('H:i'),
                             'sta_local' => $flight->arrival_time_local,
-                            'aircraft' => $flight->aircraft->registration,
-                            'aircraft_id' => $flight->aircraft_id,
-                            'capacity' => $flight->aircraft->aircraftType->capacity ?? 0,
+                            'aircraft_type' => $flight->aircraftType->formatted_name,
+                            //'aircraft_id' => $flight->aircraft_id,
+                            'capacity' => $flight->aircraftType->capacity ?? 0,
                             'active' => $flight->active,
                         ];
                     }
@@ -132,7 +132,7 @@ class FlightController extends Controller
 
         //dd($processedFlights);
 
-        return view('maintenance.flight.list', compact('processedFlights', 'locations', 'airports', 'aircrafts', 'clonedFlight'));
+        return view('maintenance.flight.list', compact('processedFlights', 'locations', 'airports', 'aircraftTypes', 'clonedFlight'));
     }
 
     /**
@@ -157,7 +157,7 @@ class FlightController extends Controller
             'i_to' => ['nullable', 'numeric', 'different:i_from'],
             'i_departure_time' => ['nullable', 'date_format:H:i'],
             'i_arrival_time' => ['nullable', 'date_format:H:i'],
-            'i_aircraft' => ['nullable', 'numeric'],
+            'i_aircraft_type' => ['nullable', 'numeric'],
             'effective_date' => ['required', 'date'],
             'day' => ['required', 'array'],
             'o_flight' => ['nullable', 'string'],
@@ -165,7 +165,7 @@ class FlightController extends Controller
             'o_to' => ['nullable', 'numeric', 'different:o_from'],
             'o_departure_time' => ['nullable', 'date_format:H:i'],
             'o_arrival_time' => ['nullable', 'date_format:H:i'],
-            'o_aircraft' => ['nullable', 'numeric'],
+            'o_aircraft_type' => ['nullable', 'numeric'],
         ]);
 
         if ($validator->fails()) {
@@ -182,7 +182,7 @@ class FlightController extends Controller
 
             $inboundFlight = $outboundFlight = null;
 
-            if ($request->has(['i_flight', 'i_from', 'i_to', 'i_departure_time', 'i_arrival_time', 'i_aircraft'])) {
+            if ($request->has(['i_flight', 'i_from', 'i_to', 'i_departure_time', 'i_arrival_time', 'i_aircraft_type'])) {
 
                 if ($request->has('clone_id')) {
                     $inboundFlight = $this->insertFlight($request, $flightPairId, 'inbound', $request->day, []);
@@ -205,7 +205,7 @@ class FlightController extends Controller
                 }
             }
 
-            if ($request->has(['o_flight', 'o_from', 'o_to', 'o_departure_time', 'o_arrival_time', 'o_aircraft'])) {
+            if ($request->has(['o_flight', 'o_from', 'o_to', 'o_departure_time', 'o_arrival_time', 'o_aircraft_type'])) {
 
                 if ($request->has('clone_id')) {
                     $outboundFlight = $this->insertFlight($request, $flightPairId, 'outbound', $request->day, []);
@@ -278,8 +278,8 @@ class FlightController extends Controller
                         'std_local' => $flight->departure_time_local,
                         'sta' => Carbon::parse($flight->arrival_time)->format('H:i'),
                         'sta_local' => $flight->arrival_time_local,
-                        'aircraft' => $flight->aircraft->registration ?? 'NA',
-                        'capacity' => $flight->aircraft->aircraftType->capacity ?? 0,
+                        'aircraft_type' => $flight->aircraftType->formatted_name ?? 'NA',
+                        'capacity' => $flight->aircraftType->capacity ?? 0,
                         'active' => $flight->active,
                         'days' => $activeFlightDays,
 
@@ -297,8 +297,8 @@ class FlightController extends Controller
                         'std_local' => $flight->departure_time_local,
                         'sta' => Carbon::parse($flight->arrival_time)->format('H:i'),
                         'sta_local' => $flight->arrival_time_local,
-                        'aircraft' => $flight->aircraft->registration ?? 'NA',
-                        'capacity' => $flight->aircraft->aircraftType->capacity ?? 0,
+                        'aircraft_type' => $flight->aircraftType->formatted_name ?? 'NA',
+                        'capacity' => $flight->aircraftType->capacity ?? 0,
                         'active' => $flight->active,
                         'days' => $activeFlightDays
                     ];
@@ -465,14 +465,14 @@ class FlightController extends Controller
             $flightNumber = $request->input('i_flight');
             $from = $request->input('i_from');
             $to = $request->input('i_to');
-            $aircraft = $request->input('i_aircraft');
+            $aircraftType = $request->input('i_aircraft_type');
         } else {
             $arrivalTime = $request->input('o_arrival_time');
             $departureTime = $request->input('o_departure_time');
             $flightNumber = $request->input('o_flight');
             $from = $request->input('o_from');
             $to = $request->input('o_to');
-            $aircraft = $request->input('o_aircraft');
+            $aircraftType = $request->input('o_aircraft_type');
         }
 
         $locationId = $request->input('location');
@@ -495,7 +495,7 @@ class FlightController extends Controller
             'to' => $to,
             'departure_time' => $departureTime,
             'arrival_time' => $arrivalTime,
-            'aircraft_id' => $aircraft,
+            'aircraft_type_id' => $aircraftType,
             'effective_date' => $request->input('effective_date'),
             'arrival_day' => $arrivalDay,
             'flight_type' => $flightDirection,

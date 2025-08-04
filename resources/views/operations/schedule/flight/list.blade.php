@@ -79,7 +79,7 @@ $customizerHidden = 'customizer-hide';
                             <td>{{ $flight->toAirport->iata ?? '' }}</td>
                             <td>{{ \Carbon\Carbon::parse($flight->departure_time)->format('H:i') }}</td>
                             <td>{{ \Carbon\Carbon::parse($flight->arrival_time)->format('H:i') }}</td>
-                            <td>{{ $flight->aircraft->name ?? '' }}</td>
+                            <td>{{ $flight->aircraftType->formatted_name ?? '' }}</td>
                             <td>{{ $flight->aircraft->capacity ?? '' }}</td>
                             <td>
                                 <input type="checkbox" name="flight[]" value="{{$flight->id}}">

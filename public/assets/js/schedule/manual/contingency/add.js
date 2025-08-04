@@ -48,7 +48,7 @@ $(document).ready(function () {
               $('#std').prop('disabled', false);
               $('#sta').val(data.arrival_time);
               $('#sta').prop('disabled', false);
-              $('#aircraft').val(data.aircraft_id);
+              $('#aircraft').val(data.aircraft_type_id);
               $('#aircraft').prop('disabled', false);
               $('#effectiveDate').prop('disabled', false);
             } else {

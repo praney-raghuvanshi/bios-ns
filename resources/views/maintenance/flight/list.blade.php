@@ -295,7 +295,7 @@ $customizerHidden = 'customizer-hide';
                             '('.$flightPair['inbound']['sta_local'].')' : '' }}</td>
                         <td
                             class="@if(isset($flightPair['inbound']['active']) && $flightPair['inbound']['active']) bg-success-subtle @elseif(isset($flightPair['inbound']['active']) && !$flightPair['inbound']['active']) bg-danger-subtle @endif">
-                            {{ $flightPair['inbound']['aircraft'] ?? '' }}</td>
+                            {{ $flightPair['inbound']['aircraft_type'] ?? '' }}</td>
                         <td
                             class="@if(isset($flightPair['inbound']['active']) && $flightPair['inbound']['active']) bg-success-subtle @elseif(isset($flightPair['inbound']['active']) && !$flightPair['inbound']['active']) bg-danger-subtle @endif">
                             {{ $flightPair['inbound']['capacity'] ?? '' }}</td>
@@ -320,7 +320,7 @@ $customizerHidden = 'customizer-hide';
                             '('.$flightPair['outbound']['sta_local'].')' : '' }}</td>
                         <td
                             class="@if(isset($flightPair['outbound']['active']) && $flightPair['outbound']['active']) bg-success-subtle @elseif(isset($flightPair['outbound']['active']) && !$flightPair['outbound']['active']) bg-danger-subtle @endif">
-                            {{ $flightPair['outbound']['aircraft'] ?? '' }}</td>
+                            {{ $flightPair['outbound']['aircraft_type'] ?? '' }}</td>
                         <td
                             class="@if(isset($flightPair['outbound']['active']) && $flightPair['outbound']['active']) bg-success-subtle @elseif(isset($flightPair['outbound']['active']) && !$flightPair['outbound']['active']) bg-danger-subtle @endif">
                             {{ $flightPair['outbound']['capacity'] ?? '' }}</td>
@@ -423,12 +423,13 @@ $customizerHidden = 'customizer-hide';
                             </div>
                             <div class="mb-2">
                                 <label class="form-label">Aircraft:</label>
-                                <select class="form-select select2" name="i_aircraft">
+                                <select class="form-select select2" name="i_aircraft_type">
                                     <option value="">-- Select Aircraft --</option>
-                                    @foreach ($aircrafts as $aircraft)
-                                    <option value="{{ $aircraft->id }}" @if(old('i_aircraft',
-                                        $clonedFlight['inbound']['aircraft_id'] ?? '' )==$aircraft->id) selected
-                                        @endif >{{ $aircraft->registration }} ({{ $aircraft->aircraftType->capacity ?? 0
+                                    @foreach ($aircraftTypes as $aircraftType)
+                                    <option value="{{ $aircraftType->id }}" @if(old('i_aircraft_type',
+                                        $clonedFlight['inbound']['aircraft_type_id'] ?? '' )==$aircraftType->id)
+                                        selected
+                                        @endif >{{ $aircraftType->formatted_name }} ({{ $aircraftType->capacity ?? 0
                                         }})
                                     </option>
                                     @endforeach
@@ -561,12 +562,13 @@ $customizerHidden = 'customizer-hide';
                             </div>
                             <div class="mb-2">
                                 <label class="form-label">Aircraft:</label>
-                                <select class="form-select select2" name="o_aircraft">
+                                <select class="form-select select2" name="o_aircraft_type">
                                     <option value="">-- Select Aircraft --</option>
-                                    @foreach ($aircrafts as $aircraft)
-                                    <option value="{{ $aircraft->id }}" @if(old('o_aircraft',
-                                        $clonedFlight['outbound']['aircraft_id'] ?? '' )==$aircraft->id) selected
-                                        @endif >{{ $aircraft->registration }} ({{ $aircraft->aircraftType->capacity ?? 0
+                                    @foreach ($aircraftTypes as $aircraftType)
+                                    <option value="{{ $aircraftType->id }}" @if(old('o_aircraft_type',
+                                        $clonedFlight['outbound']['aircraft_type_id'] ?? '' )==$aircraftType->id)
+                                        selected
+                                        @endif >{{ $aircraftType->formatted_name }} ({{ $aircraftType->capacity ?? 0
                                         }})
                                     </option>
                                     @endforeach

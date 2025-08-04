@@ -53,6 +53,8 @@ class ScheduleFlightObserver
                 $fieldName = 'Offloaded Weight';
             } else if ($field === 'latest_remark') {
                 $fieldName = 'Latest Remark';
+            } else if ($field === 'aircraft_id') {
+                $fieldName = 'Aircraft ID';
             }
 
             AuditLog::create([

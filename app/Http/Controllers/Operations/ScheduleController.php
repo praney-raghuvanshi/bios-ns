@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Operations;
 
 use App\Http\Controllers\Controller;
 use App\Models\Aircraft;
+use App\Models\AircraftType;
 use App\Models\Airport;
 use App\Models\Customer;
 use App\Models\Flight;
@@ -169,7 +170,7 @@ class ScheduleController extends Controller
             $query->where('day', $scheduleDay);
         })->whereDoesntHave('schedules', function ($query) use ($schedule) {
             $query->where('schedule_id', $schedule->id);
-        })->with(['fromAirport', 'toAirport', 'aircraft'])->whereDate('effective_date', '<=', $scheduleDate)->get();
+        })->with(['fromAirport', 'toAirport', 'aircraftType'])->whereDate('effective_date', '<=', $scheduleDate)->get();
         return view('operations.schedule.flight.list', compact('schedule', 'flights'));
     }
 
@@ -196,9 +197,9 @@ class ScheduleController extends Controller
     public function contingency(Schedule $schedule)
     {
         $airports = Airport::active()->get();
-        $aircrafts = Aircraft::active()->get();
+        $aircraftTypes = AircraftType::active()->get();
         $locations = Location::active()->get();
-        return view('operations.schedule.flight.contingency', compact('schedule', 'airports', 'aircrafts', 'locations'));
+        return view('operations.schedule.flight.contingency', compact('schedule', 'airports', 'aircraftTypes', 'locations'));
     }
 
     public function contingencyStore(Request $request, Schedule $schedule)
@@ -215,7 +216,7 @@ class ScheduleController extends Controller
             $flightNumber = $request->input('flight');
             $from = $request->input('from');
             $to = $request->input('to');
-            $aircraft = $request->input('aircraft');
+            $aircraftType = $request->input('aircraft');
             $flightDirection = $request->input('direction');
             $arrivalDay = $request->input('arrival_day');
 
@@ -232,7 +233,7 @@ class ScheduleController extends Controller
                 'to' => $to,
                 'departure_time' => $departureTime,
                 'arrival_time' => $arrivalTime,
-                'aircraft_id' => $aircraft,
+                'aircraft_type_id' => $aircraftType,
                 'effective_date' => $request->input('effective_date'),
                 'arrival_day' => $arrivalDay,
                 'flight_type' => $flightDirection,

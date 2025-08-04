@@ -101,9 +101,9 @@ $customizerHidden = 'customizer-hide';
                     </tr>
                     <tr>
                         <th>Aircraft Type</th>
-                        <td>{{ $scheduleFlight->flight->aircraft->aircraftType->formatted_name ?? 'NA' }}</td>
+                        <td>{{ $scheduleFlight->flight->aircraftType->formatted_name ?? 'NA' }}</td>
                         <th>Aircraft Registration</th>
-                        <td>{{ $scheduleFlight->flight->aircraft->registration ?? 'NA' }}</td>
+                        <td>{{ $scheduleFlight->aircraft->registration ?? 'NA' }}</td>
                     </tr>
                     <tr>
                         <th>From Airport</th>

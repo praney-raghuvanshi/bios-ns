@@ -115,7 +115,7 @@ $customizerHidden = 'customizer-hide';
                         </td>
                         <td>{{ $processedFlights['inbound']['sta'] }} ({{ $processedFlights['inbound']['sta_local'] }})
                         </td>
-                        <td>{{ $processedFlights['inbound']['aircraft'] }}</td>
+                        <td>{{ $processedFlights['inbound']['aircraft_type'] }}</td>
                         <td>{{ $processedFlights['inbound']['capacity'] }}</td>
                         <td>
                             @if ($datum->active)
@@ -217,7 +217,7 @@ $customizerHidden = 'customizer-hide';
                             }})</td>
                         <td>{{ $processedFlights['outbound']['sta'] }} ({{ $processedFlights['outbound']['sta_local']
                             }})</td>
-                        <td>{{ $processedFlights['outbound']['aircraft'] }}</td>
+                        <td>{{ $processedFlights['outbound']['aircraft_type'] }}</td>
                         <td>{{ $processedFlights['outbound']['capacity'] }}</td>
                         <td>
                             @if ($datum->active)

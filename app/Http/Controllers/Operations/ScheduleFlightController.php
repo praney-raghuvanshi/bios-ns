@@ -166,9 +166,9 @@ class ScheduleFlightController extends Controller
                 }
             }
 
-            if ($aircraft != $scheduleFlight->flight->aircraft_id) {
-                $scheduleFlight->flight->aircraft_id = $aircraft;
-                $scheduleFlight->flight->save();
+            if ($aircraft != $scheduleFlight->aircraft_id) {
+                $scheduleFlight->aircraft_id = $aircraft;
+                $hasChanges = true;
             }
 
             if ($hasChanges) {
