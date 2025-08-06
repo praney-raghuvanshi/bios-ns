@@ -61,7 +61,7 @@ class ScheduleController extends Controller
             // Fetch flights scheduled on the given day
             $flights = Flight::whereHas('flightDays', function ($query) use ($scheduleDay) {
                 $query->where('day', $scheduleDay);
-            })->with(['fromAirport', 'toAirport', 'aircraft'])->whereDate('effective_date', '<=', Carbon::now())->get();
+            })->with(['fromAirport', 'toAirport', 'aircraftType'])->whereDate('effective_date', '<=', Carbon::now())->get();
         }
 
         return view('operations.schedule.confirm', compact('request', 'flights'));
