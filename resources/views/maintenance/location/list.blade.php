@@ -68,9 +68,12 @@ $customizerHidden = 'customizer-hide';
             }
         });
     });
+});
 
-    $('.edit-btn').on('click', function () {
+$(document).on('click', '.edit-btn', function () {
         let locationId = $(this).data('record-id');
+
+        $('#editLocation .modal-form').html('<p class="text-center my-3">Loading...</p>');
 
         // Load the edit form content into the modal
         $.ajax({
@@ -111,7 +114,6 @@ $customizerHidden = 'customizer-hide';
             }
         });
     });
-});
 </script>
 @endsection
 

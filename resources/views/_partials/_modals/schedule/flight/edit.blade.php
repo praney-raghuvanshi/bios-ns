@@ -62,7 +62,7 @@
                             <option value="">-- Select Aircraft --</option>
                             @foreach ($aircrafts as $aircraft)
                             <option value="{{$aircraft->id}}" @if(old('aircraft_registration', $scheduleFlight->
-                                flight->aircraft_id)===$aircraft->id) selected
+                                aircraft_id)===$aircraft->id) selected
                                 @endif>{{ $aircraft->registration }}</option>
                             @endforeach
                         </select>

@@ -142,17 +142,17 @@ class ScheduleFlightEmailController extends Controller
                     'flight_number' => $scheduleFlight->flight->flight_number,
                     'date' => Carbon::parse($schedule->date)->format('d F Y'),
                     'route' => $scheduleFlight->flight->fromAirport->iata . ' - ' . $scheduleFlight->flight->toAirport->iata,
-                    'std' => \Carbon\Carbon::parse($scheduleFlight->flight->departure_time)->format('H:i'),
+                    'std' => Carbon::parse($scheduleFlight->flight->departure_time)->format('H:i'),
                     'etd' => optional($scheduleFlight->estimated_departure_time) ?
-                        \Carbon\Carbon::parse($scheduleFlight->estimated_departure_time)->format('H:i') : 'None',
+                        Carbon::parse($scheduleFlight->estimated_departure_time)->format('H:i') : 'None',
                     'atd' => optional($scheduleFlight->actual_departure_time) ?
-                        \Carbon\Carbon::parse($scheduleFlight->actual_departure_time)->format('H:i') : 'None',
+                        Carbon::parse($scheduleFlight->actual_departure_time)->format('H:i') : 'None',
                     'departure_diff' => $scheduleFlight->departure_time_diff,
-                    'sta' => \Carbon\Carbon::parse($scheduleFlight->flight->arrival_time)->format('H:i'),
+                    'sta' => Carbon::parse($scheduleFlight->flight->arrival_time)->format('H:i'),
                     'eta' => optional($scheduleFlight->estimated_arrival_time) ?
-                        \Carbon\Carbon::parse($scheduleFlight->estimated_arrival_time)->format('H:i') : 'None',
+                        Carbon::parse($scheduleFlight->estimated_arrival_time)->format('H:i') : 'None',
                     'ata' => optional($scheduleFlight->actual_arrival_time) ?
-                        \Carbon\Carbon::parse($scheduleFlight->actual_arrival_time)->format('H:i') : 'None',
+                        Carbon::parse($scheduleFlight->actual_arrival_time)->format('H:i') : 'None',
                     'uplifted' => $scheduleFlightCustomer->total_uplifted_weight ?? 0,
                     'offloaded' => $scheduleFlight->total_offloaded_weight ?? 0
                 ];

@@ -140,12 +140,12 @@ $customizerHidden = 'customizer-hide';
             </div>
 
             <div class="col-12 col-md-6">
-                <label class="form-label">Aircraft</label>
+                <label class="form-label">Aircraft Type</label>
                 <select class="form-select select2" name="aircraft" id="aircraft" disabled>
-                    <option value="">-- Select Aircraft --</option>
+                    <option value="">-- Select Aircraft Type --</option>
                     @foreach ($aircraftTypes as $aircraftType)
                     <option value="{{ $aircraftType->id }}" @if(old('aircraft')==$aircraftType->id) selected
-                        @endif >{{ $aircraftType->name }} ({{ $aircraftType->capacity ?? 0
+                        @endif >{{ $aircraftType->formatted_name }} ({{ $aircraftType->capacity ?? 0
                         }})
                     </option>
                     @endforeach

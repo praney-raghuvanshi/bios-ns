@@ -68,8 +68,9 @@ $customizerHidden = 'customizer-hide';
             }
         });
     });
+});
 
-    $('.edit-btn').on('click', function () {
+$(document).on('click', '.edit-btn', function () {
         let airportId = $(this).data('record-id');
 
         // Load the edit form content into the modal
@@ -143,7 +144,6 @@ $customizerHidden = 'customizer-hide';
             }
         });
     });
-});
 </script>
 @endsection
 

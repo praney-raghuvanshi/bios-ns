@@ -63,7 +63,7 @@ $customizerHidden = 'customizer-hide';
                         <th>To</th>
                         <th>STD</th>
                         <th>STA</th>
-                        <th>Aircraft</th>
+                        <th>Aircraft Type</th>
                         <th>Capacity</th>
                     </tr>
                 </thead>
@@ -75,7 +75,7 @@ $customizerHidden = 'customizer-hide';
                         <td>{{ $flight->toAirport->iata ?? '' }}</td>
                         <td>{{ \Carbon\Carbon::parse($flight->departure_time)->format('H:i') }}</td>
                         <td>{{ \Carbon\Carbon::parse($flight->arrival_time)->format('H:i') }}</td>
-                        <td>{{ $flight->aircraftType->name ?? '' }}</td>
+                        <td>{{ $flight->aircraftType->formatted_name ?? '' }}</td>
                         <td>{{ $flight->aircraftType->capacity ?? '' }}</td>
                     </tr>
                     @endforeach
