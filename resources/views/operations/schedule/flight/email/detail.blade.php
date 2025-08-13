@@ -113,21 +113,27 @@ $customizerHidden = 'customizer-hide';
                     </tr>
                     <tr>
                         <th>STD</th>
-                        <td>{{ \Carbon\Carbon::parse($scheduleFlight->flight->departure_time)->format('H:i') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($scheduleFlight->flight->departure_time)->format('H:i') }} ({{
+                            $scheduleFlight->flight->departure_time_local }})</td>
                         <th>STA</th>
-                        <td>{{ \Carbon\Carbon::parse($scheduleFlight->flight->arrival_time)->format('H:i') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($scheduleFlight->flight->arrival_time)->format('H:i') }} ({{
+                            $scheduleFlight->flight->arrival_time_local }})</td>
                     </tr>
                     <tr>
                         <th>ETD</th>
-                        <td>{{ $scheduleFlight->formatted_etd }}</td>
+                        <td>{{ $scheduleFlight->formatted_etd }} {{ !is_null($scheduleFlight->etd_local) ?
+                            '('.$scheduleFlight->etd_local.')' : '' }}</td>
                         <th>ETA</th>
-                        <td>{{ $scheduleFlight->formatted_eta }}</td>
+                        <td>{{ $scheduleFlight->formatted_eta }} {{ !is_null($scheduleFlight->eta_local) ?
+                            '('.$scheduleFlight->eta_local.')' : '' }}</td>
                     </tr>
                     <tr>
                         <th>ATD</th>
-                        <td>{{ $scheduleFlight->formatted_atd }}</td>
+                        <td>{{ $scheduleFlight->formatted_atd }} {{ !is_null($scheduleFlight->atd_local) ?
+                            '('.$scheduleFlight->atd_local.')' : '' }}</td>
                         <th>ATA</th>
-                        <td>{{ $scheduleFlight->formatted_ata }}</td>
+                        <td>{{ $scheduleFlight->formatted_ata }} {{ !is_null($scheduleFlight->ata_local) ?
+                            '('.$scheduleFlight->ata_local.')' : '' }}</td>
                     </tr>
                 </thead>
             </table>

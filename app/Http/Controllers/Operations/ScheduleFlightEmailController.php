@@ -138,21 +138,27 @@ class ScheduleFlightEmailController extends Controller
                     $emailAddresses[] = $customerEmail->email;
                 }
 
+                $departureTimeDiffDisplay = null;
+                $departureTimeDiff = $scheduleFlight->departure_time_diff;
+                if (!is_null($departureTimeDiff)) {
+                    if ($departureTimeDiff >= 0) {
+                        $departureTimeDiffDisplay = '+ ' . $scheduleFlight->formatted_departure_time_diff;
+                    } else {
+                        $departureTimeDiffDisplay = '- ' . $scheduleFlight->formatted_departure_time_diff;
+                    }
+                }
+
                 $data = [
                     'flight_number' => $scheduleFlight->flight->flight_number,
                     'date' => Carbon::parse($schedule->date)->format('d F Y'),
                     'route' => $scheduleFlight->flight->fromAirport->iata . ' - ' . $scheduleFlight->flight->toAirport->iata,
-                    'std' => Carbon::parse($scheduleFlight->flight->departure_time)->format('H:i'),
-                    'etd' => optional($scheduleFlight->estimated_departure_time) ?
-                        Carbon::parse($scheduleFlight->estimated_departure_time)->format('H:i') : 'None',
-                    'atd' => optional($scheduleFlight->actual_departure_time) ?
-                        Carbon::parse($scheduleFlight->actual_departure_time)->format('H:i') : 'None',
-                    'departure_diff' => $scheduleFlight->departure_time_diff,
-                    'sta' => Carbon::parse($scheduleFlight->flight->arrival_time)->format('H:i'),
-                    'eta' => optional($scheduleFlight->estimated_arrival_time) ?
-                        Carbon::parse($scheduleFlight->estimated_arrival_time)->format('H:i') : 'None',
-                    'ata' => optional($scheduleFlight->actual_arrival_time) ?
-                        Carbon::parse($scheduleFlight->actual_arrival_time)->format('H:i') : 'None',
+                    'std' => $scheduleFlight->flight->departure_time_local ?? 'None',
+                    'etd' => $scheduleFlight->etd_local ?? 'None',
+                    'atd' => $scheduleFlight->atd_local ?? 'None',
+                    'departure_diff' => $departureTimeDiffDisplay,
+                    'sta' => $scheduleFlight->flight->arrival_time_local ?? 'None',
+                    'eta' => $scheduleFlight->eta_local ?? 'None',
+                    'ata' => $scheduleFlight->ata_local ?? 'None',
                     'uplifted' => $scheduleFlightCustomer->total_uplifted_weight ?? 0,
                     'offloaded' => $scheduleFlight->total_offloaded_weight ?? 0
                 ];

@@ -54,7 +54,7 @@ class ScheduleFlightObserver
             } else if ($field === 'latest_remark') {
                 $fieldName = 'Latest Remark';
             } else if ($field === 'aircraft_id') {
-                $fieldName = 'Aircraft ID';
+                $fieldName = 'Aircraft Type ID';
             }
 
             AuditLog::create([

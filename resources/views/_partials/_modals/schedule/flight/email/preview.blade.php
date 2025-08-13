@@ -44,17 +44,13 @@
                     <td>{{ $scheduleFlight->flight->fromAirport->iata }} - {{ $scheduleFlight->flight->toAirport->iata
                         }}
                     </td>
-                    <td>{{ \Carbon\Carbon::parse($scheduleFlight->flight->departure_time)->format('H:i') }}</td>
-                    <td>{{ optional($scheduleFlight->estimated_departure_time) ?
-                        \Carbon\Carbon::parse($scheduleFlight->estimated_departure_time)->format('H:i') : 'None' }}</td>
-                    <td>{{ optional($scheduleFlight->actual_departure_time) ?
-                        \Carbon\Carbon::parse($scheduleFlight->actual_departure_time)->format('H:i') : 'None' }}</td>
+                    <td>{{ $scheduleFlight->flight->departure_time_local ?? 'None' }}</td>
+                    <td>{{ $scheduleFlight->etd_local ?? 'None' }}</td>
+                    <td>{{ $scheduleFlight->atd_local ?? 'None' }}</td>
                     <td>{{ $scheduleFlight->departure_time_diff }}</td>
-                    <td>{{ \Carbon\Carbon::parse($scheduleFlight->flight->arrival_time)->format('H:i') }}</td>
-                    <td>{{ optional($scheduleFlight->estimated_arrival_time) ?
-                        \Carbon\Carbon::parse($scheduleFlight->estimated_arrival_time)->format('H:i') : 'None' }}</td>
-                    <td>{{ optional($scheduleFlight->actual_arrival_time) ?
-                        \Carbon\Carbon::parse($scheduleFlight->actual_arrival_time)->format('H:i') : 'None' }}</td>
+                    <td>{{ $scheduleFlight->flight->arrival_time_local ?? 'None' }}</td>
+                    <td>{{ $scheduleFlight->eta_local ?? 'None' }}</td>
+                    <td>{{ $scheduleFlight->ata_local ?? 'None' }}</td>
                     <td>{{ $scheduleFlightCustomer->total_uplifted_weight ?? 0 }} Kgs</td>
                     <td>{{ $scheduleFlight->total_offloaded_weight ?? 0 }} Kgs</td>
                 </tr>
