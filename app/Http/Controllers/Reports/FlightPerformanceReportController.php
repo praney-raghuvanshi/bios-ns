@@ -132,7 +132,7 @@ class FlightPerformanceReportController extends Controller
 
         $startWeeks = $endWeeks = $this->getWeeks($selectedOperationalYear);
 
-        $customerToShow = Customer::find($selectedCustomer)->first()->name ?? null;
+        $customerToShow = Customer::find($selectedCustomer)->name ?? null;
         $weeksToShow = "$selectedStartWeek - $selectedEndWeek";
 
         // Fetch days based on selected weeks
@@ -189,6 +189,7 @@ class FlightPerformanceReportController extends Controller
         // Remove duplicates
         $locations = $locations->unique()->values();
         $routes = $routes->unique()->values();
+        $finalData = [];
 
         $groupedDays = [];
         foreach ($days as $day => $week) {

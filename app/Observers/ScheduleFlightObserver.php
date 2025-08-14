@@ -38,9 +38,9 @@ class ScheduleFlightObserver
             if ($field === 'updated_at' || $field === 'departure_time_diff' || $field === 'arrival_time_diff' || $oldValue == $newValue) continue;
 
             if ($field === 'estimated_departure_time') {
-                $fieldName = 'EDT';
+                $fieldName = 'ETD';
             } else if ($field === 'actual_departure_time') {
-                $fieldName = 'ADT';
+                $fieldName = 'ATD';
             } else if ($field === 'estimated_arrival_time') {
                 $fieldName = 'ETA';
             } else if ($field === 'actual_arrival_time') {

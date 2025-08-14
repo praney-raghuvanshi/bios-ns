@@ -62,15 +62,19 @@ class OperationalCalendarController extends Controller
                 'added_by' => Auth::id()
             ]);
 
-            // Create Operational Days
             $startDate = Carbon::parse($startDate);
-            $totalDays = $weeks * 7;
-            for ($i = 0; $i < $totalDays; $i++) {
+            $endDate   = $startDate->copy()->addWeeks($weeks)->subDay();
+
+            $currentDate = $startDate->copy();
+
+            while ($currentDate->lte($endDate)) {
                 OperationalCalendarDay::create([
                     'operational_calendar_id' => $operationalCalendar->id,
-                    'day' => $startDate->copy()->addDays($i),
-                    'week' => ceil(($i + 1) / 7)
+                    'day'         => $currentDate->copy(),
+                    'week'    => $currentDate->isoWeek,      // ISO week number (1–53)
                 ]);
+
+                $currentDate->addDay();
             }
 
 

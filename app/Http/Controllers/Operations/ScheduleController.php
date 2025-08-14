@@ -116,7 +116,14 @@ class ScheduleController extends Controller
     public function show(Schedule $schedule)
     {
         // Eager load flights associated with the schedule
-        $schedule->load('scheduleFlights.flight');
+        $schedule->load([
+            'scheduleFlights' => function ($query) {
+                $query->join('flights', 'flights.id', '=', 'schedule_flights.flight_id')
+                    ->orderBy('flights.departure_time', 'asc')
+                    ->select('schedule_flights.*'); // Avoid column name clashes
+            },
+            'scheduleFlights.flight'
+        ]);
 
         return view('operations.schedule.detail', compact('schedule'));
     }

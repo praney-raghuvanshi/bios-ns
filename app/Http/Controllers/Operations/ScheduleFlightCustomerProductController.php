@@ -53,7 +53,7 @@ class ScheduleFlightCustomerProductController extends Controller
             ]);
 
             // Get Flight Aircraft Capacity for Utlisation
-            $capacity = $scheduleFlight->flight->aircraft->capacity ?? 0;
+            $capacity = $scheduleFlight->flight->aircraftType->capacity ?? 0;
 
             // Update Total Uplifted & Total Offloaded weights for Customer
             $oldTotalUpliftedWeight = $scheduleFlightCustomer->total_uplifted_weight ?? 0;
@@ -120,7 +120,7 @@ class ScheduleFlightCustomerProductController extends Controller
             $scheduleFlightCustomerProduct->save();
 
             // Get Flight Aircraft Capacity for Utlisation
-            $capacity = $scheduleFlight->flight->aircraft->capacity ?? 0;
+            $capacity = $scheduleFlight->flight->aircraftType->capacity ?? 0;
 
             // Update Total Uplifted & Total Offloaded weights for Customer
             $oldTotalUpliftedWeight = $scheduleFlightCustomer->total_uplifted_weight ?? 0;
@@ -170,7 +170,7 @@ class ScheduleFlightCustomerProductController extends Controller
             $scheduleFlightCustomer->save();
 
             // Get Flight Aircraft Capacity for Utlisation
-            $capacity = $scheduleFlight->flight->aircraft->capacity ?? 0;
+            $capacity = $scheduleFlight->flight->aircraftType->capacity ?? 0;
 
             $oldUpliftedWeight = $scheduleFlight->uplifted ?? 0;
             $oldOffloadedWeight = $scheduleFlight->offloaded ?? 0;
