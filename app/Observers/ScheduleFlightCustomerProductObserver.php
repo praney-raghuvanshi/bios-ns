@@ -47,6 +47,8 @@ class ScheduleFlightCustomerProductObserver
                 $fieldName = 'Uplifted Weight';
             } else if ($field === 'offloaded_weight') {
                 $fieldName = 'Offloaded Weight';
+            } else {
+                $fieldName = $field;
             }
 
             AuditLog::create([

@@ -60,6 +60,8 @@ class ScheduleFlightCustomerShipmentObserver
                 $fieldName = 'Total Actual Weight';
             } else if ($field === 'destination') {
                 $fieldName = 'Destination';
+            } else {
+                $fieldName = $field;
             }
 
             AuditLog::create([

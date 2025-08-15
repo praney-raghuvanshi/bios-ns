@@ -55,7 +55,8 @@ $customizerHidden = 'customizer-hide';
             @csrf
             <div class="col-12">
                 <label class="form-label" for="scheduleDate">Schedule Date</label>
-                <input type="date" name="date" class="form-control" value="{{ old('date', date('Y-m-d')) }}" />
+                <input type="date" name="date" class="form-control ddmmyyyyDateFormat"
+                    value="{{ old('date', date('Y-m-d')) }}" />
             </div>
 
             <div class="col-12">

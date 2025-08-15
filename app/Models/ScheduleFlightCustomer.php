@@ -43,7 +43,7 @@ class ScheduleFlightCustomer extends Model
 
     public function productAndAwbData()
     {
-        $results = [];
+        $results = $awbTotals = [];
 
         // Get all shipments linked to this schedule flight customer
         foreach ($this->scheduleFlightCustomerShipments as $shipment) {
@@ -52,25 +52,37 @@ class ScheduleFlightCustomer extends Model
             if (!$product) continue; // Skip if product not found
 
             $productCode = $product->code;
-            $awbTotal = $shipment->total_volumetric_weight;
+            $weight = $shipment->volumetric_weight > 0
+                ? $shipment->volumetric_weight
+                : $shipment->actual_weight;
 
-            // Get total AWB weight for this product and customer
-            $productTotal = intval(ScheduleFlightCustomerProduct::where('schedule_flight_customer_id', $this->id)
-                ->where('product_id', $product->id)
-                ->sum('uplifted_weight'));
-
-            // Format the result
-            if ($awbTotal === $productTotal) {
-                $results[] = [
-                    'is_equal' => true,
-                    'msg' => "Customer $productCode Total: $productTotal - AWB $productCode Total: $awbTotal"
-                ];
-            } else {
-                $results[] = [
-                    'is_equal' => false,
-                    'msg' => "Customer $productCode Total: $productTotal - AWB $productCode Total: $awbTotal"
-                ];
+            // Sum per product code
+            if (!isset($awbTotals[$productCode])) {
+                $awbTotals[$productCode] = 0;
             }
+            $awbTotals[$productCode] += $weight;
+        }
+
+        $dbTotals = ScheduleFlightCustomerProduct::where('schedule_flight_customer_id', $this->id)
+            ->with('product')
+            ->get()
+            ->mapWithKeys(function ($item) {
+                return [$item->product->code => (int) $item->uplifted_weight];
+            })
+            ->toArray();
+
+        $allProductCodes = array_unique(array_merge(array_keys($awbTotals), array_keys($dbTotals)));
+
+        foreach ($allProductCodes as $productCode) {
+            $awbTotal = $awbTotals[$productCode] ?? 0;
+            $dbTotal = $dbTotals[$productCode] ?? 0;
+
+            $isEqual = ($awbTotal === $dbTotal);
+
+            $results[] = [
+                'is_equal' => $isEqual,
+                'msg' => "Customer $productCode Total: $dbTotal - AWB $productCode Total: $awbTotal"
+            ];
         }
 
         return $results;

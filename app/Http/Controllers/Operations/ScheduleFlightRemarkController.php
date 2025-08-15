@@ -44,25 +44,33 @@ class ScheduleFlightRemarkController extends Controller
             $isFpr = $request->has('fpr') ? true : false;
             $isEmail = $request->has('email') ? true : false;
 
+            // Handling new lines in Remark
+            $remarksArray = preg_split('/\r\n|\r|\n/', trim($remark));
+            $remarksArray = array_filter($remarksArray, fn($line) => trim($line) !== '');
+
             foreach ($customers as $customer) {
-                ScheduleFlightRemark::create([
-                    'schedule_flight_id' => $scheduleFlight->id,
-                    'customer_id' => $customer,
-                    'remark' => $remark,
-                    'email_required' => $isEmail,
-                    'is_fpr' => $isFpr,
-                    'added_by' => Auth::id()
-                ]);
+                foreach ($remarksArray as $remark) {
+                    ScheduleFlightRemark::create([
+                        'schedule_flight_id' => $scheduleFlight->id,
+                        'customer_id' => $customer,
+                        'remark' => $remark,
+                        'email_required' => $isEmail,
+                        'is_fpr' => $isFpr,
+                        'added_by' => Auth::id()
+                    ]);
+                }
             }
 
             if ($isDfr) {
-                ScheduleFlightRemark::create([
-                    'schedule_flight_id' => $scheduleFlight->id,
-                    'is_dfr' => $isDfr,
-                    'remark' => $remark,
-                    'added_by' => Auth::id()
-                ]);
-                $scheduleFlight->latest_remark = $remark;
+                foreach ($remarksArray as $remark) {
+                    ScheduleFlightRemark::create([
+                        'schedule_flight_id' => $scheduleFlight->id,
+                        'is_dfr' => $isDfr,
+                        'remark' => $remark,
+                        'added_by' => Auth::id()
+                    ]);
+                }
+                $scheduleFlight->latest_remark = end($remarksArray);
                 $scheduleFlight->save();
             }
 

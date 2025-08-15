@@ -92,33 +92,38 @@ $customizerHidden = 'customizer-hide';
                 @php
 
                 $now = \Carbon\Carbon::now('Europe/Berlin');
-                $stdEtd = \Carbon\Carbon::parse($scheduleFlight->estimated_departure_time ??
-                $scheduleFlight->flight->departure_time, 'Europe/Berlin'); // use ETD if available
-                $eta = \Carbon\Carbon::parse($scheduleFlight->estimated_arrival_time ??
-                $scheduleFlight->flight->arrival_time, 'Europe/Berlin');
+                $std = \Carbon\Carbon::parse($scheduleFlight->flight->departure_time, 'Europe/Berlin');
+                $scheduleDate = \Carbon\Carbon::parse($scheduleFlight->schedule->date, 'Europe/Berlin');
+                // $eta = \Carbon\Carbon::parse($scheduleFlight->estimated_arrival_time ??
+                // $scheduleFlight->flight->arrival_time, 'Europe/Berlin');
                 // use ETA if available
 
                 // Departure color logic
                 $departureClass = '';
-                if(is_null($scheduleFlight->actual_departure_time) && $scheduleFlight->status === 1) {
-                if ($now->gte($stdEtd->copy()->addMinutes(15))) {
+
+                if ($scheduleFlight->status === 3) {
+                $departureClass = 'bg-danger-subtle';
+                } elseif ($scheduleDate->isSameDay($now)) {
+                if ($scheduleFlight->status === 1) {
+                if ($now->gte($std->copy()->addMinutes(15))) {
                 $departureClass = 'bg-danger-subtle'; // Red after 15 min
-                } elseif ($now->gte($stdEtd)) {
+                } elseif ($now->gte($std)) {
                 $departureClass = 'bg-purple-subtle'; // Purple at STD/ETD
                 }
                 }
+                }
 
-                // Arrival color logic (similar to departure)
-                $arrivalClass = '';
-                if(is_null($scheduleFlight->actual_arrival_time) && $scheduleFlight->status === 1) {
-                if ($now->gte($eta->copy()->addMinutes(15))) {
-                $arrivalClass = 'bg-danger-subtle'; // Red after 15 min
-                } elseif ($now->gte($eta)) {
-                $arrivalClass = 'bg-purple-subtle'; // Purple at ETA
-                }
-                }
+                // // Arrival color logic (similar to departure)
+                // $arrivalClass = '';
+                // if(is_null($scheduleFlight->actual_arrival_time) && $scheduleFlight->status === 1) {
+                // if ($now->gte($eta->copy()->addMinutes(15))) {
+                // $arrivalClass = 'bg-danger-subtle'; // Red after 15 min
+                // } elseif ($now->gte($eta)) {
+                // $arrivalClass = 'bg-purple-subtle'; // Purple at ETA
+                // }
+                // }
                 @endphp
-                <tr class="{{ $departureClass }} {{ $arrivalClass }}">
+                <tr class="{{ $departureClass }}">
                     <td class="p-1">{{ $scheduleFlight->flight->flight_number }}</td>
                     <td class="p-1">{{ $scheduleFlight->flight->fromAirport->iata ?? '' }}</td>
                     <td class="p-1">{{ $scheduleFlight->flight->toAirport->iata ?? '' }}</td>
@@ -132,7 +137,8 @@ $customizerHidden = 'customizer-hide';
                     <td class="p-1">
                         @if(!is_null($scheduleFlight->departure_time_diff))
                         @if($scheduleFlight->departure_time_diff >= 0)
-                        <span class="badge bg-success">- {{ $scheduleFlight->formatted_departure_time_diff }}</span>
+                        <span class="badge bg-success">@if($scheduleFlight->departure_time_diff > 0) - @endif {{
+                            $scheduleFlight->formatted_departure_time_diff }}</span>
                         @else
                         <span class="badge bg-danger">+ {{ $scheduleFlight->formatted_departure_time_diff }}</span>
                         @endif
@@ -149,7 +155,8 @@ $customizerHidden = 'customizer-hide';
                     <td class="p-1">
                         @if(!is_null($scheduleFlight->arrival_time_diff))
                         @if($scheduleFlight->arrival_time_diff >= 0)
-                        <span class="badge bg-success">- {{ $scheduleFlight->formatted_arrival_time_diff }}</span>
+                        <span class="badge bg-success">@if($scheduleFlight->arrival_time_diff > 0) - @endif {{
+                            $scheduleFlight->formatted_arrival_time_diff }}</span>
                         @else
                         <span class="badge bg-danger">+ {{ $scheduleFlight->formatted_arrival_time_diff }}</span>
                         @endif

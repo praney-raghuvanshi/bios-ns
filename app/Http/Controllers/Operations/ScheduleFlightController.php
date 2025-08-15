@@ -142,7 +142,10 @@ class ScheduleFlightController extends Controller
 
             if ($etd && $atd) {
                 $departureDiff = Carbon::parse($atd)->diffInMinutes(Carbon::parse($scheduleFlight->flight->departure_time), false);
-                if ($departureDiff != $original['departure_time_diff']) {
+                $originalDepartureDiff = isset($original['departure_time_diff'])
+                    ? (int) $original['departure_time_diff']
+                    : null;
+                if ($originalDepartureDiff === null || $departureDiff !== $originalDepartureDiff) {
                     $scheduleFlight->departure_time_diff = $departureDiff;
                     $hasChanges = true;
                 }
@@ -160,7 +163,10 @@ class ScheduleFlightController extends Controller
 
             if ($eta && $ata) {
                 $arrivalDiff = Carbon::parse($ata)->diffInMinutes(Carbon::parse($scheduleFlight->flight->arrival_time), false);
-                if ($arrivalDiff != $original['arrival_time_diff']) {
+                $originalArrivalDiff = isset($original['arrival_time_diff'])
+                    ? (int) $original['arrival_time_diff']
+                    : null;
+                if ($originalArrivalDiff === null || $arrivalDiff !== $originalArrivalDiff) {
                     $scheduleFlight->arrival_time_diff = $arrivalDiff;
                     $hasChanges = true;
                 }
