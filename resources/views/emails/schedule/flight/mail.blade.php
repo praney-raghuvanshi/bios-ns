@@ -45,9 +45,13 @@
     <hr style="border: none; border-top: 1px solid #ccc; margin: 10px 0;">
 
     <p style="font-weight: bold; margin-bottom: 5px;">Service Remarks:</p>
+    @if(count($data['service_remarks']) > 0)
     @foreach ($data['service_remarks'] as $serviceRemark)
     <p style="margin: 3px 0;">{{ $serviceRemark }}</p>
     @endforeach
+    @else
+    <p style="margin: 3px 0;">None</p>
+    @endif
 
     <hr style="border: none; border-top: 1px solid #ccc; margin: 10px 0;">
 

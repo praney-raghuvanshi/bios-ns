@@ -22,6 +22,20 @@ class ScheduleFlight extends Model
 
     protected $guarded = [];
 
+    protected $append = [
+        'formatted_id',
+        'formatted_etd',
+        'formatted_atd',
+        'formatted_eta',
+        'formatted_ata',
+        'formatted_departure_time_diff',
+        'formatted_arrival_time_diff',
+        'etd_local',
+        'atd_local',
+        'eta_local',
+        'ata_local'
+    ];
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
@@ -87,7 +101,13 @@ class ScheduleFlight extends Model
         if (is_null($this->departure_time_diff)) {
             return '--';
         }
-        return Carbon::createFromTime(0, 0, 0)->addMinutes(abs($this->departure_time_diff))->format('H:i');
+        if ($this->departure_time_diff > 0) {
+            return '- ' . Carbon::createFromTime(0, 0, 0)->addMinutes(abs($this->departure_time_diff))->format('H:i');
+        } elseif ($this->departure_time_diff < 0) {
+            return '+ ' . Carbon::createFromTime(0, 0, 0)->addMinutes(abs($this->departure_time_diff))->format('H:i');
+        } else {
+            return Carbon::createFromTime(0, 0, 0)->addMinutes(abs($this->departure_time_diff))->format('H:i');
+        }
     }
 
     public function getFormattedArrivalTimeDiffAttribute()
@@ -95,7 +115,13 @@ class ScheduleFlight extends Model
         if (is_null($this->arrival_time_diff)) {
             return '--';
         }
-        return Carbon::createFromTime(0, 0, 0)->addMinutes(abs($this->arrival_time_diff))->format('H:i');
+        if ($this->arrival_time_diff > 0) {
+            return '- ' . Carbon::createFromTime(0, 0, 0)->addMinutes(abs($this->arrival_time_diff))->format('H:i');
+        } elseif ($this->arrival_time_diff < 0) {
+            return '+ ' . Carbon::createFromTime(0, 0, 0)->addMinutes(abs($this->arrival_time_diff))->format('H:i');
+        } else {
+            return Carbon::createFromTime(0, 0, 0)->addMinutes(abs($this->arrival_time_diff))->format('H:i');
+        }
     }
 
     public function getEtdLocalAttribute()

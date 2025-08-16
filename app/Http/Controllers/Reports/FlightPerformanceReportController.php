@@ -136,7 +136,10 @@ class FlightPerformanceReportController extends Controller
         $weeksToShow = "$selectedStartWeek - $selectedEndWeek";
 
         // Fetch days based on selected weeks
-        $days = OperationalCalendarDay::where('operational_calendar_id', $selectedOperationalYear)->whereBetween('week', [$selectedStartWeek, $selectedEndWeek])->pluck('week', 'day')->toArray();
+        $days = OperationalCalendarDay::where('operational_calendar_id', $selectedOperationalYear)
+            ->whereBetween('week', [$selectedStartWeek, $selectedEndWeek])
+            ->pluck('week', 'day')
+            ->toArray();
 
         $scheduleFlights = ScheduleFlight::with([
             'scheduleFlightCustomers' => function ($query) use ($selectedCustomer) {
@@ -150,7 +153,7 @@ class FlightPerformanceReportController extends Controller
                 $query->with(['location', 'fromAirport', 'toAirport']); // Fetch the location (FROM-TO)
             },
         ])->whereHas('schedule', function ($query) use ($days) {
-            $query->whereIn('date', array_keys($days)); // Use mapped dates
+            $query->whereIn('date', array_keys($days));
         })->whereHas('scheduleFlightCustomers', function ($query) use ($selectedCustomer) {
             $query->where('customer_id', $selectedCustomer);
         })->whereHas('flight', function ($query) use ($selectedZone, $selectedFlight) {
@@ -164,31 +167,29 @@ class FlightPerformanceReportController extends Controller
             }
         })->get();
 
-        $locations = collect();
-        $routes = collect();
+        $locationRoutes = collect();
 
         foreach ($scheduleFlights as $scheduleFlight) {
             $flight = $scheduleFlight->flight;
 
             if ($flight) {
-                // Extract location and route
                 $location = $flight->location->name ?? null;
                 $route = $flight->fromAirport->iata . ' - ' . $flight->toAirport->iata;
-                //$reverseRoute = $flight->toAirport->iata . ' - ' . $flight->fromAirport->iata;
 
                 if ($location) {
-                    $locations->push($location);
+                    if (!isset($locationRoutes[$location])) {
+                        $locationRoutes[$location] = collect();
+                    }
+                    $locationRoutes[$location]->push($route);
                 }
-
-                // Store routes uniquely
-                $routes->push($route);
-                //$routes->push($reverseRoute); // Store reverse route as well
             }
         }
 
-        // Remove duplicates
-        $locations = $locations->unique()->values();
-        $routes = $routes->unique()->values();
+        // Remove duplicates for each location
+        foreach ($locationRoutes as $loc => $routes) {
+            $locationRoutes[$loc] = $routes->unique()->values();
+        }
+
         $finalData = [];
 
         $groupedDays = [];
@@ -196,15 +197,15 @@ class FlightPerformanceReportController extends Controller
             $groupedDays[$week][] = $day; // Now weeks contain multiple days
         }
 
-        foreach ($locations as $locationKey => $location) { // 🔹 First Loop: Locations
+        foreach ($locationRoutes as $locationKey => $routes) { // 🔹 Loop: Locations
             $finalData[$locationKey] = [
-                'location' => $location,
+                'location' => $locationKey,
                 'routes' => []
             ];
 
             $processedRoutes = []; // 🔥 Track routes to avoid duplicate reverse key
 
-            foreach ($routes as $key => $route) { // 🔹 Second Loop: Routes in this location
+            foreach ($routes as $route) { // 🔹 Loop: Routes in this location
                 [$from, $to] = explode(' - ', $route);
 
                 // 🔥 Sort airports alphabetically to ensure unique key
@@ -218,10 +219,10 @@ class FlightPerformanceReportController extends Controller
                 if (isset($processedRoutes[$routeKey])) {
                     continue;
                 }
-                $processedRoutes[$routeKey] = true; // Mark route as processed
+                $processedRoutes[$routeKey] = true;
 
-                foreach ($groupedDays as $week => $weekDays) { // 🔹 Third Loop: Weeks
-                    foreach ($weekDays as $day) { // 🔹 Fourth Loop: Each day in the week
+                foreach ($groupedDays as $week => $weekDays) { // 🔹 Loop: Weeks
+                    foreach ($weekDays as $day) { // 🔹 Loop: Days
                         // Get flights for both directions
                         $inboundFlights = $scheduleFlights->filter(function ($scheduleFlight) use ($from, $to, $day) {
                             return $scheduleFlight->flight &&

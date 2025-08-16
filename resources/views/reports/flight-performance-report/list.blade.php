@@ -272,10 +272,10 @@ $customizerHidden = 'customizer-hide';
                             {{-- Forward Flight Data --}}
                             @if ($flightData['flights'])
                             @php $flight = $flightData['flights'][0]; @endphp
-                            <td>{{ $flight['estimated_departure_time'] ?? '-' }}</td>
+                            <td>{{ $flight['flight']['departure_time'] ?? '-' }}</td>
                             <td>{{ $flight['actual_departure_time'] ?? '-' }}</td>
                             <td>{{ $flight['departure_time_diff'] ?? '-' }}</td>
-                            <td>{{ $flight['estimated_arrival_time'] ?? '-' }}</td>
+                            <td>{{ $flight['flight']['arrival_time'] ?? '-' }}</td>
                             <td>{{ $flight['actual_arrival_time'] ?? '-' }}</td>
                             <td>{{ $flight['arrival_time_diff'] ?? '-' }}</td>
                             <td>
@@ -313,10 +313,10 @@ $customizerHidden = 'customizer-hide';
                             {{-- Reverse Flight Data --}}
                             @if ($flightData['reverse_flights'])
                             @php $flight = $flightData['reverse_flights'][0]; @endphp
-                            <td>{{ $flight['estimated_departure_time'] ?? '-' }}</td>
+                            <td>{{ $flight['flight']['departure_time'] ?? '-' }}</td>
                             <td>{{ $flight['actual_departure_time'] ?? '-' }}</td>
                             <td>{{ $flight['departure_time_diff'] ?? '-' }}</td>
-                            <td>{{ $flight['estimated_arrival_time'] ?? '-' }}</td>
+                            <td>{{ $flight['flight']['arrival_time'] ?? '-' }}</td>
                             <td>{{ $flight['actual_arrival_time'] ?? '-' }}</td>
                             <td>{{ $flight['arrival_time_diff'] ?? '-' }}</td>
                             <td>

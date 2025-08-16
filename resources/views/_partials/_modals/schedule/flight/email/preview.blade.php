@@ -47,7 +47,7 @@
                     <td>{{ $scheduleFlight->flight->departure_time_local ?? 'None' }}</td>
                     <td>{{ $scheduleFlight->etd_local ?? 'None' }}</td>
                     <td>{{ $scheduleFlight->atd_local ?? 'None' }}</td>
-                    <td>{{ $scheduleFlight->departure_time_diff }}</td>
+                    <td>{{ $scheduleFlight->formatted_departure_time_diff ?? 'None' }}</td>
                     <td>{{ $scheduleFlight->flight->arrival_time_local ?? 'None' }}</td>
                     <td>{{ $scheduleFlight->eta_local ?? 'None' }}</td>
                     <td>{{ $scheduleFlight->ata_local ?? 'None' }}</td>
@@ -63,9 +63,13 @@
 
     <hr>
     <p class="fw-bold">Service Remarks:</p>
+    @if(count($serviceRemarks) > 0)
     @foreach ($serviceRemarks as $serviceRemark)
     <p>{{ $serviceRemark }}</p>
     @endforeach
+    @else
+    <p>None</p>
+    @endif
 
     <hr>
 

@@ -137,10 +137,10 @@ $customizerHidden = 'customizer-hide';
                     <td class="p-1">
                         @if(!is_null($scheduleFlight->departure_time_diff))
                         @if($scheduleFlight->departure_time_diff >= 0)
-                        <span class="badge bg-success">@if($scheduleFlight->departure_time_diff > 0) - @endif {{
+                        <span class="badge bg-success">{{
                             $scheduleFlight->formatted_departure_time_diff }}</span>
                         @else
-                        <span class="badge bg-danger">+ {{ $scheduleFlight->formatted_departure_time_diff }}</span>
+                        <span class="badge bg-danger">{{ $scheduleFlight->formatted_departure_time_diff }}</span>
                         @endif
                         @endif
                     </td>
@@ -155,10 +155,10 @@ $customizerHidden = 'customizer-hide';
                     <td class="p-1">
                         @if(!is_null($scheduleFlight->arrival_time_diff))
                         @if($scheduleFlight->arrival_time_diff >= 0)
-                        <span class="badge bg-success">@if($scheduleFlight->arrival_time_diff > 0) - @endif {{
+                        <span class="badge bg-success">{{
                             $scheduleFlight->formatted_arrival_time_diff }}</span>
                         @else
-                        <span class="badge bg-danger">+ {{ $scheduleFlight->formatted_arrival_time_diff }}</span>
+                        <span class="badge bg-danger">{{ $scheduleFlight->formatted_arrival_time_diff }}</span>
                         @endif
                         @endif
                     </td>

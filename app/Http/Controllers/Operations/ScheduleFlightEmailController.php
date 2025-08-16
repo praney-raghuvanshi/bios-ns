@@ -102,7 +102,7 @@ class ScheduleFlightEmailController extends Controller
             }
 
             if ($isRemarkIncluded) {
-                $serviceRemarks = ScheduleFlightRemark::where('customer_id', $scheduleFlightCustomer->customer_id)->where('is_fpr', 1)->orderBy('id', 'desc')->pluck('remark');
+                $serviceRemarks = ScheduleFlightRemark::where('schedule_flight_id', $scheduleFlight->id)->where('customer_id', $scheduleFlightCustomer->customer_id)->where('is_fpr', 1)->orderBy('id', 'desc')->pluck('remark');
             }
         } catch (Exception $e) {
             return back()->with('failure', $e->getMessage());
@@ -138,16 +138,6 @@ class ScheduleFlightEmailController extends Controller
                     $emailAddresses[] = $customerEmail->email;
                 }
 
-                $departureTimeDiffDisplay = null;
-                $departureTimeDiff = $scheduleFlight->departure_time_diff;
-                if (!is_null($departureTimeDiff)) {
-                    if ($departureTimeDiff >= 0) {
-                        $departureTimeDiffDisplay = '+ ' . $scheduleFlight->formatted_departure_time_diff;
-                    } else {
-                        $departureTimeDiffDisplay = '- ' . $scheduleFlight->formatted_departure_time_diff;
-                    }
-                }
-
                 $data = [
                     'flight_number' => $scheduleFlight->flight->flight_number,
                     'date' => Carbon::parse($schedule->date)->format('d F Y'),
@@ -155,7 +145,7 @@ class ScheduleFlightEmailController extends Controller
                     'std' => $scheduleFlight->flight->departure_time_local ?? 'None',
                     'etd' => $scheduleFlight->etd_local ?? 'None',
                     'atd' => $scheduleFlight->atd_local ?? 'None',
-                    'departure_diff' => $departureTimeDiffDisplay,
+                    'departure_diff' => $scheduleFlight->formatted_departure_time_diff ?? 0,
                     'sta' => $scheduleFlight->flight->arrival_time_local ?? 'None',
                     'eta' => $scheduleFlight->eta_local ?? 'None',
                     'ata' => $scheduleFlight->ata_local ?? 'None',
@@ -166,10 +156,12 @@ class ScheduleFlightEmailController extends Controller
                 $subject = 'Bridges WW Update for Flight ' . $data['flight_number'] . ' on ' . $data['date'];
 
                 if (in_array($scheduleFlightCustomer->id, $scheduleFlightCustomerIdsForRemarks)) {
-                    $data['service_remarks'] = ScheduleFlightRemark::where('customer_id', $scheduleFlightCustomer->customer_id)->where('is_fpr', 1)->orderBy('id', 'desc')->pluck('remark');
+                    $data['service_remarks'] = ScheduleFlightRemark::where('schedule_flight_id', $scheduleFlight->id)->where('customer_id', $scheduleFlightCustomer->customer_id)->where('is_fpr', 1)->orderBy('id', 'desc')->pluck('remark');
                 } else {
                     $data['service_remarks'] = [];
                 }
+
+                $messageToShow = 'Schedule Flight Emails sent successfully.';
 
                 if (count($emailAddresses) > 0) {
                     Mail::to($emailAddresses)->send(new FlightUpdate($subject, $data));
@@ -182,12 +174,14 @@ class ScheduleFlightEmailController extends Controller
                         'status' => 'sent',
                         'added_by' => Auth::id()
                     ]);
+                } else {
+                    $messageToShow = 'No email addresses found for the selected customers.';
                 }
             }
         } catch (Exception $e) {
             return back()->with('failure', $e->getMessage());
         }
 
-        return redirect()->route('flight-operations.schedule.flight.email', [$schedule, $scheduleFlight])->with('success', 'Schedule Flight Emails sent successfully.');
+        return redirect()->route('flight-operations.schedule.flight.email', [$schedule, $scheduleFlight])->with('success', $messageToShow);
     }
 }
