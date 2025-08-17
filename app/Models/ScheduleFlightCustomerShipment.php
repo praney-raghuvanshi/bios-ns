@@ -68,6 +68,16 @@ class ScheduleFlightCustomerShipment extends Model
         return $this->belongsTo(Airport::class, 'destination', 'id');
     }
 
+    public function parent()
+    {
+        return $this->belongsTo(ScheduleFlightCustomerShipment::class, 'parent_awb_id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(ScheduleFlightCustomerShipment::class, 'parent_awb_id');
+    }
+
     public function auditLogs()
     {
         return $this->morphMany(AuditLog::class, 'model');

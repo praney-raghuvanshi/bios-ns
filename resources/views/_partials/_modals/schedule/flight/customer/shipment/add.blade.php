@@ -12,7 +12,7 @@
                     action="{{ route('flight-operations.schedule.flight.customer.shipment.store', [$schedule, $scheduleFlight, $scheduleFlightCustomer]) }}">
                     @csrf
 
-                    <!-- Row 1: Radio Buttons (Centered) -->
+                    <!-- Row 1: Radio Buttons -->
                     <div class="d-flex justify-content-center mb-3">
                         <label class="form-label me-3">Select AWB Type:</label>
                         <div class="form-check me-3">
@@ -46,7 +46,7 @@
                         <div id="awbMessage" class="text-danger"></div>
                     </div>
 
-                    <!-- Row 3: Product Selection -->
+                    <!-- Row 3: Product + Destination -->
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label class="form-label" for="product">Product</label>
@@ -54,7 +54,9 @@
                                 <option value="">-- Select Product --</option>
                                 @foreach ($scheduleFlightCustomer->scheduleFlightCustomerProducts as $item)
                                 <option value="{{$item->product_id}}" @if(old('product')===$item->product_id) selected
-                                    @endif>{{ $item->product->name }}</option>
+                                    @endif>
+                                    {{ $item->product->name }}
+                                </option>
                                 @endforeach
                             </select>
                         </div>
@@ -64,13 +66,15 @@
                             <select name="destination" class="select2 form-select" id="destination" disabled>
                                 <option value="">-- Select Destination --</option>
                                 @foreach ($airports as $item)
-                                <option value="{{$item->id}}" @if(old('destination')===$item->id) selected
-                                    @endif>{{ $item->name }}</option>
+                                <option value="{{$item->id}}" @if(old('destination')===$item->id) selected @endif>
+                                    {{ $item->name }}
+                                </option>
                                 @endforeach
                             </select>
                         </div>
                     </div>
 
+                    <!-- Row 4: Weights -->
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label class="form-label" for="declaredWeight">Declared Weight</label>
@@ -110,11 +114,11 @@
                         </div>
                     </div>
 
+                    <!-- Submit Buttons -->
                     <div class="text-center">
                         <button type="submit" class="btn btn-primary me-2">Submit</button>
                         <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     </div>
-
                 </form>
             </div>
         </div>

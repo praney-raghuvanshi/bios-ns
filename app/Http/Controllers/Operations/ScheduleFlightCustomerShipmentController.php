@@ -40,24 +40,106 @@ class ScheduleFlightCustomerShipmentController extends Controller
 
             DB::beginTransaction();
 
-            $awbType = $request->input('awb_type');
-            $awb = $request->input('new_awb') ?? $request->input('subsequent_awb');
 
+
+            // $awb = $request->input('new_awb') ?? $request->input('subsequent_awb');
+            // $awbType = $request->input('awb_type'); // new / connecting / subsequent
+            // $flightCustomerId = $scheduleFlightCustomer->id;
+
+            // $records = ScheduleFlightCustomerShipment::where('awb', $awb)->get();
+            // $parent  = $records->first();
+
+
+
+            // $parentId = null;
+
+            // if ($awbType === 'connecting') {
+            //     $parent = ScheduleFlightCustomerShipment::where('awb', $awb)
+            //         ->latest('id')
+            //         ->first();
+            //     $parentId = $parent?->id;
+            // }
+
+            // if ($awbType === 'subsequent') {
+            //     $parent = ScheduleFlightCustomerShipment::where('awb', $awb)
+            //         ->where('type', 'new')
+            //         ->first();
+            //     $parentId = $parent?->id;
+            // }
+
+            // ScheduleFlightCustomerShipment::create([
+            //     'schedule_flight_customer_id' => $flightCustomerId,
+            //     'awb' => $awb,
+            //     'product_id' => $request->input('product'),
+            //     'declared_weight' => $request->input('declared_weight') ?? 0,
+            //     'actual_weight' => $request->input('actual_weight') ?? 0,
+            //     'volumetric_weight' => $request->input('volumetric_weight') ?? 0,
+            //     'uplifted_weight' => $request->input('actual_weight') ?? 0,
+            //     'offloaded_weight' => $request->input('offloaded_weight') ?? 0,
+            //     'total_volumetric_weight' => $request->input('total_volumetric_weight') ?? 0,
+            //     'total_actual_weight' => $request->input('total_actual_weight') ?? 0,
+            //     'destination' => $request->input('destination'),
+            //     'type' => $awbType,
+            //     'parent_awb_id' => $parentId,
+            //     'added_by' => auth()->id(),
+            // ]);
+
+            $awbNumber = $request->input('new_awb') ?? $request->input('subsequent_awb');
+            $awbType   = $request->input('awb_type');
+            $flightCustomerId = $scheduleFlightCustomer->id;
+            $parentId  = null;
+
+            // Find existing AWBs with same number
+            $records = ScheduleFlightCustomerShipment::where('awb', $awbNumber)->get();
+            $parent  = $records->first();
+
+            /**
+             * Case 1: User selected NEW, but AWB already exists → 
+             * Treat as CONNECTING, only for this new entry.
+             */
+            if ($awbType === 'new' && $records->isNotEmpty()) {
+                $awbType  = 'connecting';
+                $parentId = $parent->id;
+            }
+
+            /**
+             * Case 2: User selected SUBSEQUENT →
+             * Ensure total actual weight does not exceed available.
+             */
+            if ($awbType === 'subsequent' && $records->isNotEmpty()) {
+                $totalActual = $records->sum('actual_weight');
+                $totalAllowed = $records->first()->total_actual_weight;
+
+                $newActual = $request->input('actual_weight') ?? 0;
+
+                if ($totalActual + $newActual > $totalAllowed) {
+                    return back()->withErrors([
+                        'actual_weight' => 'Total actual weight already reached for this AWB. Cannot add more subsequent shipments.',
+                    ])->withInput();
+                }
+
+                $parentId = $parent->id;
+            }
+
+            // ✅ Create the shipment entry
             ScheduleFlightCustomerShipment::create([
-                'schedule_flight_customer_id' => $scheduleFlightCustomer->id,
-                'awb' => $awb,
-                'product_id' => $request->input('product'),
-                'declared_weight' => $request->input('declared_weight') ?? 0,
-                'actual_weight' => $request->input('actual_weight') ?? 0,
-                'volumetric_weight' => $request->input('volumetric_weight') ?? 0,
-                'uplifted_weight' => $request->input('actual_weight') ?? 0,
-                'offloaded_weight' => $request->input('offloaded_weight') ?? 0,
-                'total_volumetric_weight' => $request->input('total_volumetric_weight') ?? 0,
-                'total_actual_weight' => $request->input('total_actual_weight') ?? 0,
-                'destination' => $request->input('destination'),
-                'type' => $awbType,
-                'added_by' => Auth::id()
+                'schedule_flight_customer_id' => $flightCustomerId,
+                'awb'                         => $awbNumber,
+                'product_id'                  => $request->input('product'),
+                'declared_weight'             => $request->input('declared_weight') ?? 0,
+                'actual_weight'               => $request->input('actual_weight') ?? 0,
+                'volumetric_weight'           => $request->input('volumetric_weight') ?? 0,
+                'uplifted_weight'             => $request->input('actual_weight') ?? 0, // always same as actual
+                'offloaded_weight'            => $request->input('offloaded_weight') ?? 0,
+                'total_volumetric_weight'     => $request->input('total_volumetric_weight') ?? 0,
+                'total_actual_weight'         => $request->input('total_actual_weight') ?? 0,
+                'destination'                 => $request->input('destination'),
+                'type'                        => $awbType,
+                'parent_awb_id'               => $parentId,
+                'added_by'                    => Auth::id(),
             ]);
+
+            //return back()->with('success', 'AWB stored successfully.');
 
             DB::commit();
         } catch (Exception $e) {
@@ -138,50 +220,81 @@ class ScheduleFlightCustomerShipmentController extends Controller
 
     public function checkAwbForScheduleFlightCustomer(Request $request)
     {
-        $awbType = $request->input('awb_type');
-        $awb = $request->input('awb');
-        $data = [
-            'success' => false,
-            'exist' => false,
-            'data' => []
-        ];
-
         try {
 
-            $result = ScheduleFlightCustomerShipment::where('awb', $awb)->first();
+            $awbNumber = $request->input('awb');
+            $awbType   = $request->input('awb_type');
+
+            if (!$awbNumber || !$awbType) {
+                return response()->json([
+                    'status'  => 'error',
+                    'message' => 'Missing AWB number or type.'
+                ]);
+            }
+
+            // Query existing AWB records
+            $records = ScheduleFlightCustomerShipment::where('awb', $awbNumber)->get();
+
+            // Case: NEW AWB
             if ($awbType === 'new') {
-                if ($result) {
-                    $data = [
-                        'success' => true,
-                        'show_error' => true,
-                        'data' => $result
-                    ];
+                if ($records->isEmpty()) {
+                    // Brand new AWB, not used anywhere
+                    return response()->json([
+                        'status'  => 'available',
+                        'message' => 'AWB available.'
+                    ]);
                 } else {
-                    $data = [
-                        'success' => true,
-                        'show_error' => false,
-                        'data' => []
-                    ];
-                }
-            } elseif ($awbType === 'subsequent') {
-                if ($result) {
-                    $data = [
-                        'success' => true,
-                        'show_error' => false,
-                        'data' => $result
-                    ];
-                } else {
-                    $data = [
-                        'success' => true,
-                        'show_error' => true,
-                        'data' => []
-                    ];
+                    // Already exists → treat as CONNECTING shipment (duplicate allowed)
+                    $normal = $records->first(); // pick first for prefill
+                    return response()->json([
+                        'status'   => 'exists',
+                        'message'  => 'AWB already exists. It will be treated as a Connecting shipment.',
+                        'normal'   => [
+                            'product_id'            => $normal->product_id,
+                            'destination'           => $normal->destination,
+                            'declared_weight'       => $normal->declared_weight,
+                            'volumetric_weight'     => $normal->volumetric_weight,
+                            'total_actual_weight'   => $normal->total_actual_weight,
+                            'total_volumetric_weight' => $normal->total_volumetric_weight,
+                        ],
+                        'records'  => $records
+                    ]);
                 }
             }
+
+            // Case: SUBSEQUENT AWB
+            if ($awbType === 'subsequent') {
+                if ($records->isEmpty()) {
+                    return response()->json([
+                        'status'  => 'error',
+                        'message' => 'No existing record for this AWB. Enter it as a New/Connecting shipment first.'
+                    ]);
+                } else {
+                    // Must already exist → allow subsequent (partial load)
+                    $normal = $records->first();
+                    return response()->json([
+                        'status'   => 'exists',
+                        'message'  => 'AWB found. Entering as Subsequent (partial) shipment.',
+                        'normal'   => [
+                            'product_id'            => $normal->product_id,
+                            'destination'           => $normal->destination,
+                            'declared_weight'       => $normal->declared_weight,
+                            'volumetric_weight'     => $normal->volumetric_weight,
+                            'actual_weight'         => $normal->actual_weight,
+                            'total_actual_weight'   => $normal->total_actual_weight,
+                            'total_volumetric_weight' => $normal->total_volumetric_weight,
+                        ],
+                        'records'  => $records
+                    ]);
+                }
+            }
+
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Invalid AWB type.'
+            ]);
         } catch (Exception $e) {
             return response()->json($e->getMessage(), 500);
         }
-
-        return response()->json($data);
     }
 }
