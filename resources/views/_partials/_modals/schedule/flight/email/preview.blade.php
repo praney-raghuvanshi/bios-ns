@@ -52,7 +52,7 @@
                     <td>{{ $scheduleFlight->eta_local ?? 'None' }}</td>
                     <td>{{ $scheduleFlight->ata_local ?? 'None' }}</td>
                     <td>{{ $scheduleFlightCustomer->total_uplifted_weight ?? 0 }} Kgs</td>
-                    <td>{{ $scheduleFlight->total_offloaded_weight ?? 0 }} Kgs</td>
+                    <td>{{ $scheduleFlightCustomer->total_offloaded_weight ?? 0 }} Kgs</td>
                 </tr>
             </tbody>
         </table>

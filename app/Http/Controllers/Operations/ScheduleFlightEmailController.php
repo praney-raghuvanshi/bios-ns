@@ -157,7 +157,7 @@ class ScheduleFlightEmailController extends Controller
                     'eta' => $scheduleFlight->eta_local ?? 'None',
                     'ata' => $scheduleFlight->ata_local ?? 'None',
                     'uplifted' => $scheduleFlightCustomer->total_uplifted_weight ?? 0,
-                    'offloaded' => $scheduleFlight->total_offloaded_weight ?? 0
+                    'offloaded' => $scheduleFlightCustomer->total_offloaded_weight ?? 0
                 ];
 
                 $subject = 'Bridges WW Update for Flight ' . $data['flight_number'] . ' on ' . $data['date'];
