@@ -102,7 +102,14 @@ class ScheduleFlightEmailController extends Controller
             }
 
             if ($isRemarkIncluded) {
-                $serviceRemarks = ScheduleFlightRemark::where('schedule_flight_id', $scheduleFlight->id)->where('customer_id', $scheduleFlightCustomer->customer_id)->where('is_fpr', 1)->orderBy('id', 'desc')->pluck('remark');
+                $serviceRemarks = ScheduleFlightRemark::where('schedule_flight_id', $scheduleFlight->id)
+                    ->where('customer_id', $scheduleFlightCustomer->customer_id)
+                    ->where(function ($q) {
+                        $q->where('is_fpr', 1)
+                            ->orWhere('email_required', 1);
+                    })
+                    ->orderBy('id', 'desc')
+                    ->pluck('remark');
             }
         } catch (Exception $e) {
             return back()->with('failure', $e->getMessage());
@@ -156,7 +163,14 @@ class ScheduleFlightEmailController extends Controller
                 $subject = 'Bridges WW Update for Flight ' . $data['flight_number'] . ' on ' . $data['date'];
 
                 if (in_array($scheduleFlightCustomer->id, $scheduleFlightCustomerIdsForRemarks)) {
-                    $data['service_remarks'] = ScheduleFlightRemark::where('schedule_flight_id', $scheduleFlight->id)->where('customer_id', $scheduleFlightCustomer->customer_id)->where('is_fpr', 1)->orderBy('id', 'desc')->pluck('remark');
+                    $data['service_remarks'] = ScheduleFlightRemark::where('schedule_flight_id', $scheduleFlight->id)
+                        ->where('customer_id', $scheduleFlightCustomer->customer_id)
+                        ->where(function ($q) {
+                            $q->where('is_fpr', 1)
+                                ->orWhere('email_required', 1);
+                        })
+                        ->orderBy('id', 'desc')
+                        ->pluck('remark');
                 } else {
                     $data['service_remarks'] = [];
                 }

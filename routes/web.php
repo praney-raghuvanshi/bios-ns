@@ -224,6 +224,7 @@ Route::middleware(['auth', 'verified'])->prefix('flight-operations')->name('flig
             Route::get('/schedules/{schedule}/flights/{scheduleFlight}', 'show')->name('show')->can('view schedules');
             Route::post('/schedules/{schedule}/flights/{scheduleFlight}/update', 'update')->name('update')->can('edit schedules');
             Route::get('/schedules/{schedule}/flights/{scheduleFlight}/mark-complete', 'markComplete')->name('mark-complete')->can('add schedules');
+            Route::get('/schedules/{schedule}/flights/{scheduleFlight}/re-open', 'reOpen')->name('re-open')->can('edit schedules');
             Route::get('/schedules/{schedule}/flights/{scheduleFlight}/cancel', 'cancel')->name('cancel')->can('delete schedules');
             Route::get('/schedules/{schedule}/flights/{scheduleFlight}/emails', 'scheduleFlightEmails')->name('email')->can('view schedules');
 

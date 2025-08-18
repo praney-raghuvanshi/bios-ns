@@ -216,6 +216,24 @@ class ScheduleFlightController extends Controller
         return redirect()->route('flight-operations.schedule.flight.show', [$schedule, $scheduleFlight])->with('success', 'Schedule  Flight marked completed successfully.');
     }
 
+    public function reOpen(Schedule $schedule, ScheduleFlight $scheduleFlight)
+    {
+        try {
+
+            DB::beginTransaction();
+
+            $scheduleFlight->status = 1; // Re-open the flight
+            $scheduleFlight->save();
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with('failure', $e->getMessage());
+        }
+
+        return redirect()->route('flight-operations.schedule.flight.show', [$schedule, $scheduleFlight])->with('success', 'Schedule Flight re-opened successfully.');
+    }
+
     public function cancel(Schedule $schedule, ScheduleFlight $scheduleFlight)
     {
         try {

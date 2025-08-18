@@ -145,6 +145,13 @@ $customizerHidden = 'customizer-hide';
                 <span><i class="ti ti-x me-0 me-sm-1 ti-xs"></i>Cancel Flight</span>
             </a>
             @endcan
+            @elseif($scheduleFlight->status === 2)
+            @can('edit schedules')
+            <a href="{{ route('flight-operations.schedule.flight.re-open', [$schedule, $scheduleFlight]) }}"
+                class="btn btn-success re-open">
+                <span><i class="ti ti-arrow-back-up me-0 me-sm-1 ti-xs"></i>Re-Open</span>
+            </a>
+            @endcan
             @endif
             @can('view schedules')
             <a href="{{ route('flight-operations.schedule.show', $schedule) }}" class="btn btn-secondary">

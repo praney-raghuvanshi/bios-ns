@@ -5,7 +5,7 @@
 'use strict';
 
 document.addEventListener('DOMContentLoaded', function (e) {
-  document.querySelectorAll('.mark-complete, .delete-flight, .cancel-flight').forEach(function (element) {
+  document.querySelectorAll('.mark-complete, .re-open, .delete-flight, .cancel-flight').forEach(function (element) {
     element.addEventListener('click', function (event) {
       event.preventDefault(); // Prevent default action
 
@@ -19,6 +19,8 @@ document.addEventListener('DOMContentLoaded', function (e) {
         actionText = 'cancel this flight';
       } else if (this.classList.contains('mark-complete')) {
         actionText = 'mark this flight as complete';
+      } else if (this.classList.contains('re-open')) {
+        actionText = 're-open this flight';
       }
 
       Swal.fire({
