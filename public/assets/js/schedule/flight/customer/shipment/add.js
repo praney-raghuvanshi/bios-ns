@@ -76,7 +76,7 @@ $(document).ready(function () {
           } else if (available) {
             // First time we see this AWB → it's a brand-new first leg
             setAwbMessage(
-              `AWB ${awbNumber} not found. It will be created as a <strong>new shipment</strong>.`,
+              `AWB ${awbNumber} available. It will be created as a <strong>new shipment</strong>.`,
               'success'
             );
             enableFormFields();

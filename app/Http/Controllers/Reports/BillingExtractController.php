@@ -70,32 +70,78 @@ class BillingExtractController extends Controller
             if ($flight !== 'all') {
                 $query->where('flight_number', $flight);
             }
-        })->get();
+        })->where('status', '!=', 3)->get(); // Ignore Cancelled Flights
 
         $data = [];
 
-        foreach ($scheduleFlights as $scheduleFlight) {
-            foreach ($scheduleFlight->scheduleFlightCustomers as $scheduleFlightCustomer) {
-                foreach ($scheduleFlightCustomer->scheduleFlightCustomerShipments as $scheduleFlightCustomerShipment) {
-                    $data[] = [
-                        'date' => Carbon::parse($scheduleFlight->schedule->date)->format('d/m/Y'),
-                        'origin' => $scheduleFlight->flight->fromAirport->iata,
-                        'destination' => $scheduleFlight->flight->toAirport->iata,
-                        'end_destination' => $scheduleFlightCustomerShipment->toAirport->iata,
-                        'flight' => $scheduleFlight->flight->flight_number,
-                        'awb' => $scheduleFlightCustomerShipment->awb,
-                        'declared' => $scheduleFlightCustomerShipment->declared_weight,
-                        'actual' => $scheduleFlightCustomerShipment->actual_weight,
-                        'volume' => $scheduleFlightCustomerShipment->volumetric_weight,
-                        'total_actual' => $scheduleFlightCustomerShipment->total_actual_weight,
-                        'total_volume' => $scheduleFlightCustomerShipment->total_volumetric_weight,
-                        'shipment_type' => $scheduleFlightCustomerShipment->type,
-                        'customer' => $scheduleFlightCustomer->customer->code,
-                        'product' => $scheduleFlightCustomerShipment->product->code
-                    ];
+        $data = collect($scheduleFlights)->flatMap(function ($scheduleFlight) {
+            return collect($scheduleFlight->scheduleFlightCustomers)->flatMap(function ($scheduleFlightCustomer) use ($scheduleFlight) {
+                $shipments = $scheduleFlightCustomer->scheduleFlightCustomerShipments;
+                $products  = $scheduleFlightCustomer->scheduleFlightCustomerProducts;
+
+                // Case 1: has shipments
+                if ($shipments->isNotEmpty()) {
+                    return $shipments->map(function ($shipment) use ($scheduleFlight, $scheduleFlightCustomer) {
+                        return [
+                            'date'          => Carbon::parse($scheduleFlight->schedule->date)->format('d-m-Y'),
+                            'origin'        => $scheduleFlight->flight->fromAirport->iata ?? null,
+                            'destination'   => $scheduleFlight->flight->toAirport->iata ?? null,
+                            'end_destination' => $shipment->toAirport->iata ?? null,
+                            'flight'        => $scheduleFlight->flight->flight_number ?? null,
+                            'awb'           => $shipment->awb ?? null,
+                            'declared'      => $shipment->declared_weight ?? null,
+                            'actual'        => $shipment->actual_weight ?? null,
+                            'volume'        => $shipment->volumetric_weight ?? null,
+                            'total_actual'  => $shipment->total_actual_weight ?? null,
+                            'total_volume'  => $shipment->total_volumetric_weight ?? null,
+                            'shipment_type' => $shipment->type ?? null,
+                            'customer'      => $scheduleFlightCustomer->customer->code ?? null,
+                            'product'       => $shipment->product->code ?? null,
+                        ];
+                    });
                 }
-            }
-        }
+
+                // Case 2: no shipments, fallback to products
+                if ($products->isNotEmpty()) {
+                    return $products->map(function ($product) use ($scheduleFlight, $scheduleFlightCustomer) {
+                        return [
+                            'date'          => Carbon::parse($scheduleFlight->schedule->date)->format('d-m-Y'),
+                            'origin'        => $scheduleFlight->flight->fromAirport->iata,
+                            'destination'   => $scheduleFlight->flight->toAirport->iata,
+                            'end_destination' => null,
+                            'flight'        => $scheduleFlight->flight->flight_number,
+                            'awb'           => null,
+                            'declared'      => null,
+                            'actual'        => $product->uplifted_weight,
+                            'volume'        => null,
+                            'total_actual'  => null,
+                            'total_volume'  => null,
+                            'shipment_type' => null,
+                            'customer'      => $scheduleFlightCustomer->customer->code ?? null,
+                            'product'       => $product->product->code ?? null, // from product list
+                        ];
+                    });
+                }
+
+                // Case 3: neither shipments nor products
+                return [[
+                    'date'          => Carbon::parse($scheduleFlight->schedule->date)->format('d-m-Y'),
+                    'origin'        => $scheduleFlight->flight->fromAirport->iata,
+                    'destination'   => $scheduleFlight->flight->toAirport->iata ?? null,
+                    'end_destination' => null,
+                    'flight'        => $scheduleFlight->flight->flight_number ?? null,
+                    'awb'           => null,
+                    'declared'      => null,
+                    'actual'        => null,
+                    'volume'        => null,
+                    'total_actual'  => null,
+                    'total_volume'  => null,
+                    'shipment_type' => null,
+                    'customer'      => $scheduleFlightCustomer->customer->code ?? null,
+                    'product'       => null,
+                ]];
+            });
+        })->values()->all();
 
         return $data;
     }

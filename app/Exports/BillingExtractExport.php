@@ -20,53 +20,133 @@ class BillingExtractExport implements FromArray, WithTitle, ShouldAutoSize, With
 
     public function array(): array
     {
+        $rows = [];
+
+        // ========================
+        // HEADER ROW 1
+        // ========================
         $rows[] = [
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            'CON1',
-            'CON2',
-            'CON3',
-            'CON4',
-            'Declared',
-            'Actual',
-            'Volume',
-            'Total Actual',
-            'Total Volume',
-            'First/Subs',
-            'CUSTOMER DETAIL',
-            '',
-            '',
-            'CHARGES'
+            '',  // A
+            '',  // B
+            '',  // C
+            '',  // D
+            '',  // E
+            '',  // F
+            '',  // G
+            '',  // H
+            '',  // I
+            '',  // J
+            '',  // K
+            'CON1',  // L
+            '',      // M
+            'CON2',  // N
+            '',      // O
+            'CON3',  // P
+            '',      // Q
+            'CON4',  // R
+            '',      // S
+            'Declared', // T
+            '',         // U
+            'Actual',   // V
+            'Volume',   // W
+            '',         // X
+            'Total Actual', // Y
+            '',             // Z
+            'Total Volume', // AA
+            'First/Subs',   // AB
+            '',             // AC
+            'CUSTOMER DETAIL', // AD (merged AD:AH)
+            '',      // AE
+            '',      // AF
+            '',      // AG
+            '',      // AH
+            '',      // AI
+            'CHARGES' // AJ
         ];
 
-        $rows[] = ['DATE', 'ORIGIN', 'DEST', 'END DEST', 'FLIGHT #', 'AIRWAY BILL #', 'LD3', 'LD7', '', '', 'KG', 'KG', 'KG', 'KG', 'KG', 'Shipment', 'CON #', 'CUSTOMER', 'PRODUCT', 'HANDLING'];
+        // ========================
+        // HEADER ROW 2
+        // ========================
+        $rows[] = [
+            'DATE',  // A
+            '',      // B
+            'ORIGIN', // C
+            '',      // D
+            'DEST',  // E
+            '',      // F
+            'END DEST', // G
+            'FLIGHT#',  // H
+            '',      // I
+            'AIRWAY BILL #', // J
+            '',      // K
+            'LD3',   // L
+            '',      // M
+            'LD7',   // N
+            '',      // O
+            '',      // P
+            '',      // Q
+            '',      // R
+            '',      // S
+            'KG',    // T
+            '',      // U
+            'KG',    // V
+            'KG',    // W
+            '',      // X
+            'KG',    // Y
+            '',      // Z
+            'KG',    // AA
+            'SHIPMENT', // AB
+            '',      // AC
+            'CON#',  // AD
+            '',      // AE
+            'CUSTOMER', // AF
+            '',      // AG
+            'PRODUCT', // AH
+            '',
+            'HANDLING' // AJ
+        ];
 
+        // ========================
+        // DATA ROWS
+        // ========================
         foreach ($this->data as $datum) {
             $rows[] = [
-                $datum['date'],
-                $datum['origin'],
-                $datum['destination'],
-                $datum['end_destination'],
-                $datum['flight'],
-                $datum['awb'],
+                $datum['date'],   // A
+                '',               // B
+                $datum['origin'], // C
+                '',               // D
+                $datum['destination'], // E
+                '',               // F
+                $datum['end_destination'], // G
+                $datum['flight'], // H
+                '',               // I
+                $datum['awb'],    // J
+                '',               // K
+                '',               // L (LD3 - not mapped yet)
+                '',               // M
+                '',               // N (LD7 - not mapped yet)
+                '',               // O
+                '',               // P
+                '',               // Q
+                '',               // R
+                '',               // S
+                $datum['declared'], // T
+                '',                 // U
+                $datum['actual'],   // V
+                $datum['volume'],   // W
+                '',                 // X
+                $datum['total_actual'], // Y
+                '',                     // Z
+                $datum['total_volume'], // AA
+                $datum['shipment_type'], // AB
+                '',                     // AC
+                '',                     // AD (CON#)
+                '',                     // AE
+                $datum['customer'],     // AF
+                '',                     // AG
+                $datum['product'],      // AH
                 '',
-                '',
-                '',
-                '',
-                $datum['declared'],
-                $datum['actual'],
-                $datum['volume'],
-                $datum['total_actual'],
-                $datum['total_volume'],
-                $datum['shipment_type'],
-                '',
-                $datum['customer'],
-                $datum['product'],
-                ''
+                ''                      // AJ (Handling)
             ];
         }
 
@@ -75,14 +155,21 @@ class BillingExtractExport implements FromArray, WithTitle, ShouldAutoSize, With
 
     public function styles(Worksheet $sheet)
     {
-        $sheet->mergeCells("A1:F1");
-        $sheet->mergeCells("Q1:S1");
+        // Merge CUSTOMER DETAIL across AD:AH (Row 1 only)
+        $sheet->mergeCells("AD1:AH1");
 
-        $sheet->getStyle("A1:T1")->getFont()->setBold(true)->setSize(14);
-        $sheet->getStyle("A1:T1")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        // Style headers
+        $sheet->getStyle("A1:AJ1")->getFont()->setBold(true)->setSize(12);
+        $sheet->getStyle("A2:AJ2")->getFont()->setBold(true)->setSize(12);
 
-        $sheet->getStyle("A2:T2")->getFont()->setBold(true)->setSize(14);
-        $sheet->getStyle("A2:T2")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle("A1:AJ2")->getAlignment()
+            ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER)
+            ->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+
+        // Hide skipped columns
+        foreach (['B', 'D', 'F', 'I', 'K', 'M', 'O', 'Q', 'S', 'U', 'X', 'Z', 'AC', 'AE', 'AG', 'AI'] as $col) {
+            $sheet->getColumnDimension($col)->setVisible(false);
+        }
     }
 
     public function title(): string

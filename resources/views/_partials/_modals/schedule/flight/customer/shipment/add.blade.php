@@ -67,7 +67,7 @@
                                 <option value="">-- Select Destination --</option>
                                 @foreach ($airports as $item)
                                 <option value="{{$item->id}}" @if(old('destination')===$item->id) selected @endif>
-                                    {{ $item->name }}
+                                    {{ $item->iata }} - {{ $item->name }}
                                 </option>
                                 @endforeach
                             </select>

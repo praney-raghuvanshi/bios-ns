@@ -32,7 +32,7 @@
         </div>
         <div class="form-check">
             <input class="form-check-input" type="checkbox" name="email" value="Email" id="email"
-                @if($scheduleFlightRemark->email_required) checked @endif disabled>
+                @if($scheduleFlightRemark->email_required) checked @endif>
             <label class="form-check-label" for="email">Email</label>
         </div>
     </div>

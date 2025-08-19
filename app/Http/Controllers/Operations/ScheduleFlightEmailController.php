@@ -105,8 +105,7 @@ class ScheduleFlightEmailController extends Controller
                 $serviceRemarks = ScheduleFlightRemark::where('schedule_flight_id', $scheduleFlight->id)
                     ->where('customer_id', $scheduleFlightCustomer->customer_id)
                     ->where(function ($q) {
-                        $q->where('is_fpr', 1)
-                            ->orWhere('email_required', 1);
+                        $q->where('email_required', 1);
                     })
                     ->orderBy('id', 'desc')
                     ->pluck('remark');
@@ -166,8 +165,7 @@ class ScheduleFlightEmailController extends Controller
                     $data['service_remarks'] = ScheduleFlightRemark::where('schedule_flight_id', $scheduleFlight->id)
                         ->where('customer_id', $scheduleFlightCustomer->customer_id)
                         ->where(function ($q) {
-                            $q->where('is_fpr', 1)
-                                ->orWhere('email_required', 1);
+                            $q->where('email_required', 1);
                         })
                         ->orderBy('id', 'desc')
                         ->pluck('remark');
