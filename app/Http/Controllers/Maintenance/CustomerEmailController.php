@@ -102,7 +102,12 @@ class CustomerEmailController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'string'],
-            'email' => ['required', 'string', Rule::unique('customer_emails', 'email')->ignore($customerEmail->id)->whereNull('deleted_at')],
+            'email' => ['required', 'string', Rule::unique('customer_emails', 'email')
+                ->where(function ($query) use ($customer) {
+                    $query->whereNull('deleted_at')
+                        ->where('customer_id', $customer->id);
+                })
+                ->ignore($customerEmail->id, 'id')],
             'status' => ['required']
         ]);
 

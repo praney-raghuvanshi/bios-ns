@@ -121,6 +121,13 @@ class ScheduleFlightCustomerShipmentController extends Controller
                 $parentId = $parent->id;
             }
 
+            $upliftedWeight = 0;
+            if ($request->input('actual_weight') >= $request->input('volumetric_weight')) {
+                $upliftedWeight = $request->input('actual_weight');
+            } else {
+                $upliftedWeight = $request->input('volumetric_weight');
+            }
+
             // ✅ Create the shipment entry
             ScheduleFlightCustomerShipment::create([
                 'schedule_flight_customer_id' => $flightCustomerId,
@@ -129,7 +136,7 @@ class ScheduleFlightCustomerShipmentController extends Controller
                 'declared_weight'             => $request->input('declared_weight') ?? 0,
                 'actual_weight'               => $request->input('actual_weight') ?? 0,
                 'volumetric_weight'           => $request->input('volumetric_weight') ?? 0,
-                'uplifted_weight'             => $request->input('actual_weight') ?? 0, // always same as actual
+                'uplifted_weight'             => $upliftedWeight,
                 'offloaded_weight'            => $request->input('offloaded_weight') ?? 0,
                 'total_volumetric_weight'     => $request->input('total_volumetric_weight') ?? 0,
                 'total_actual_weight'         => $request->input('total_actual_weight') ?? 0,
@@ -177,10 +184,17 @@ class ScheduleFlightCustomerShipmentController extends Controller
 
             DB::beginTransaction();
 
+            $upliftedWeight = 0;
+            if ($request->input('actual_weight') >= $request->input('volumetric_weight')) {
+                $upliftedWeight = $request->input('actual_weight');
+            } else {
+                $upliftedWeight = $request->input('volumetric_weight');
+            }
+
             $scheduleFlightCustomerShipment->declared_weight = $request->input('declared_weight');
             $scheduleFlightCustomerShipment->actual_weight = $request->input('actual_weight');
             $scheduleFlightCustomerShipment->volumetric_weight = $request->input('volumetric_weight');
-            $scheduleFlightCustomerShipment->uplifted_weight = $request->input('actual_weight');
+            $scheduleFlightCustomerShipment->uplifted_weight = $upliftedWeight;
             $scheduleFlightCustomerShipment->offloaded_weight = $request->input('offloaded_weight');
             $scheduleFlightCustomerShipment->total_volumetric_weight = $request->input('total_volumetric_weight');
             $scheduleFlightCustomerShipment->total_actual_weight = $request->input('total_actual_weight');
