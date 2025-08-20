@@ -7,11 +7,22 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\WithTitle;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
+use Carbon\Carbon;
 
 class BillingExtractExport implements FromArray, WithTitle, ShouldAutoSize, WithStyles
 {
     protected $data;
     protected $title = 'Billing Extract';
+
+    public function columnFormats(): array
+    {
+        return [
+            'A' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'J' => NumberFormat::FORMAT_TEXT,
+        ];
+    }
 
     public function __construct($data)
     {
@@ -111,7 +122,7 @@ class BillingExtractExport implements FromArray, WithTitle, ShouldAutoSize, With
         // ========================
         foreach ($this->data as $datum) {
             $rows[] = [
-                $datum['date'],   // A
+                ExcelDate::PHPToExcel(Carbon::parse($datum['raw_date'])),   // A
                 '',               // B
                 $datum['origin'], // C
                 '',               // D
@@ -157,6 +168,8 @@ class BillingExtractExport implements FromArray, WithTitle, ShouldAutoSize, With
     {
         // Merge CUSTOMER DETAIL across AD:AH (Row 1 only)
         $sheet->mergeCells("AD1:AH1");
+
+        $sheet->getStyle('A')->getNumberFormat()->setFormatCode('dd-mm-yyyy');
 
         // Style headers
         $sheet->getStyle("A1:AJ1")->getFont()->setBold(true)->setSize(12);

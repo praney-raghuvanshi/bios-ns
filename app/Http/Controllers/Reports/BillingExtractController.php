@@ -84,6 +84,7 @@ class BillingExtractController extends Controller
                     return $shipments->map(function ($shipment) use ($scheduleFlight, $scheduleFlightCustomer) {
                         return [
                             'date'          => Carbon::parse($scheduleFlight->schedule->date)->format('d-m-Y'),
+                            'raw_date'      => $scheduleFlight->schedule->date,
                             'origin'        => $scheduleFlight->flight->fromAirport->iata ?? null,
                             'destination'   => $scheduleFlight->flight->toAirport->iata ?? null,
                             'end_destination' => $shipment->toAirport->iata ?? null,
@@ -106,6 +107,7 @@ class BillingExtractController extends Controller
                     return $products->map(function ($product) use ($scheduleFlight, $scheduleFlightCustomer) {
                         return [
                             'date'          => Carbon::parse($scheduleFlight->schedule->date)->format('d-m-Y'),
+                            'raw_date'      => $scheduleFlight->schedule->date,
                             'origin'        => $scheduleFlight->flight->fromAirport->iata,
                             'destination'   => $scheduleFlight->flight->toAirport->iata,
                             'end_destination' => null,
@@ -126,6 +128,7 @@ class BillingExtractController extends Controller
                 // Case 3: neither shipments nor products
                 return [[
                     'date'          => Carbon::parse($scheduleFlight->schedule->date)->format('d-m-Y'),
+                    'raw_date'      => $scheduleFlight->schedule->date,
                     'origin'        => $scheduleFlight->flight->fromAirport->iata,
                     'destination'   => $scheduleFlight->flight->toAirport->iata ?? null,
                     'end_destination' => null,
