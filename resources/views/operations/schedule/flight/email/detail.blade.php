@@ -171,7 +171,7 @@ $customizerHidden = 'customizer-hide';
                 <tbody>
                     @foreach($scheduleFlight->scheduleFlightCustomers as $datum)
                     <tr>
-                        <td>{{ $datum->customer->name }}</td>
+                        <td>{{ $datum->customer->formatted_name }}</td>
                         <td>
                             <input type="checkbox" name="include_remark[]" id="includeRemark{{$datum->id}}"
                                 value="{{$datum->id}}" checked>

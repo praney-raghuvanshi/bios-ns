@@ -13,7 +13,7 @@
             <option value="{{$datum->customer->id}}" @if(old('customer', $scheduleFlightRemark->
                 customer_id)===$datum->customer->id)
                 selected @endif>{{
-                $datum->customer->name }}
+                $datum->customer->formatted_name }}
             </option>
             @endforeach
         </select>

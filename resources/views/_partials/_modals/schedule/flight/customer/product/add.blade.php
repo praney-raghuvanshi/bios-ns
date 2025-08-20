@@ -17,7 +17,7 @@
                             <option value="">-- Select Product --</option>
                             @foreach ($products as $product)
                             <option value="{{$product->id}}" @if(old('product')===$product->id) selected @endif>{{
-                                $product->name }}
+                                $product->formatted_name }}
                             </option>
                             @endforeach
                         </select>

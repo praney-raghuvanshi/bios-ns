@@ -55,7 +55,7 @@
                                 @foreach ($scheduleFlightCustomer->scheduleFlightCustomerProducts as $item)
                                 <option value="{{$item->product_id}}" @if(old('product')===$item->product_id) selected
                                     @endif>
-                                    {{ $item->product->name }}
+                                    {{ $item->product->formatted_name }}
                                 </option>
                                 @endforeach
                             </select>
@@ -67,7 +67,7 @@
                                 <option value="">-- Select Destination --</option>
                                 @foreach ($airports as $item)
                                 <option value="{{$item->id}}" @if(old('destination')===$item->id) selected @endif>
-                                    {{ $item->iata }} - {{ $item->name }}
+                                    {{ $item->formatted_name }}
                                 </option>
                                 @endforeach
                             </select>

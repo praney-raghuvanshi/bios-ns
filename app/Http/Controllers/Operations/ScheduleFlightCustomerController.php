@@ -10,6 +10,7 @@ use App\Models\Schedule;
 use App\Models\ScheduleFlight;
 use App\Models\ScheduleFlightCustomer;
 use App\Models\ScheduleFlightCustomerProduct;
+use App\Models\ScheduleFlightRemark;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -88,9 +89,44 @@ class ScheduleFlightCustomerController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Schedule $schedule, ScheduleFlight $scheduleFlight, ScheduleFlightCustomer $scheduleFlightCustomer)
     {
-        //
+        // Check if the customer has any products linked to them
+        if ($scheduleFlightCustomer->scheduleFlightCustomerProducts()->exists()) {
+            return back()->with('failure', 'Cannot delete customer with linked products. Please delete linked products first.');
+        }
+
+        // Check if the customer has any shipments linked to them
+        if ($scheduleFlightCustomer->scheduleFlightCustomerShipments()->exists()) {
+            return back()->with('failure', 'Cannot delete customer with linked shipments. Please delete linked shipments first.');
+        }
+
+        // // Check if the customer has any remarks linked to them
+        // $count = ScheduleFlightRemark::where('schedule_flight_id', $scheduleFlight->id)
+        //     ->where('customer_id', $scheduleFlightCustomer->customer_id)
+        //     ->count();
+
+        // if ($count > 0) {
+        //     return back()->with('failure', 'Cannot delete customer with linked remarks. Please delete linked remarks first.');
+        // }
+
+        try {
+
+            DB::beginTransaction();
+
+            $scheduleFlightCustomer->update([
+                'deleted_by' => Auth::id()
+            ]);
+
+            $scheduleFlightCustomer->delete();
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with('failure', $e->getMessage());
+        }
+
+        return redirect()->route('flight-operations.schedule.flight.show', [$schedule, $scheduleFlight])->with('success', 'Schedule Flight Customer deleted successfully.');
     }
 
     public function getAvailableProducts($customerId, $scheduleFlightCustomerId)

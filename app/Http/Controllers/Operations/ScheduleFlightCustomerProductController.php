@@ -9,6 +9,7 @@ use App\Models\Schedule;
 use App\Models\ScheduleFlight;
 use App\Models\ScheduleFlightCustomer;
 use App\Models\ScheduleFlightCustomerProduct;
+use App\Models\ScheduleFlightCustomerShipment;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -155,6 +156,15 @@ class ScheduleFlightCustomerProductController extends Controller
      */
     public function destroy(Schedule $schedule, ScheduleFlight $scheduleFlight, ScheduleFlightCustomer $scheduleFlightCustomer, ScheduleFlightCustomerProduct $scheduleFlightCustomerProduct)
     {
+        // Check if the product has any shipments linked to them
+        $count = ScheduleFlightCustomerShipment::where('schedule_flight_customer_id', $scheduleFlightCustomer->id)
+            ->where('product_id', $scheduleFlightCustomerProduct->product_id)
+            ->count();
+
+        if ($count > 0) {
+            return back()->with('failure', 'Cannot delete product with linked shipments. Please delete linked shipments first.');
+        }
+
         try {
             DB::beginTransaction();
 

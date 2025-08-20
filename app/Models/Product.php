@@ -33,6 +33,14 @@ class Product extends Model
         return '#' . Str::padLeft($this->attributes['id'], 6, '0');
     }
 
+    public function getFormattedNameAttribute(): string
+    {
+        return implode(' - ', [
+            $this->attributes['code'],
+            $this->attributes['name'],
+        ]);
+    }
+
     /**
      * Scope a query to only include active products.
      */

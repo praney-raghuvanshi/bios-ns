@@ -199,7 +199,7 @@ $customizerHidden = 'customizer-hide';
             <table class="table table-bordered text-center mt-2">
                 <tr>
                     <th>Customer</th>
-                    <td>{{ $scheduleFlightCustomer->customer->name }}</td>
+                    <td>{{ $scheduleFlightCustomer->customer->formatted_name }}</td>
                 </tr>
                 <tr>
                     <th>Uplifted Weight</th>
@@ -243,7 +243,7 @@ $customizerHidden = 'customizer-hide';
                 <tbody>
                     @foreach($scheduleFlightCustomer->scheduleFlightCustomerProducts as $datum)
                     <tr>
-                        <td>{{ $datum->product->name }}</td>
+                        <td>{{ $datum->product->formatted_name }}</td>
                         <td>{{ $datum->uplifted_weight }}</td>
                         <td>{{ $datum->offloaded_weight }}</td>
                         <td>
@@ -283,7 +283,7 @@ $customizerHidden = 'customizer-hide';
 </div>
 
 @if($scheduleFlightCustomer->scheduleFlightCustomerProducts->isNotEmpty())
-<div class="card mt-2">
+<div class="card mt-2 p-2">
     <div class="card-header d-flex justify-content-between">
         <h5>AWB Details</h5>
         <div>
@@ -297,7 +297,7 @@ $customizerHidden = 'customizer-hide';
             @endif
         </div>
     </div>
-    <div class="card-body align-items-center text-center">
+    <div class="card-body align-items-center text-center p-2">
         @if($scheduleFlightCustomer->scheduleFlightCustomerShipments->isNotEmpty())
 
         <div>
@@ -310,9 +310,9 @@ $customizerHidden = 'customizer-hide';
             @endforeach
         </div>
 
-        <div class="table-responsive text-nowrap mt-2">
+        <div class="table-responsive mt-2">
             <table class="table table-bordered text-center">
-                <thead>
+                <thead class="bg-light">
                     <tr>
                         <th>AWB</th>
                         <th>Product</th>
@@ -331,18 +331,18 @@ $customizerHidden = 'customizer-hide';
                 <tbody>
                     @foreach($scheduleFlightCustomer->scheduleFlightCustomerShipments as $datum)
                     <tr>
-                        <td>{{ $datum->awb }}</td>
-                        <td>{{ $datum->product->name }}</td>
-                        <td>{{ $datum->declared_weight }}</td>
-                        <td>{{ $datum->actual_weight }}</td>
-                        <td>{{ $datum->volumetric_weight }}</td>
-                        <td>{{ $datum->uplifted_weight }}</td>
-                        <td>{{ $datum->offloaded_weight }}</td>
-                        <td>{{ $datum->toAirport->iata }}</td>
-                        <td>{{ $datum->type }}</td>
-                        <td>{{ $datum->total_actual_weight }}</td>
-                        <td>{{ $datum->total_volumetric_weight }}</td>
-                        <td>
+                        <td class="p-1">{{ $datum->awb }}</td>
+                        <td class="p-1">{{ $datum->product->code }}</td>
+                        <td class="p-1">{{ $datum->declared_weight }}</td>
+                        <td class="p-1">{{ $datum->actual_weight }}</td>
+                        <td class="p-1">{{ $datum->volumetric_weight }}</td>
+                        <td class="p-1">{{ $datum->uplifted_weight }}</td>
+                        <td class="p-1">{{ $datum->offloaded_weight }}</td>
+                        <td class="p-1">{{ $datum->toAirport->iata }}</td>
+                        <td class="p-1">{{ $datum->type }}</td>
+                        <td class="p-1">{{ $datum->total_actual_weight }}</td>
+                        <td class="p-1">{{ $datum->total_volumetric_weight }}</td>
+                        <td class="p-1">
                             @if($scheduleFlight->status === 1)
                             <div class="d-flex align-items-center justify-content-center">
                                 @can('edit schedules')

@@ -9,6 +9,7 @@ $customizerHidden = 'customizer-hide';
 @section('page-script')
 
 <script src="{{asset('assets/js/schedule/flight/remark/delete.js')}}"></script>
+<script src="{{asset('assets/js/schedule/flight/customer/delete.js')}}"></script>
 <script src="{{asset('assets/js/schedule/flight/actions.js')}}"></script>
 
 <script type="text/javascript">
@@ -241,16 +242,34 @@ $customizerHidden = 'customizer-hide';
                 <tbody>
                     @foreach($scheduleFlight->scheduleFlightCustomers as $datum)
                     <tr>
-                        <td>{{ $datum->customer->name }}</td>
+                        <td>{{ $datum->customer->formatted_name }}</td>
                         <td>{{ $datum->total_uplifted_weight }}</td>
                         <td>{{ $datum->total_offloaded_weight }}</td>
                         <td>
-                            @can('view schedules')
-                            <a href="{{ route('flight-operations.schedule.flight.customer.show', [$schedule, $scheduleFlight, $datum]) }}"
-                                class="text-body">
-                                <i class="ti ti-eye ti-sm mx-2 text-primary"></i>
-                            </a>
-                            @endcan
+                            <div class="d-flex align-items-center justify-content-center">
+                                @can('view schedules')
+                                <a href="{{ route('flight-operations.schedule.flight.customer.show', [$schedule, $scheduleFlight, $datum]) }}"
+                                    class="text-body">
+                                    <i class="ti ti-eye ti-sm mx-2 text-primary"></i>
+                                </a>
+                                @endcan
+                                @if($scheduleFlight->status === 1)
+                                @can('delete schedules')
+                                <form
+                                    action="{{ route('flight-operations.schedule.flight.customer.destroy', [$schedule, $scheduleFlight, $datum]) }}"
+                                    method="post" id="delete-schedule-flight-customer-form-{{ $datum->id }}">
+                                    @csrf
+                                    @method('delete')
+                                    <a href="javascript:;"
+                                        onclick="confirmScheduleFlightCustomerDelete({{ $datum->id }})">
+                                        <i class="ti ti-trash ti-sm mx-2 text-danger"></i>
+                                    </a>
+                                </form>
+                                @endcan
+                                @else
+                                <span><i class="ti ti-x ti-sm text-danger"></i></span>
+                                @endif
+                            </div>
                         </td>
                     </tr>
                     @endforeach
@@ -355,7 +374,7 @@ $customizerHidden = 'customizer-hide';
                     <tr>
                         <td>{{ \Carbon\Carbon::parse($remark->created_at)->format('d/m/Y H:i:s') }}</td>
                         <td>{{ $remark->addedByUser->name }}</td>
-                        <td>{{ $remark->customer->name }}</td>
+                        <td>{{ $remark->customer->code }}</td>
                         <td>{{ $remark->remark }}</td>
                         <td>
                             @if ($remark->email_required)

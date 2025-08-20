@@ -18,7 +18,7 @@
                             @foreach ($scheduleFlight->scheduleFlightCustomers as $datum)
                             <option value="{{$datum->customer->id}}" @if(old('customer')===$datum->customer->id)
                                 selected @endif>{{
-                                $datum->customer->name }}
+                                $datum->customer->formatted_name }}
                             </option>
                             @endforeach
                         </select>

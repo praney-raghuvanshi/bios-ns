@@ -246,6 +246,7 @@ Route::middleware(['auth', 'verified'])->prefix('flight-operations')->name('flig
             Route::name('customer.')->controller(ScheduleFlightCustomerController::class)->group(function () {
                 Route::get('/schedules/{schedule}/flights/{scheduleFlight}/customers/{scheduleFlightCustomer}', 'show')->name('show')->can('view schedules');
                 Route::post('/schedules/{schedule}/flights/{scheduleFlight}/customers', 'store')->name('store')->can('add schedules');
+                Route::delete('/schedules/{schedule}/flights/{scheduleFlight}/customers/{scheduleFlightCustomer}', 'destroy')->name('destroy')->can('delete schedules');
 
                 // Schedule Flight Customer Product Routes
                 Route::name('product.')->controller(ScheduleFlightCustomerProductController::class)->group(function () {
