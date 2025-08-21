@@ -107,7 +107,7 @@ class ScheduleFlightEmailController extends Controller
                     ->where(function ($q) {
                         $q->where('email_required', 1);
                     })
-                    ->orderBy('id', 'desc')
+                    ->orderBy('id')
                     ->pluck('remark');
             }
         } catch (Exception $e) {
@@ -167,7 +167,7 @@ class ScheduleFlightEmailController extends Controller
                         ->where(function ($q) {
                             $q->where('email_required', 1);
                         })
-                        ->orderBy('id', 'desc')
+                        ->orderBy('id')
                         ->pluck('remark');
                 } else {
                     $data['service_remarks'] = [];
