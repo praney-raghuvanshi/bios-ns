@@ -59,18 +59,25 @@ class BillingExtractController extends Controller
             'flight' => function ($query) {
                 $query->with(['location', 'fromAirport', 'toAirport']);
             },
-        ])->whereHas('schedule', function ($query) use ($startDate, $endDate) {
-            $query->whereBetween('date', [$startDate, $endDate]);
-        })->whereHas('flight', function ($query) use ($zone, $flight) {
-            if ($zone !== 'all') {
-                $query->whereHas('location', function ($query) use ($zone) {
-                    $query->where('zone_id', $zone);
-                });
-            }
-            if ($flight !== 'all') {
-                $query->where('flight_number', $flight);
-            }
-        })->where('status', '!=', 3)->get(); // Ignore Cancelled Flights
+        ])
+            ->whereHas('schedule', function ($query) use ($startDate, $endDate) {
+                $query->whereBetween('date', [$startDate, $endDate]);
+            })
+            ->whereHas('flight', function ($query) use ($zone, $flight) {
+                // ✅ Zone filter
+                if (!in_array('all', (array) $zone)) {
+                    $query->whereHas('location', function ($subQuery) use ($zone) {
+                        $subQuery->whereIn('zone_id', (array) $zone);
+                    });
+                }
+
+                // ✅ Flight filter
+                if (!in_array('all', (array) $flight)) {
+                    $query->whereIn('flight_number', (array) $flight);
+                }
+            })
+            ->where('status', '!=', 3)         // Ignore Cancelled Flights
+            ->get();
 
         $data = [];
 

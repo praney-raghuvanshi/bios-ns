@@ -10,8 +10,9 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
 use Carbon\Carbon;
+use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 
-class BillingExtractExport implements FromArray, WithTitle, ShouldAutoSize, WithStyles
+class BillingExtractExport implements FromArray, WithTitle, ShouldAutoSize, WithStyles, WithColumnFormatting
 {
     protected $data;
     protected $title = 'Billing Extract';
@@ -131,7 +132,7 @@ class BillingExtractExport implements FromArray, WithTitle, ShouldAutoSize, With
                 $datum['end_destination'], // G
                 $datum['flight'], // H
                 '',               // I
-                $datum['awb'],    // J
+                (string) $datum['awb'],    // J
                 '',               // K
                 '',               // L (LD3 - not mapped yet)
                 '',               // M

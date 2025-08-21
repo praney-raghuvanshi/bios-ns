@@ -77,22 +77,31 @@ $customizerHidden = 'customizer-hide';
                 <div class="col-md-3">
                     <label class="form-label" for="startDate">Start Date</label>
                     <input type="date" name="start_date" id="startDate" class="form-select"
-                        value="{{ request('start_date') }}">
+                        value="{{ request('start_date', \Carbon\Carbon::yesterday()->format('Y-m-d')) }}">
                 </div>
 
                 <div class="col-md-3">
                     <label class="form-label" for="endDate">End Date</label>
                     <input type="date" name="end_date" id="endDate" class="form-select"
-                        value="{{ request('end_date') }}">
+                        value="{{ request('end_date', \Carbon\Carbon::today()->format('Y-m-d')) }}">
                 </div>
 
                 <div class="col-md-3">
                     <label class="form-label" for="zone">Zone</label>
-                    <select name="zone" id="zone" class="form-select select2">
+                    <select name="zone[]" id="zone" class="form-select select2" multiple>
                         <option value="">-- Select Zone --</option>
-                        <option value="all" @if(request('zone')==='all' ) selected @endif>All Zones</option>
+
+                        {{-- All Zones option --}}
+                        <option value="all" @if(collect(request('zone'))->contains('all') || !request()->has('zone'))
+                            selected @endif>
+                            All Zones
+                        </option>
+
+                        {{-- Individual Zones --}}
                         @foreach ($zones as $zone)
-                        <option value="{{$zone->id}}" @if(request('zone')==$zone->id) selected @endif >{{$zone->name}}
+                        <option value="{{ $zone->id }}" @if(collect(request('zone'))->contains($zone->id)) selected
+                            @endif>
+                            {{ $zone->name }}
                         </option>
                         @endforeach
                     </select>
@@ -100,13 +109,24 @@ $customizerHidden = 'customizer-hide';
 
                 <div class="col-md-3">
                     <label class="form-label" for="flight">Flight</label>
-                    <select name="flight" id="flight" class="form-select select2">
+                    <select name="flight[]" id="flight" class="form-select select2" multiple>
                         <option value="">-- Select Flight --</option>
-                        <option value="all" @if(request('flight')==='all' ) selected @endif>All Flights</option>
+
+                        {{-- All Flights option --}}
+                        <option value="all" @if(collect(request('flight'))->contains('all') ||
+                            !request()->has('flight')) selected @endif>
+                            All Flights
+                        </option>
+
+                        {{-- Individual Flights --}}
                         @foreach ($flights as $flight)
-                        <option value="{{$flight}}" @if(request('flight')==$flight) selected @endif>{{$flight}}</option>
+                        <option value="{{ $flight }}" @if(collect(request('flight'))->contains($flight)) selected
+                            @endif>
+                            {{ $flight }}
+                        </option>
                         @endforeach
                     </select>
+
                 </div>
             </div>
 
@@ -127,8 +147,21 @@ $customizerHidden = 'customizer-hide';
             @csrf
             <input type="hidden" name="export_start_date" value="{{ request('start_date') }}">
             <input type="hidden" name="export_end_date" value="{{ request('end_date') }}">
-            <input type="hidden" name="export_zone" value="{{ request('zone') }}">
-            <input type="hidden" name="export_flight" value="{{ request('flight') }}">
+
+            {{-- Zones --}}
+            @if(request()->has('zone'))
+            @foreach((array) request('zone') as $z)
+            <input type="hidden" name="export_zone[]" value="{{ $z }}">
+            @endforeach
+            @endif
+
+            {{-- Flights --}}
+            @if(request()->has('flight'))
+            @foreach((array) request('flight') as $f)
+            <input type="hidden" name="export_flight[]" value="{{ $f }}">
+            @endforeach
+            @endif
+
 
             <button type="submit" class="btn btn-primary">
                 <i class="fas fa-file-excel me-2"></i> Export

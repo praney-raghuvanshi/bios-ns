@@ -21,6 +21,24 @@ $(document).ready(function () {
       });
   }
 
+  $('#zone').on('change', function () {
+    let selected = $(this).val();
+
+    // if "all" is selected, clear others
+    if (selected && selected.includes('all')) {
+      $(this).val(['all']).trigger('change');
+    }
+  });
+
+  $('#flight').on('change', function () {
+    let selected = $(this).val();
+
+    // if "all" is selected, clear others
+    if (selected && selected.includes('all')) {
+      $(this).val(['all']).trigger('change');
+    }
+  });
+
   // Initialize jQuery Validation
   $('#billingExtractForm').validate({
     errorElement: 'div',
