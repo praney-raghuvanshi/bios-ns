@@ -96,7 +96,7 @@ class BillingExtractController extends Controller
                             'destination'   => $scheduleFlight->flight->toAirport->iata ?? null,
                             'end_destination' => $shipment->toAirport->iata ?? null,
                             'flight'        => $scheduleFlight->flight->flight_number ?? null,
-                            'awb'           => $shipment->awb ?? null,
+                            'awb'           => (string) $shipment->awb ?? null,
                             'declared'      => $shipment->declared_weight ?? null,
                             'actual'        => $shipment->actual_weight ?? null,
                             'volume'        => $shipment->volumetric_weight ?? null,

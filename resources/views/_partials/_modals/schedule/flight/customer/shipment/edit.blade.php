@@ -19,7 +19,7 @@
 
         <div class="col-md-6">
             <label class="form-label" for="destination">Destination</label>
-            <select name="destination" class="select2 form-select" disabled>
+            <select name="destination" class="select2 form-select">
                 <option value="">-- Select Destination --</option>
                 @foreach ($airports as $item)
                 <option value="{{$item->id}}" @if(old('destination', $scheduleFlightCustomerShipment->

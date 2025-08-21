@@ -11,19 +11,15 @@ use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
+use PhpOffice\PhpSpreadsheet\Cell\Cell;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use Maatwebsite\Excel\Concerns\WithCustomValueBinder;
+use Maatwebsite\Excel\DefaultValueBinder;
 
-class BillingExtractExport implements FromArray, WithTitle, ShouldAutoSize, WithStyles, WithColumnFormatting
+class BillingExtractExport extends DefaultValueBinder implements FromArray, WithTitle, ShouldAutoSize, WithStyles, WithColumnFormatting, WithCustomValueBinder
 {
     protected $data;
     protected $title = 'Billing Extract';
-
-    public function columnFormats(): array
-    {
-        return [
-            'A' => NumberFormat::FORMAT_DATE_DDMMYYYY,
-            'J' => NumberFormat::FORMAT_TEXT,
-        ];
-    }
 
     public function __construct($data)
     {
@@ -132,7 +128,7 @@ class BillingExtractExport implements FromArray, WithTitle, ShouldAutoSize, With
                 $datum['end_destination'], // G
                 $datum['flight'], // H
                 '',               // I
-                (string) $datum['awb'],    // J
+                $datum['awb'],    // J
                 '',               // K
                 '',               // L (LD3 - not mapped yet)
                 '',               // M
@@ -184,6 +180,24 @@ class BillingExtractExport implements FromArray, WithTitle, ShouldAutoSize, With
         foreach (['B', 'D', 'F', 'I', 'K', 'M', 'O', 'Q', 'S', 'U', 'X', 'Z', 'AC', 'AE', 'AG', 'AI'] as $col) {
             $sheet->getColumnDimension($col)->setVisible(false);
         }
+    }
+
+    public function columnFormats(): array
+    {
+        return [
+            'A' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'J' => NumberFormat::FORMAT_TEXT,
+        ];
+    }
+
+    public function bindValue(Cell $cell, $value): bool
+    {
+        if ($cell->getColumn() === 'J') { // adjust 'J' if MAWB is in another column
+            $cell->setValueExplicit($value, DataType::TYPE_STRING);
+            return true;
+        }
+
+        return parent::bindValue($cell, $value);
     }
 
     public function title(): string

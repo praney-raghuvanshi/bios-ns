@@ -101,15 +101,30 @@ $customizerHidden = 'customizer-hide';
                 // Departure color logic
                 $departureClass = '';
 
+                // if ($scheduleFlight->status === 3) {
+                // $departureClass = 'bg-danger-subtle';
+                // } elseif ($scheduleDate->isSameDay($now)) {
+                // if ($scheduleFlight->status === 1) {
+                // if ($now->gte($std->copy()->addMinutes(15))) {
+                // $departureClass = 'bg-danger-subtle'; // Red after 15 min
+                // } elseif ($now->gte($std)) {
+                // $departureClass = 'bg-purple-subtle'; // Purple at STD/ETD
+                // }
+                // }
+                // }
+
                 if ($scheduleFlight->status === 3) {
-                $departureClass = 'bg-danger-subtle';
-                } elseif ($scheduleDate->isSameDay($now)) {
-                if ($scheduleFlight->status === 1) {
+                $departureClass = 'bg-danger-subtle'; // Red
+                } elseif (!empty($scheduleFlight->actual_departure_time) &&
+                !empty($scheduleFlight->actual_arrival_time)) {
+                $departureClass = 'bg-info-subtle'; // Blue
+                } elseif (empty($scheduleFlight->actual_arrival_time) && empty($scheduleFlight->uplifted)) {
+                $departureClass = 'bg-warning-subtle'; // Yellow (or red if you want danger)
+                } elseif ($scheduleFlight->status === 1) {
                 if ($now->gte($std->copy()->addMinutes(15))) {
                 $departureClass = 'bg-danger-subtle'; // Red after 15 min
                 } elseif ($now->gte($std)) {
-                $departureClass = 'bg-purple-subtle'; // Purple at STD/ETD
-                }
+                $departureClass = 'bg-purple-subtle'; // Purple in 15 min window
                 }
                 }
 

@@ -198,6 +198,7 @@ class ScheduleFlightCustomerShipmentController extends Controller
             $scheduleFlightCustomerShipment->offloaded_weight = $request->input('offloaded_weight');
             $scheduleFlightCustomerShipment->total_volumetric_weight = $request->input('total_volumetric_weight');
             $scheduleFlightCustomerShipment->total_actual_weight = $request->input('total_actual_weight');
+            $scheduleFlightCustomerShipment->destination = $request->input('destination');
             $scheduleFlightCustomerShipment->save();
 
             DB::commit();
