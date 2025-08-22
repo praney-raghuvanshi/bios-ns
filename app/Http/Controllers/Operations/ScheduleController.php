@@ -8,10 +8,12 @@ use App\Models\AircraftType;
 use App\Models\Airport;
 use App\Models\Customer;
 use App\Models\Flight;
+use App\Models\FlightCustomer;
 use App\Models\FlightDay;
 use App\Models\Location;
 use App\Models\Schedule;
 use App\Models\ScheduleFlight;
+use App\Models\ScheduleFlightCustomer;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -94,11 +96,25 @@ class ScheduleController extends Controller
             $flightIds = array_filter(explode(',', $request->input('flights'))); // Remove empty values
 
             foreach ($flightIds as $flightId) {
-                ScheduleFlight::create([
+                $scheduleFlight = ScheduleFlight::create([
                     'schedule_id' => $schedule->id,
                     'flight_id' => $flightId,
                     'added_by' => Auth::id()
                 ]);
+
+                // Fetch Flight Day
+                $flightDayId = FlightDay::where('flight_id', $flightId)->where('day', $schedule->day)->pluck('id');
+
+                // Fetch Customers For Flight Day
+                $flightCustomers = FlightCustomer::whereIn('flight_day_id', $flightDayId)->pluck('customer_id');
+
+                foreach ($flightCustomers as $customerId) {
+                    ScheduleFlightCustomer::create([
+                        'schedule_flight_id' => $scheduleFlight->id,
+                        'customer_id' => $customerId,
+                        'added_by' => Auth::id()
+                    ]);
+                }
             }
 
             DB::commit();
