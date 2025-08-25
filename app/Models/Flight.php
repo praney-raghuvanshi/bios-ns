@@ -17,6 +17,12 @@ class Flight extends Model
 
     protected $guarded = [];
 
+    protected $appends = [
+        'formatted_id',
+        'departure_time_local',
+        'arrival_time_local'
+    ];
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

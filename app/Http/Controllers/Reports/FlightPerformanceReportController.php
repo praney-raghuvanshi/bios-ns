@@ -147,7 +147,7 @@ class FlightPerformanceReportController extends Controller
                     ->with(['scheduleFlightCustomerProducts', 'scheduleFlightCustomerShipments', 'customer']);
             },
             'scheduleFlightRemarks' => function ($query) use ($selectedCustomer) {
-                $query->where('customer_id', $selectedCustomer);
+                $query->where('customer_id', $selectedCustomer)->where('is_fpr', 1);
             },
             'flight' => function ($query) {
                 $query->with(['location', 'fromAirport', 'toAirport']); // Fetch the location (FROM-TO)

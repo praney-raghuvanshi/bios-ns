@@ -22,7 +22,7 @@ class ScheduleFlight extends Model
 
     protected $guarded = [];
 
-    protected $append = [
+    protected $appends = [
         'formatted_id',
         'formatted_etd',
         'formatted_atd',
@@ -102,11 +102,11 @@ class ScheduleFlight extends Model
             return '--';
         }
         if ($this->departure_time_diff > 0) {
-            return '- ' . Carbon::createFromTime(0, 0, 0)->addMinutes(abs($this->departure_time_diff))->format('H:i');
+            return '- ' . abs($this->departure_time_diff);
         } elseif ($this->departure_time_diff < 0) {
-            return '+ ' . Carbon::createFromTime(0, 0, 0)->addMinutes(abs($this->departure_time_diff))->format('H:i');
+            return '+ ' . abs($this->departure_time_diff);
         } else {
-            return Carbon::createFromTime(0, 0, 0)->addMinutes(abs($this->departure_time_diff))->format('H:i');
+            return $this->departure_time_diff;
         }
     }
 
@@ -116,11 +116,11 @@ class ScheduleFlight extends Model
             return '--';
         }
         if ($this->arrival_time_diff > 0) {
-            return '- ' . Carbon::createFromTime(0, 0, 0)->addMinutes(abs($this->arrival_time_diff))->format('H:i');
+            return '- ' . abs($this->arrival_time_diff);
         } elseif ($this->arrival_time_diff < 0) {
-            return '+ ' . Carbon::createFromTime(0, 0, 0)->addMinutes(abs($this->arrival_time_diff))->format('H:i');
+            return '+ ' . abs($this->arrival_time_diff);
         } else {
-            return Carbon::createFromTime(0, 0, 0)->addMinutes(abs($this->arrival_time_diff))->format('H:i');
+            return $this->arrival_time_diff;
         }
     }
 

@@ -143,7 +143,7 @@ $customizerHidden = 'customizer-hide';
                         <option value="">-- Select Customer --</option>
                         @foreach ($customers as $customer)
                         <option value="{{$customer->id}}" @if(request('customer')==$customer->id) selected @endif
-                            >{{$customer->name}}</option>
+                            >{{$customer->formatted_name}}</option>
                         @endforeach
                     </select>
                 </div>
@@ -272,12 +272,12 @@ $customizerHidden = 'customizer-hide';
                             {{-- Forward Flight Data --}}
                             @if ($flightData['flights'])
                             @php $flight = $flightData['flights'][0]; @endphp
-                            <td>{{ $flight['flight']['departure_time'] ?? '-' }}</td>
-                            <td>{{ $flight['actual_departure_time'] ?? '-' }}</td>
-                            <td>{{ $flight['departure_time_diff'] ?? '-' }}</td>
-                            <td>{{ $flight['flight']['arrival_time'] ?? '-' }}</td>
-                            <td>{{ $flight['actual_arrival_time'] ?? '-' }}</td>
-                            <td>{{ $flight['arrival_time_diff'] ?? '-' }}</td>
+                            <td>{{ $flight['flight']['departure_time_local'] ?? '-' }}</td>
+                            <td>{{ $flight['atd_local'] ?? '-' }}</td>
+                            <td>{{ $flight['formatted_departure_time_diff'] ?? '-' }}</td>
+                            <td>{{ $flight['flight']['arrival_time_local'] ?? '-' }}</td>
+                            <td>{{ $flight['ata_local'] ?? '-' }}</td>
+                            <td>{{ $flight['formatted_arrival_time_diff'] ?? '-' }}</td>
                             <td>
                                 @if (!empty($flight['schedule_flight_customers']))
                                 @foreach ($flight['schedule_flight_customers'] as $customer)
@@ -313,12 +313,12 @@ $customizerHidden = 'customizer-hide';
                             {{-- Reverse Flight Data --}}
                             @if ($flightData['reverse_flights'])
                             @php $flight = $flightData['reverse_flights'][0]; @endphp
-                            <td>{{ $flight['flight']['departure_time'] ?? '-' }}</td>
-                            <td>{{ $flight['actual_departure_time'] ?? '-' }}</td>
-                            <td>{{ $flight['departure_time_diff'] ?? '-' }}</td>
-                            <td>{{ $flight['flight']['arrival_time'] ?? '-' }}</td>
-                            <td>{{ $flight['actual_arrival_time'] ?? '-' }}</td>
-                            <td>{{ $flight['arrival_time_diff'] ?? '-' }}</td>
+                            <td>{{ $flight['flight']['departure_time_local'] ?? '-' }}</td>
+                            <td>{{ $flight['atd_local'] ?? '-' }}</td>
+                            <td>{{ $flight['formatted_departure_time_diff'] ?? '-' }}</td>
+                            <td>{{ $flight['flight']['arrival_time_local'] ?? '-' }}</td>
+                            <td>{{ $flight['ata_local'] ?? '-' }}</td>
+                            <td>{{ $flight['formatted_arrival_time_diff'] ?? '-' }}</td>
                             <td>
                                 @if (!empty($flight['schedule_flight_customers']))
                                 @foreach ($flight['schedule_flight_customers'] as $customer)
