@@ -41,7 +41,8 @@ class CustomerController extends Controller
         $validator = Validator::make($request->all(), [
             'code' => ['required', 'string', 'unique:customers,code,NULL,id,deleted_at,NULL'],
             'name' => ['required', 'string', 'unique:customers,name,NULL,id,deleted_at,NULL'],
-            'status' => ['required']
+            'status' => ['required'],
+            'type' => ['required']
         ]);
 
         if ($validator->fails()) {
@@ -54,6 +55,7 @@ class CustomerController extends Controller
                 'code' => Str::upper($request->input('code')),
                 'name' => $request->input('name'),
                 'active' => $request->input('status'),
+                'type' => $request->input('type'),
                 'added_by' => Auth::id()
             ]);
         } catch (Exception $e) {
