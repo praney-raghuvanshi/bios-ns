@@ -87,7 +87,7 @@ class ScheduleFlightEmailController extends Controller
 
             // Get Customer Emails for that location
 
-            $customerEmails = $scheduleFlightCustomer->load(['customer.emails.locations'])
+            $customerEmails = $scheduleFlightCustomer->load(['customer.emails.locations',])
                 ->customer
                 ->emails
                 ->filter(function ($email) use ($locationId) {
@@ -100,6 +100,8 @@ class ScheduleFlightEmailController extends Controller
                     'email' => $customerEmail->email
                 ];
             }
+            $scheduleFlightCustomer->load('scheduleFlightCustomerShipments');
+            $awbs = $scheduleFlightCustomer->scheduleFlightCustomerShipments->pluck('awb')->toArray();
 
             if ($isRemarkIncluded) {
                 $serviceRemarks = ScheduleFlightRemark::where('schedule_flight_id', $scheduleFlight->id)
@@ -114,7 +116,7 @@ class ScheduleFlightEmailController extends Controller
             return back()->with('failure', $e->getMessage());
         }
 
-        return view('_partials._modals.schedule.flight.email.preview', compact('schedule', 'scheduleFlight', 'scheduleFlightCustomer', 'data', 'serviceRemarks'));
+        return view('_partials._modals.schedule.flight.email.preview', compact('schedule', 'scheduleFlight', 'scheduleFlightCustomer', 'data', 'serviceRemarks', 'awbs'));
     }
 
     public function send(Request $request, Schedule $schedule, ScheduleFlight $scheduleFlight)

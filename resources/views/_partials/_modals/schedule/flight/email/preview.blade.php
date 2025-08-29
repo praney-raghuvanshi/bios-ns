@@ -28,13 +28,17 @@
             <thead>
                 <tr>
                     <th>Route</th>
-                    <th>STD*</th>
-                    <th>ETD*</th>
-                    <th>ATD*</th>
-                    <th>+/- Mins</th>
-                    <th>STA*</th>
-                    <th>ETA*</th>
-                    <th>ATA*</th>
+                    @if($scheduleFlightCustomer->customer->type !== 'Cargo')
+                        <th>STD*</th>
+                        <th>ETD*</th>
+                        <th>ATD*</th>
+                        <th>+/- Mins</th>
+                        <th>STA*</th>
+                        <th>ETA*</th>
+                        <th>ATA*</th>
+                    @else
+                        <th>AWB</th>
+                    @endif
                     <th>Uplifted</th>
                     <th>Offloaded</th>
                 </tr>
@@ -44,13 +48,23 @@
                     <td>{{ $scheduleFlight->flight->fromAirport->iata }} - {{ $scheduleFlight->flight->toAirport->iata
                         }}
                     </td>
-                    <td>{{ $scheduleFlight->flight->departure_time_local ?? 'None' }}</td>
-                    <td>{{ $scheduleFlight->etd_local ?? 'None' }}</td>
-                    <td>{{ $scheduleFlight->atd_local ?? 'None' }}</td>
-                    <td>{{ $scheduleFlight->formatted_departure_time_diff ?? 'None' }}</td>
-                    <td>{{ $scheduleFlight->flight->arrival_time_local ?? 'None' }}</td>
-                    <td>{{ $scheduleFlight->eta_local ?? 'None' }}</td>
-                    <td>{{ $scheduleFlight->ata_local ?? 'None' }}</td>
+                    @if($scheduleFlightCustomer->customer->type !== 'Cargo')
+                        <td>{{ $scheduleFlight->flight->departure_time_local ?? 'None' }}</td>
+                        <td>{{ $scheduleFlight->etd_local ?? 'None' }}</td>
+                        <td>{{ $scheduleFlight->atd_local ?? 'None' }}</td>
+                        <td>{{ $scheduleFlight->formatted_departure_time_diff ?? 'None' }}</td>
+                        <td>{{ $scheduleFlight->flight->arrival_time_local ?? 'None' }}</td>
+                        <td>{{ $scheduleFlight->eta_local ?? 'None' }}</td>
+                        <td>{{ $scheduleFlight->ata_local ?? 'None' }}</td>
+                    @else
+                        <td>@if(!empty($awbs))
+                                @foreach($awbs as $awb)
+                                    <div>{{ $awb ?? 'None' }}</div>
+                                @endforeach
+                        @else
+                            <p>No AWBs available.</p>
+                        @endif</td>
+                    @endif
                     <td>{{ $scheduleFlightCustomer->total_uplifted_weight ?? 0 }} Kgs</td>
                     <td>{{ $scheduleFlightCustomer->total_offloaded_weight ?? 0 }} Kgs</td>
                 </tr>
