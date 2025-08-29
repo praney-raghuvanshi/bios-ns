@@ -43,6 +43,9 @@ $(document).ready(function () {
       },
       status: {
         required: true
+      },
+      type: {
+        required: true
       }
     }
   });

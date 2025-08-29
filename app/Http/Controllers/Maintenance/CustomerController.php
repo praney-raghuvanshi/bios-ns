@@ -92,7 +92,8 @@ class CustomerController extends Controller
         $validator = Validator::make($request->all(), [
             'code' => ['required', 'string', Rule::unique('customers', 'code')->ignore($customer->id)->whereNull('deleted_at')],
             'name' => ['required', 'string', Rule::unique('customers', 'name')->ignore($customer->id)->whereNull('deleted_at')],
-            'status' => ['required']
+            'status' => ['required'],
+            'type' => ['required']
         ]);
 
         if ($validator->fails()) {
@@ -103,6 +104,7 @@ class CustomerController extends Controller
             $customer->code = Str::upper($request->input('code'));
             $customer->name = $request->input('name');
             $customer->active = $request->input('status');
+            $customer->type = $request->input('type');
             $customer->save();
         } catch (Exception $e) {
             return back()->with('failure', $e->getMessage());

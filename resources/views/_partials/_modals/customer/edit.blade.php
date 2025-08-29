@@ -22,6 +22,15 @@
         </select>
     </div>
 
+    <div class="col-12 col-md-6">
+        <label class="form-label" for="type">Type</label>
+        <select name="type" class="select2 form-select" aria-label="type">
+            <option value="">Type</option>
+            <option value="Express" @if(old('type', $customer->type) === "Express") selected @endif>Express</option>
+            <option value="Cargo" @if(old('type', $customer->type) === "Cargo") selected @endif>Cargo</option>
+        </select>
+    </div>
+
     <div class="col-12 text-center">
         <button type="submit" class="btn btn-primary me-sm-3 me-1">Update</button>
         <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>

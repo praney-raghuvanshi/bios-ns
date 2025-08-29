@@ -103,6 +103,9 @@ $(document).on('click', '.edit-btn', function () {
                         },
                         status: {
                             required: true
+                        },
+                        type: {
+                            required: true
                         }
                     }
                 });
