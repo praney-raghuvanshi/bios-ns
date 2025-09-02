@@ -13,27 +13,43 @@
         <thead>
             <tr style="background-color: #f0f0f0;">
                 <th style="border: 1px solid #ccc; padding: 5px;">Route</th>
-                <th style="border: 1px solid #ccc; padding: 5px;">STD*</th>
-                <th style="border: 1px solid #ccc; padding: 5px;">ETD*</th>
-                <th style="border: 1px solid #ccc; padding: 5px;">ATD*</th>
-                <th style="border: 1px solid #ccc; padding: 5px;">+/- Mins</th>
-                <th style="border: 1px solid #ccc; padding: 5px;">STA*</th>
-                <th style="border: 1px solid #ccc; padding: 5px;">ETA*</th>
-                <th style="border: 1px solid #ccc; padding: 5px;">ATA*</th>
+                 @if($data['customer_type'] !== 'Cargo')
+                    <th style="border: 1px solid #ccc; padding: 5px;">STD*</th>
+                    <th style="border: 1px solid #ccc; padding: 5px;">ETD*</th>
+                    <th style="border: 1px solid #ccc; padding: 5px;">ATD*</th>
+                    <th style="border: 1px solid #ccc; padding: 5px;">+/- Mins</th>
+                    <th style="border: 1px solid #ccc; padding: 5px;">STA*</th>
+                    <th style="border: 1px solid #ccc; padding: 5px;">ETA*</th>
+                    <th style="border: 1px solid #ccc; padding: 5px;">ATA*</th>
+                 @else
+                    <th style="border: 1px solid #ccc; padding: 5px;">AWB</th>
+                @endif    
                 <th style="border: 1px solid #ccc; padding: 5px;">Uplifted</th>
                 <th style="border: 1px solid #ccc; padding: 5px;">Offloaded</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td style="border: 1px solid #ccc; padding: 5px;">{{ $data['route'] }}</td>
-                <td style="border: 1px solid #ccc; padding: 5px;">{{ $data['std'] }}</td>
-                <td style="border: 1px solid #ccc; padding: 5px;">{{ $data['etd'] }}</td>
-                <td style="border: 1px solid #ccc; padding: 5px;">{{ $data['atd'] }}</td>
-                <td style="border: 1px solid #ccc; padding: 5px;">{{ $data['departure_diff'] }}</td>
-                <td style="border: 1px solid #ccc; padding: 5px;">{{ $data['sta'] }}</td>
-                <td style="border: 1px solid #ccc; padding: 5px;">{{ $data['eta'] }}</td>
-                <td style="border: 1px solid #ccc; padding: 5px;">{{ $data['ata'] }}</td>
+                    <td style="border: 1px solid #ccc; padding: 5px;">{{ $data['route'] }}</td>
+                @if($data['customer_type'] !== 'Cargo')
+                    <td style="border: 1px solid #ccc; padding: 5px;">{{ $data['std'] }}</td>
+                    <td style="border: 1px solid #ccc; padding: 5px;">{{ $data['etd'] }}</td>
+                    <td style="border: 1px solid #ccc; padding: 5px;">{{ $data['atd'] }}</td>
+                    <td style="border: 1px solid #ccc; padding: 5px;">{{ $data['departure_diff'] }}</td>
+                    <td style="border: 1px solid #ccc; padding: 5px;">{{ $data['sta'] }}</td>
+                    <td style="border: 1px solid #ccc; padding: 5px;">{{ $data['eta'] }}</td>
+                    <td style="border: 1px solid #ccc; padding: 5px;">{{ $data['ata'] }}</td>
+                 @else
+                    <td style="border: 1px solid #ccc; padding: 5px; text-align: centre;">
+                         @if(!empty($data['awbs']))
+                            @foreach($data['awbs'] as $awb)
+                                <div>{{ $awb }}</div>
+                            @endforeach
+                        @else
+                            <p>No AWBs available.</p>
+                        @endif
+                    </td>
+                 @endif
                 <td style="border: 1px solid #ccc; padding: 5px;">{{ $data['uplifted'] }} Kgs</td>
                 <td style="border: 1px solid #ccc; padding: 5px;">{{ $data['offloaded'] }} Kgs</td>
             </tr>

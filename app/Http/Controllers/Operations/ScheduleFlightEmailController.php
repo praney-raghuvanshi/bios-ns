@@ -126,9 +126,14 @@ class ScheduleFlightEmailController extends Controller
             $scheduleFlightCustomerIdsForRemarks = $request->input('include_remark');
 
             $scheduleFlightCustomers = ScheduleFlightCustomer::whereIn('id', $scheduleFlightCustomerIds)->get();
+   
             foreach ($scheduleFlightCustomers as $scheduleFlightCustomer) {
 
                 $emailAddresses = [];
+
+                $scheduleFlightCustomer->load('scheduleFlightCustomerShipments');
+                // Collect AWBs from the related shipments
+                $awbs = $scheduleFlightCustomer->scheduleFlightCustomerShipments->pluck('awb')->toArray();
 
                 // Get Flight Location
                 $locationId = $scheduleFlight->flight->location_id;
@@ -147,6 +152,8 @@ class ScheduleFlightEmailController extends Controller
                 }
 
                 $data = [
+                    'customer_type' => $scheduleFlightCustomer->customer->type,
+                    'awbs' => $awbs,
                     'flight_number' => $scheduleFlight->flight->flight_number,
                     'date' => Carbon::parse($schedule->date)->format('d F Y'),
                     'route' => $scheduleFlight->flight->fromAirport->iata . ' - ' . $scheduleFlight->flight->toAirport->iata,
