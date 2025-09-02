@@ -165,6 +165,7 @@ $(document).on('click', '.edit-btn', function () {
                         <th>ID</th>
                         <th>Code</th>
                         <th>Name</th>
+                        <th>Type</th>
                         <th>Status</th>
                         <th>Added By</th>
                     </tr>
@@ -202,6 +203,7 @@ $(document).on('click', '.edit-btn', function () {
                         </td>
                         <td>{{ $customer->code }}</td>
                         <td>{{ $customer->name }}</td>
+                        <td>{{ $customer->type ?? '--' }}</td>
                         <td>
                             @if ($customer->active)
                             <span class="badge bg-label-success me-1">Active</span>
