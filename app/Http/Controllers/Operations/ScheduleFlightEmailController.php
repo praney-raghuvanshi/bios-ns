@@ -87,7 +87,7 @@ class ScheduleFlightEmailController extends Controller
 
             // Get Customer Emails for that location
 
-            $customerEmails = $scheduleFlightCustomer->load(['customer.emails.locations',])
+            $customerEmails = $scheduleFlightCustomer->load(['customer.emails.locations'])
                 ->customer
                 ->emails
                 ->filter(function ($email) use ($locationId) {
@@ -100,8 +100,14 @@ class ScheduleFlightEmailController extends Controller
                     'email' => $customerEmail->email
                 ];
             }
-            $scheduleFlightCustomer->load('scheduleFlightCustomerShipments');
-            $awbs = $scheduleFlightCustomer->scheduleFlightCustomerShipments->pluck('awb')->toArray();
+
+            $awbs = [];
+
+            if ($scheduleFlightCustomer->customer->type === 'Cargo') {
+                $awbs = $scheduleFlightCustomer->scheduleFlightCustomerShipments()
+                    ->pluck('awb')
+                    ->toArray();
+            }
 
             if ($isRemarkIncluded) {
                 $serviceRemarks = ScheduleFlightRemark::where('schedule_flight_id', $scheduleFlight->id)
@@ -126,14 +132,16 @@ class ScheduleFlightEmailController extends Controller
             $scheduleFlightCustomerIdsForRemarks = $request->input('include_remark');
 
             $scheduleFlightCustomers = ScheduleFlightCustomer::whereIn('id', $scheduleFlightCustomerIds)->get();
-   
+
             foreach ($scheduleFlightCustomers as $scheduleFlightCustomer) {
 
                 $emailAddresses = [];
 
-                $scheduleFlightCustomer->load('scheduleFlightCustomerShipments');
-                // Collect AWBs from the related shipments
-                $awbs = $scheduleFlightCustomer->scheduleFlightCustomerShipments->pluck('awb')->toArray();
+                if ($scheduleFlightCustomer->customer->type === 'Cargo') {
+                    $awbs = $scheduleFlightCustomer->scheduleFlightCustomerShipments()
+                        ->pluck('awb')
+                        ->toArray();
+                }
 
                 // Get Flight Location
                 $locationId = $scheduleFlight->flight->location_id;
@@ -152,7 +160,7 @@ class ScheduleFlightEmailController extends Controller
                 }
 
                 $data = [
-                    'customer_type' => $scheduleFlightCustomer->customer->type,
+                    'customer_type' => $scheduleFlightCustomer->customer->type ?? '',
                     'awbs' => $awbs,
                     'flight_number' => $scheduleFlight->flight->flight_number,
                     'date' => Carbon::parse($schedule->date)->format('d F Y'),
