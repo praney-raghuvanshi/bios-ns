@@ -135,7 +135,7 @@ class ScheduleFlightEmailController extends Controller
 
             foreach ($scheduleFlightCustomers as $scheduleFlightCustomer) {
 
-                $emailAddresses = [];
+                $emailAddresses = $awbs = [];
 
                 if ($scheduleFlightCustomer->customer->type === 'Cargo') {
                     $awbs = $scheduleFlightCustomer->scheduleFlightCustomerShipments()
