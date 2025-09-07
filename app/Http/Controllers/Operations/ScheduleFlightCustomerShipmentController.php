@@ -112,11 +112,11 @@ class ScheduleFlightCustomerShipmentController extends Controller
 
                 $newActual = $request->input('actual_weight') ?? 0;
 
-                if ($totalActual + $newActual > $totalAllowed) {
-                    return back()->withErrors([
-                        'actual_weight' => 'Total actual weight already reached for this AWB. Cannot add more subsequent shipments.',
-                    ])->withInput();
-                }
+                // if ($totalActual + $newActual > $totalAllowed) {
+                //     return back()->withErrors([
+                //         'actual_weight' => 'Total actual weight already reached for this AWB. Cannot add more subsequent shipments.',
+                //     ])->withInput();
+                // }
 
                 $parentId = $parent->id;
             }
