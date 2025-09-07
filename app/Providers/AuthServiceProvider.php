@@ -30,6 +30,9 @@ class AuthServiceProvider extends ServiceProvider
                 // Allow access to aircraft types if the user has the permission or belongs to a group with the permission 'Aircrafts'
                 $permission = str_replace('aircraft-types', 'aircrafts', $permission);
             }
+            if ($permission === 'view daily-report') {
+                $permission = 'view daily-flight-report';
+            }
             // If user has direct permission, allow
             if ($user->hasPermissionTo($permission)) {
                 return true;

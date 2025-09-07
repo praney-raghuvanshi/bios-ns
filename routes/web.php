@@ -24,6 +24,7 @@ use App\Http\Controllers\Operations\ScheduleFlightRemarkController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Reports\BillingExtractController;
 use App\Http\Controllers\Reports\DailyFlightReportController;
+use App\Http\Controllers\Reports\DailyReportController;
 use App\Http\Controllers\Reports\FlightPerformanceReportController;
 use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
@@ -286,6 +287,12 @@ Route::middleware(['auth', 'verified'])->prefix('reports')->name('reports.')->gr
     Route::name('daily-flight-report.')->controller(DailyFlightReportController::class)->group(function () {
         Route::match(['get', 'post'], '/daily-flight-report', 'index')->name('list')->can('view daily-flight-report');
         Route::post('/daily-flight-report/export', 'export')->name('export')->can('view daily-flight-report');
+    });
+
+    // - Daily Report Routes
+    Route::name('daily-report.')->controller(DailyReportController::class)->group(function () {
+        Route::match(['get', 'post'], '/daily-report', 'index')->name('list')->can('view daily-flight-report');
+        Route::post('/daily-report/export', 'export')->name('export')->can('view daily-flight-report');
     });
 });
 

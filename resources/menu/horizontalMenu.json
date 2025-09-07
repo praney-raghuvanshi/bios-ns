@@ -129,6 +129,12 @@
           "slug": "billing-extract"
         },
         {
+          "url": "/reports/daily-report",
+          "name": "Daily Report",
+          "icon": "menu-icon tf-icons ti ti-file",
+          "slug": "daily-report"
+        },
+        {
           "url": "/reports/daily-flight-report",
           "name": "Daily Flight Report",
           "icon": "menu-icon tf-icons ti ti-file",
