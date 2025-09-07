@@ -146,7 +146,7 @@ $customizerHidden = 'customizer-hide';
                 <span><i class="ti ti-x me-0 me-sm-1 ti-xs"></i>Cancel Flight</span>
             </a>
             @endcan
-            @elseif($scheduleFlight->status === 2 || $scheduleFlight->status === 3)
+            @elseif($scheduleFlight->status === 2)
             @can('edit schedules')
             <a href="{{ route('flight-operations.schedule.flight.re-open', [$schedule, $scheduleFlight]) }}"
                 class="btn btn-success re-open">

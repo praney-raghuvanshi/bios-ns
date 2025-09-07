@@ -171,33 +171,69 @@ $customizerHidden = 'customizer-hide';
     <div class="card-body p-2">
         <table>
             <tr class="header">
-                <th>CUSTOMER</th>
-                <th>FLIGHT #</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>CON1</th>
+                <th>CON2</th>
+                <th>CON3</th>
+                <th>CON4</th>
+                <th>Declared</th>
+                <th>Actual</th>
+                <th>Volume</th>
+                <th>Total Actual</th>
+                <th>Total Volume</th>
+                <th>First/Subs</th>
+                <th colspan="3">CUSTOMER DETAIL</th>
+                <th>CHARGES</th>
+            </tr>
+            <tr class="header">
                 <th>DATE</th>
-                <th>AIRWAYBILL #</th>
                 <th>ORIGIN</th>
+                <th>DEST</th>
                 <th>END DEST</th>
+                <th>FLIGHT #</th>
+                <th>AIRWAY BILL #</th>
+                <th>LD3</th>
+                <th>LD7</th>
+                <th></th>
+                <th></th>
+                <th>KG</th>
+                <th>KG</th>
+                <th>KG</th>
+                <th>KG</th>
+                <th>KG</th>
+                <th>SHIPMENT</th>
+                <th>CON #</th>
+                <th>CUSTOMER</th>
                 <th>PRODUCT</th>
-                <th>ACTUAL</th>
-                <th>VOLUMETRIC</th>
-                <th>TOTAL ACTUAL</th>
-                <th>TOTAL VOLUMETRIC</th>
-                <th>FIRST/SUBS</th>
+                <th>HANDLING</th>
             </tr>
             @foreach ($finalData as $datum)
             <tr>
-                <td>{{ $datum['customer'] }}</td>
-                <td>{{ $datum['flight'] }}</td>
                 <td>{{ $datum['date'] }}</td>
-                <td>{{ $datum['awb'] }}</td>
                 <td>{{ $datum['origin'] }}</td>
+                <td>{{ $datum['destination'] }}</td>
                 <td>{{ $datum['end_destination'] }}</td>
-                <td>{{ $datum['product'] }}</td>
+                <td>{{ $datum['flight'] }}</td>
+                <td>{{ $datum['awb'] }}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>{{ $datum['declared'] }}</td>
                 <td>{{ $datum['actual'] }}</td>
                 <td>{{ $datum['volume'] }}</td>
                 <td>{{ $datum['total_actual'] }}</td>
                 <td>{{ $datum['total_volume'] }}</td>
                 <td>{{ $datum['shipment_type'] }}</td>
+                <td></td>
+                <td>{{ $datum['customer'] }}</td>
+                <td>{{ $datum['product'] }}</td>
+                <td></td>
             </tr>
             @endforeach
         </table>

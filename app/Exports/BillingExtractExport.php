@@ -34,18 +34,84 @@ class BillingExtractExport extends DefaultValueBinder implements FromArray, With
         // HEADER ROW 1
         // ========================
         $rows[] = [
-            'Customer',  // A
-            'Flight #',  // B
-            'Date',  // C
-            'Airwaybill #',  // D
-            'Origin',  // E
-            'End Dest',  // F
-            'Product',  // G
-            'Actual',  // H
-            'Volumetric',  // I
-            'Total Actual',  // J
-            'Total Volumetric',  // K
-            'First/Subs',  // L
+            '',  // A
+            '',  // B
+            '',  // C
+            '',  // D
+            '',  // E
+            '',  // F
+            '',  // G
+            '',  // H
+            '',  // I
+            '',  // J
+            '',  // K
+            'CON1',  // L
+            '',      // M
+            'CON2',  // N
+            '',      // O
+            'CON3',  // P
+            '',      // Q
+            'CON4',  // R
+            '',      // S
+            'Declared', // T
+            '',         // U
+            'Actual',   // V
+            'Volume',   // W
+            '',         // X
+            'Total Actual', // Y
+            '',             // Z
+            'Total Volume', // AA
+            'First/Subs',   // AB
+            '',             // AC
+            'CUSTOMER DETAIL', // AD (merged AD:AH)
+            '',      // AE
+            '',      // AF
+            '',      // AG
+            '',      // AH
+            '',      // AI
+            'CHARGES' // AJ
+        ];
+
+        // ========================
+        // HEADER ROW 2
+        // ========================
+        $rows[] = [
+            'DATE',  // A
+            '',      // B
+            'ORIGIN', // C
+            '',      // D
+            'DEST',  // E
+            '',      // F
+            'END DEST', // G
+            'FLIGHT#',  // H
+            '',      // I
+            'AIRWAY BILL #', // J
+            '',      // K
+            'LD3',   // L
+            '',      // M
+            'LD7',   // N
+            '',      // O
+            '',      // P
+            '',      // Q
+            '',      // R
+            '',      // S
+            'KG',    // T
+            '',      // U
+            'KG',    // V
+            'KG',    // W
+            '',      // X
+            'KG',    // Y
+            '',      // Z
+            'KG',    // AA
+            'SHIPMENT', // AB
+            '',      // AC
+            'CON#',  // AD
+            '',      // AE
+            'CUSTOMER', // AF
+            '',      // AG
+            'PRODUCT', // AH
+            '',
+            'HANDLING' // AJ
         ];
 
         // ========================
@@ -53,18 +119,42 @@ class BillingExtractExport extends DefaultValueBinder implements FromArray, With
         // ========================
         foreach ($this->data as $datum) {
             $rows[] = [
-                $datum['customer'],
-                $datum['flight'],
-                ExcelDate::PHPToExcel(Carbon::parse($datum['raw_date'])),
-                $datum['awb'],
-                $datum['origin'],
-                $datum['end_destination'],
-                $datum['product'],
-                $datum['actual'],
-                $datum['volume'],
-                $datum['total_actual'],
-                $datum['total_volume'],
-                $datum['shipment_type']
+                ExcelDate::PHPToExcel(Carbon::parse($datum['raw_date'])),   // A
+                '',               // B
+                $datum['origin'], // C
+                '',               // D
+                $datum['destination'], // E
+                '',               // F
+                $datum['end_destination'], // G
+                $datum['flight'], // H
+                '',               // I
+                $datum['awb'],    // J
+                '',               // K
+                '',               // L (LD3 - not mapped yet)
+                '',               // M
+                '',               // N (LD7 - not mapped yet)
+                '',               // O
+                '',               // P
+                '',               // Q
+                '',               // R
+                '',               // S
+                $datum['declared'], // T
+                '',                 // U
+                $datum['actual'],   // V
+                $datum['volume'],   // W
+                '',                 // X
+                $datum['total_actual'], // Y
+                '',                     // Z
+                $datum['total_volume'], // AA
+                $datum['shipment_type'], // AB
+                '',                     // AC
+                '',                     // AD (CON#)
+                '',                     // AE
+                $datum['customer'],     // AF
+                '',                     // AG
+                $datum['product'],      // AH
+                '',
+                ''                      // AJ (Handling)
             ];
         }
 
@@ -73,22 +163,36 @@ class BillingExtractExport extends DefaultValueBinder implements FromArray, With
 
     public function styles(Worksheet $sheet)
     {
-        $sheet->getStyle('C')->getNumberFormat()->setFormatCode('dd-mm-yyyy');
+        // Merge CUSTOMER DETAIL across AD:AH (Row 1 only)
+        $sheet->mergeCells("AD1:AH1");
+
+        $sheet->getStyle('A')->getNumberFormat()->setFormatCode('dd-mm-yyyy');
+
         // Style headers
-        $sheet->getStyle("A1:L1")->getFont()->setBold(true)->setSize(12);
+        $sheet->getStyle("A1:AJ1")->getFont()->setBold(true)->setSize(12);
+        $sheet->getStyle("A2:AJ2")->getFont()->setBold(true)->setSize(12);
+
+        $sheet->getStyle("A1:AJ2")->getAlignment()
+            ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER)
+            ->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+
+        // Hide skipped columns
+        foreach (['B', 'D', 'F', 'I', 'K', 'M', 'O', 'Q', 'S', 'U', 'X', 'Z', 'AC', 'AE', 'AG', 'AI'] as $col) {
+            $sheet->getColumnDimension($col)->setVisible(false);
+        }
     }
 
     public function columnFormats(): array
     {
         return [
-            'C' => NumberFormat::FORMAT_DATE_DDMMYYYY,
-            'D' => NumberFormat::FORMAT_TEXT,
+            'A' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'J' => NumberFormat::FORMAT_TEXT,
         ];
     }
 
     public function bindValue(Cell $cell, $value): bool
     {
-        if ($cell->getColumn() === 'D') { // Airwaybill #
+        if ($cell->getColumn() === 'J') { // adjust 'J' if MAWB is in another column
             $cell->setValueExplicit($value, DataType::TYPE_STRING);
             return true;
         }
