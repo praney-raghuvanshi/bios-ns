@@ -61,7 +61,7 @@ class ScheduleController extends Controller
 
         if ($scheduleType === 'auto') {
             // Fetch flights scheduled on the given day
-            $flights = Flight::whereHas('flightDays', function ($query) use ($scheduleDay) {
+            $flights = Flight::active()->whereHas('flightDays', function ($query) use ($scheduleDay) {
                 $query->where('day', $scheduleDay);
             })->with(['fromAirport', 'toAirport', 'aircraftType'])->whereDate('effective_date', '<=', Carbon::now())->orderBy('departure_time', 'asc')->get();
         }
@@ -189,7 +189,7 @@ class ScheduleController extends Controller
     {
         $scheduleDate = $schedule->date;
         $scheduleDay = Carbon::parse($scheduleDate)->format('N');
-        $flights = Flight::whereHas('flightDays', function ($query) use ($scheduleDay) {
+        $flights = Flight::active()->whereHas('flightDays', function ($query) use ($scheduleDay) {
             $query->where('day', $scheduleDay);
         })->whereDoesntHave('schedules', function ($query) use ($schedule) {
             $query->where('schedule_id', $schedule->id);
