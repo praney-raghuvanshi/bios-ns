@@ -88,7 +88,9 @@ class BillingExtractController extends Controller
 
                 // Case 1: has shipments
                 if ($shipments->isNotEmpty()) {
-                    return $shipments->map(function ($shipment) use ($scheduleFlight, $scheduleFlightCustomer) {
+                    return $shipments->filter(function ($shipment) {
+                        return ($shipment->actual_weight ?? 0) > 0;
+                    })->map(function ($shipment) use ($scheduleFlight, $scheduleFlightCustomer) {
                         return [
                             'date'          => Carbon::parse($scheduleFlight->schedule->date)->format('d-m-Y'),
                             'raw_date'      => $scheduleFlight->schedule->date,
@@ -111,7 +113,9 @@ class BillingExtractController extends Controller
 
                 // Case 2: no shipments, fallback to products
                 if ($products->isNotEmpty()) {
-                    return $products->map(function ($product) use ($scheduleFlight, $scheduleFlightCustomer) {
+                    return $products->filter(function ($product) {
+                        return ($product->uplifted_weight ?? 0) > 0;
+                    })->map(function ($product) use ($scheduleFlight, $scheduleFlightCustomer) {
                         return [
                             'date'          => Carbon::parse($scheduleFlight->schedule->date)->format('d-m-Y'),
                             'raw_date'      => $scheduleFlight->schedule->date,
@@ -133,23 +137,25 @@ class BillingExtractController extends Controller
                 }
 
                 // Case 3: neither shipments nor products
-                return [[
-                    'date'          => Carbon::parse($scheduleFlight->schedule->date)->format('d-m-Y'),
-                    'raw_date'      => $scheduleFlight->schedule->date,
-                    'origin'        => $scheduleFlight->flight->fromAirport->iata,
-                    'destination'   => $scheduleFlight->flight->toAirport->iata ?? null,
-                    'end_destination' => null,
-                    'flight'        => $scheduleFlight->flight->flight_number ?? null,
-                    'awb'           => null,
-                    'declared'      => null,
-                    'actual'        => null,
-                    'volume'        => null,
-                    'total_actual'  => null,
-                    'total_volume'  => null,
-                    'shipment_type' => null,
-                    'customer'      => $scheduleFlightCustomer->customer->code ?? null,
-                    'product'       => null,
-                ]];
+                // return [[
+                //     'date'          => Carbon::parse($scheduleFlight->schedule->date)->format('d-m-Y'),
+                //     'raw_date'      => $scheduleFlight->schedule->date,
+                //     'origin'        => $scheduleFlight->flight->fromAirport->iata,
+                //     'destination'   => $scheduleFlight->flight->toAirport->iata ?? null,
+                //     'end_destination' => null,
+                //     'flight'        => $scheduleFlight->flight->flight_number ?? null,
+                //     'awb'           => null,
+                //     'declared'      => null,
+                //     'actual'        => null,
+                //     'volume'        => null,
+                //     'total_actual'  => null,
+                //     'total_volume'  => null,
+                //     'shipment_type' => null,
+                //     'customer'      => $scheduleFlightCustomer->customer->code ?? null,
+                //     'product'       => null,
+                // ]];
+
+                return [];
             });
         })->values()->all();
 
