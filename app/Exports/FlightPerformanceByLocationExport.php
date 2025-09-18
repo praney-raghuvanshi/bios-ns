@@ -134,15 +134,54 @@ class FlightPerformanceByLocationExport implements FromArray, WithTitle, WithHea
                     // Reverse flight
                     if (!empty($flights['reverse_flights'])) {
                         $r = $flights['reverse_flights'][0];
+                        $r2 = [];
+                        if (isset($flights['reverse_flights'][1])) {
+                            $r2 = $flights['reverse_flights'][1];
+                        }
                         $row = array_merge($row, [
-                            $r['flight']['departure_time_local'] ?? '-',
-                            $r['atd_local'] ?? '-',
-                            $r['formatted_departure_time_diff'] ?? '-',
-                            $r['flight']['arrival_time_local'] ?? '-',
-                            $r['ata_local'] ?? '-',
-                            $r['formatted_arrival_time_diff'] ?? '-',
-                            !empty($r['schedule_flight_customers']) ? implode("\r\n", array_column($r['schedule_flight_customers'], 'total_uplifted_weight')) : '-',
-                            !empty($r['schedule_flight_remarks']) ? implode("\r\n", array_column($r['schedule_flight_remarks'], 'remark')) : '-',
+                            isset($r2['flight']['departure_time_local'])
+                                ? implode("\r\n", [$r['flight']['departure_time_local'] ?? '-', $r2['flight']['departure_time_local'] ?? '-'])
+                                : ($r['flight']['departure_time_local'] ?? '-'),
+
+                            isset($r2['atd_local'])
+                                ? implode("\r\n", [$r['atd_local'] ?? '-', $r2['atd_local'] ?? '-'])
+                                : ($r['atd_local'] ?? '-'),
+
+                            isset($r2['formatted_departure_time_diff'])
+                                ? implode("\r\n", [$r['formatted_departure_time_diff'] ?? '-', $r2['formatted_departure_time_diff'] ?? '-'])
+                                : ($r['formatted_departure_time_diff'] ?? '-'),
+
+                            isset($r2['flight']['arrival_time_local'])
+                                ? implode("\r\n", [$r['flight']['arrival_time_local'] ?? '-', $r2['flight']['arrival_time_local'] ?? '-'])
+                                : ($r['flight']['arrival_time_local'] ?? '-'),
+
+                            isset($r2['ata_local'])
+                                ? implode("\r\n", [$r['ata_local'] ?? '-', $r2['ata_local'] ?? '-'])
+                                : ($r['ata_local'] ?? '-'),
+
+                            isset($r2['formatted_arrival_time_diff'])
+                                ? implode("\r\n", [$r['formatted_arrival_time_diff'] ?? '-', $r2['formatted_arrival_time_diff'] ?? '-'])
+                                : ($r['formatted_arrival_time_diff'] ?? '-'),
+
+                            !empty($r2['schedule_flight_customers'])
+                                ? implode("\r\n", [
+                                    implode(', ', array_column($r['schedule_flight_customers'], 'total_uplifted_weight')),
+                                    '----',
+                                    implode(', ', array_column($r2['schedule_flight_customers'], 'total_uplifted_weight'))
+                                ])
+                                : (!empty($r['schedule_flight_customers'])
+                                    ? implode(', ', array_column($r['schedule_flight_customers'], 'total_uplifted_weight'))
+                                    : '-'),
+
+                            !empty($r2['schedule_flight_remarks'])
+                                ? implode("\r\n", [
+                                    implode('; ', array_column($r['schedule_flight_remarks'], 'remark')),
+                                    '----',
+                                    implode('; ', array_column($r2['schedule_flight_remarks'], 'remark'))
+                                ])
+                                : (!empty($r['schedule_flight_remarks'])
+                                    ? implode('; ', array_column($r['schedule_flight_remarks'], 'remark'))
+                                    : '-'),
                         ]);
                     } else {
                         $row = array_merge($row, array_fill(0, 8, '-'));
@@ -214,6 +253,28 @@ class FlightPerformanceByLocationExport implements FromArray, WithTitle, WithHea
             ->setVertical(Alignment::VERTICAL_CENTER);
 
         $sheet->getStyle("A1:S{$highestRow}")->getFont()->setSize(10);
+
+        $sheet->getStyle("L1:L{$highestRow}")
+            ->getAlignment()->setWrapText(true)
+            ->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle("M1:M{$highestRow}")
+            ->getAlignment()->setWrapText(true)
+            ->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle("N1:N{$highestRow}")
+            ->getAlignment()->setWrapText(true)
+            ->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle("O1:O{$highestRow}")
+            ->getAlignment()->setWrapText(true)
+            ->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle("P1:P{$highestRow}")
+            ->getAlignment()->setWrapText(true)
+            ->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle("Q1:Q{$highestRow}")
+            ->getAlignment()->setWrapText(true)
+            ->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle("R1:R{$highestRow}")
+            ->getAlignment()->setWrapText(true)
+            ->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
         // === REMARKS WRAP ===
         // Forward remarks column = J

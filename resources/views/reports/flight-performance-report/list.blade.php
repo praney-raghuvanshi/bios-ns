@@ -312,29 +312,92 @@ $customizerHidden = 'customizer-hide';
 
                             {{-- Reverse Flight Data --}}
                             @if ($flightData['reverse_flights'])
-                            @php $flight = $flightData['reverse_flights'][0]; @endphp
-                            <td>{{ $flight['flight']['departure_time_local'] ?? '-' }}</td>
-                            <td>{{ $flight['atd_local'] ?? '-' }}</td>
-                            <td>{{ $flight['formatted_departure_time_diff'] ?? '-' }}</td>
-                            <td>{{ $flight['flight']['arrival_time_local'] ?? '-' }}</td>
-                            <td>{{ $flight['ata_local'] ?? '-' }}</td>
-                            <td>{{ $flight['formatted_arrival_time_diff'] ?? '-' }}</td>
+                            @php
+                            $flightOne = $flightData['reverse_flights'][0];
+                            $flightTwo = [];
+                            if(isset($flightData['reverse_flights'][1])) {
+                            $flightTwo = $flightData['reverse_flights'][1];
+                            }
+
+                            @endphp
                             <td>
-                                @if (!empty($flight['schedule_flight_customers']))
-                                @foreach ($flight['schedule_flight_customers'] as $customer)
+                                {{ $flightOne['flight']['departure_time_local'] ?? '-' }}
+                                @if(isset($flightTwo['flight']['departure_time_local']))
+                                <hr>
+                                {{ $flightTwo['flight']['departure_time_local'] ?? '-' }}
+                                @endif
+                            </td>
+                            <td>
+                                {{ $flightOne['atd_local'] ?? '-' }}
+                                @if(isset($flightTwo['atd_local']))
+                                <hr>
+                                {{ $flightTwo['atd_local'] ?? '-' }}
+                                @endif
+                            </td>
+                            <td>
+                                {{ $flightOne['formatted_departure_time_diff'] ?? '-' }}
+                                @if(isset($flightTwo['formatted_departure_time_diff']))
+                                <hr>
+                                {{ $flightTwo['formatted_departure_time_diff'] ?? '-' }}
+                                @endif
+                            </td>
+                            <td>
+                                {{ $flightOne['flight']['arrival_time_local'] ?? '-' }}
+                                @if(isset($flightTwo['flight']['arrival_time_local']))
+                                <hr>
+                                {{ $flightTwo['flight']['arrival_time_local'] ?? '-' }}
+                                @endif
+                            </td>
+                            <td>
+                                {{ $flightOne['ata_local'] ?? '-' }}
+                                @if(isset($flightTwo['ata_local']))
+                                <hr>
+                                {{ $flightTwo['ata_local'] ?? '-' }}
+                                @endif
+                            </td>
+                            <td>
+                                {{ $flightOne['formatted_arrival_time_diff'] ?? '-' }}
+                                @if(isset($flightTwo['formatted_arrival_time_diff']))
+                                <hr>
+                                {{ $flightTwo['formatted_arrival_time_diff'] ?? '-' }}
+                                @endif
+                            </td>
+                            <td>
+                                @if (!empty($flightOne['schedule_flight_customers']))
+                                @foreach ($flightOne['schedule_flight_customers'] as $customer)
                                 {{ $customer['total_uplifted_weight'] }}<br>
                                 @endforeach
                                 @else
                                 -
                                 @endif
+                                @if(isset($flightTwo['schedule_flight_customers']))
+                                <hr>
+                                @if (!empty($flightTwo['schedule_flight_customers']))
+                                @foreach ($flightTwo['schedule_flight_customers'] as $customer)
+                                {{ $customer['total_uplifted_weight'] }}<br>
+                                @endforeach
+                                @else
+                                -
+                                @endif
+                                @endif
                             </td>
                             <td>
-                                @if (!empty($flight['schedule_flight_remarks']))
-                                @foreach ($flight['schedule_flight_remarks'] as $remark)
+                                @if (!empty($flightOne['schedule_flight_remarks']))
+                                @foreach ($flightOne['schedule_flight_remarks'] as $remark)
                                 {{ $remark['remark'] }}<br>
                                 @endforeach
                                 @else
                                 -
+                                @endif
+                                @if(isset($flightTwo['schedule_flight_remarks']))
+                                <hr>
+                                @if (!empty($flightTwo['schedule_flight_remarks']))
+                                @foreach ($flightTwo['schedule_flight_remarks'] as $remark)
+                                {{ $remark['remark'] }}<br>
+                                @endforeach
+                                @else
+                                -
+                                @endif
                                 @endif
                             </td>
                             @else

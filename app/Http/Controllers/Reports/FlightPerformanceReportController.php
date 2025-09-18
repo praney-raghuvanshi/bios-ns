@@ -165,6 +165,7 @@ class FlightPerformanceReportController extends Controller
             if ($selectedFlight !== 'all') {
                 $query->where('flight_number', $selectedFlight);
             }
+            $query->orderBy('departure_time');
         })->get();
 
         $locationRoutes = collect();
@@ -208,18 +209,19 @@ class FlightPerformanceReportController extends Controller
             foreach ($routes as $route) { // 🔹 Loop: Routes in this location
                 [$from, $to] = explode(' - ', $route);
 
-                // 🔥 Sort airports alphabetically to ensure unique key
                 $sortedAirports = [$from, $to];
-                sort($sortedAirports);
                 $routeKey = "{$sortedAirports[0]} - {$sortedAirports[1]}:{$sortedAirports[1]} - {$sortedAirports[0]}";
+                $reverseRouteKey = "{$sortedAirports[1]} - {$sortedAirports[0]}:{$sortedAirports[0]} - {$sortedAirports[1]}";
+
                 $from = $sortedAirports[0];
                 $to = $sortedAirports[1];
 
                 // ✅ Skip if we already processed this route
-                if (isset($processedRoutes[$routeKey])) {
+                if (isset($processedRoutes[$routeKey]) || isset($processedRoutes[$reverseRouteKey])) {
                     continue;
                 }
                 $processedRoutes[$routeKey] = true;
+                $processedRoutes[$reverseRouteKey] = true;
 
                 foreach ($groupedDays as $week => $weekDays) { // 🔹 Loop: Weeks
                     foreach ($weekDays as $day) { // 🔹 Loop: Days
@@ -252,6 +254,50 @@ class FlightPerformanceReportController extends Controller
                 }
             }
         }
+
+        if (array_key_exists('Malta', $finalData)) {
+            if (isset($finalData['Malta']['routes']['LCA - MLA:MLA - LCA']) && isset($finalData['Malta']['routes']['MLA - CGN:CGN - MLA'])) {
+                $newKey = 'LCA - MLA:MLA - CGN';
+
+                // Copy LCA → MLA structure as base
+                $newData = $finalData['Malta']['routes']['LCA - MLA:MLA - LCA'];
+
+                // Loop through MLA → CGN just once to push flights into reverse_flights
+                foreach ($finalData['Malta']['routes']['MLA - CGN:CGN - MLA'] as $week => $days) {
+                    foreach ($days as $day => $data) {
+                        $newData[$week][$day]['reverse_flights'] = $data['flights'];
+                    }
+                }
+
+                // Assign merged route
+                $finalData['Malta']['routes'][$newKey] = $newData;
+
+                // Remove old ones
+                unset($finalData['Malta']['routes']['LCA - MLA:MLA - LCA'], $finalData['Malta']['routes']['MLA - CGN:CGN - MLA']);
+            }
+        }
+
+        if (array_key_exists('CASABLANCA', $finalData)) {
+            //dd($finalData['CASABLANCA']['routes']);
+            if (array_key_exists('MAD - CMN:CMN - MAD', $finalData['CASABLANCA']['routes']) && array_key_exists('CMN - TNG:TNG - CMN', $finalData['CASABLANCA']['routes']) && array_key_exists('TNG - MAD:MAD - TNG', $finalData['CASABLANCA']['routes'])) {
+                $firstNewKey = 'MAD - CMN:CMN - TNG - MAD';
+                $secondNewKey = ':CMN - MAD';
+
+                $newDataOne = $newDataTwo = $finalData['CASABLANCA']['routes']['MAD - CMN:CMN - MAD'];
+                foreach ($finalData['CASABLANCA']['routes']['MAD - CMN:CMN - MAD'] as $week => $days) {
+                    foreach ($days as $day => $data) {
+                        $newDataOne[$week][$day]['reverse_flights'][0] = $finalData['CASABLANCA']['routes']['CMN - TNG:TNG - CMN'][$week][$day]['flights'][0] ?? [];
+                        $newDataOne[$week][$day]['reverse_flights'][1] = $finalData['CASABLANCA']['routes']['TNG - MAD:MAD - TNG'][$week][$day]['flights'][0] ?? [];
+                        $newDataTwo[$week][$day]['flights'] = [];
+                    }
+                }
+                $finalData['CASABLANCA']['routes'][$firstNewKey] = $newDataOne;
+                $finalData['CASABLANCA']['routes'][$secondNewKey] = $newDataTwo;
+                unset($finalData['CASABLANCA']['routes']['MAD - CMN:CMN - MAD'], $finalData['CASABLANCA']['routes']['CMN - TNG:TNG - CMN'], $finalData['CASABLANCA']['routes']['TNG - MAD:MAD - TNG']);
+            }
+        }
+
+        //dd($finalData);
 
         return [$startWeeks, $endWeeks, $finalData, $customerToShow, $weeksToShow];
     }
