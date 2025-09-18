@@ -28,6 +28,25 @@ class BillingExtractExport extends DefaultValueBinder implements FromArray, With
 
     public function array(): array
     {
+
+        // ---- Sort first ----
+    $sorted = collect($this->data)->sort(function ($a, $b) {
+        //  Primary: customer 
+        $cmp = strcmp($a['customer'], $b['customer']);
+        if ($cmp !== 0) {
+            return $cmp;
+        }
+
+        //  Secondary: origin  
+        $cmp = strcmp($a['origin'], $b['origin']);
+        if ($cmp !== 0) {
+            return $cmp;
+        }
+
+        // 3️⃣  Tertiary: destination 
+        return strcmp($a['destination'], $b['destination']);
+    });
+
         $rows = [];
 
         // ========================
@@ -116,8 +135,8 @@ class BillingExtractExport extends DefaultValueBinder implements FromArray, With
 
         // ========================
         // DATA ROWS
-        // ========================
-        foreach ($this->data as $datum) {
+        // ======================== 
+        foreach ($sorted->values() as $datum) {
             $rows[] = [
                 ExcelDate::PHPToExcel(Carbon::parse($datum['raw_date'])),   // A
                 '',               // B

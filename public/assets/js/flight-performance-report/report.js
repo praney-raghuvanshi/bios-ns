@@ -123,7 +123,7 @@ $(document).ready(function () {
 
   // Update Zone dropdown when End Week is selected
   endWeekDropdown.on('change', function () {
-    zoneDropdown.prop('disabled', false);
+    zoneDropdown.val('').prop('disabled', false).trigger('change')
     customerDropdown.val('').prop('disabled', true).trigger('change');
     flightDropdown.empty().append('<option value="">-- Select Flight --</option>').prop('disabled', true);
     fprRunBtn.prop('disabled', true);
@@ -131,7 +131,7 @@ $(document).ready(function () {
 
   // Update Customer dropdown when Zone is selected
   zoneDropdown.on('change', function () {
-    customerDropdown.prop('disabled', false);
+    customerDropdown.val('').prop('disabled', false).trigger('change')
     flightDropdown.empty().append('<option value="">-- Select Flight --</option>').prop('disabled', true);
     fprRunBtn.prop('disabled', true);
   });
